@@ -99,8 +99,9 @@ into `<results directory>/<case name>/`:
   says: `{"failure": {"kind": …}}` where the call failed, `kind` the local
   name of its `bridge:FailureKind`, with `map`, `adapter` or `vocabulary`, and
   `path` for a `fileMissingFailure`, and an optional `message`; otherwise
-  `{"answer": true}` or `{"answer": false}` for `ask`, `{"detected": true}` or
-  `{"detected": false}` for `convert`, and `{}` for any other call;
+  `{"answer": true}` or `{"answer": false}` for `ask`, `{}` for any other call,
+  and for `convert` `{}` or the `detected` it returned, `{"detected": true}` or
+  `{"detected": false}`;
 - `<n>.graph`, the graph `describe` or `convert` returned, as returned;
 - `<n>.findings`, the findings `convert` returned, where it returned any;
 - `<n>.report`, the report `test` returned, as returned.
