@@ -136,6 +136,31 @@ class TestCommandsAnEngineOffers:
             """writes the graph a call returned beside its result, as `<case>/<number>.graph`"""
             assert Graph().parse(results / "a-case" / "1.graph", format="turtle")
 
+        def test_writes_whether_the_adapter_accepts_the_document_as_the_result_of_a_convert(self, tmp_path):
+            iri = "https://example.org/adapters/synthetic-adapter/"
+            files = {path.relative_to(ADAPTER).as_posix(): str(path) for path in ADAPTER.rglob("*") if path.is_file()}
+            document = {"iri": iri + "fixtures/in/example-0001.xml", "path": str(DOCUMENT)}
+            calls = tmp_path / "calls.json"
+            calls.write_text(
+                json.dumps(
+                    {
+                        "cases": [
+                            {
+                                "name": "a-case",
+                                "calls": [
+                                    {"load": {"adapter": {"iri": iri, "files": files}}},
+                                    {"convert": {"document": document, "format": "turtle"}},
+                                ],
+                            }
+                        ]
+                    }
+                ),
+                "utf-8",
+            )
+            engine("library", str(calls), str(tmp_path / "results"))
+            written = tmp_path / "results" / "a-case"
+            assert json.loads((written / "2.json").read_text(encoding="utf-8")) == {"detected": True}
+
 
 class TestChecksOfTheFakeEnginesOwnOutput:
     """Checks of the fake engine's own output · fixtures/fake-engine/engine.py"""

@@ -66,6 +66,13 @@ The graph is every record of the document, emitted as one. The findings are
 the union of every record's, the ones a `bridge:expectedFindings` file is
 compared against, and never change the graph.
 
+**The result also says whether the adapter accepts the document, as `detected`:
+the answer [**ask**](#ask) gives for it, in the same envelope.** A document the
+adapter does not accept is converted all the same, with `detected` false
+([`sparql.md`](sparql.md#running-an-adapter)). A caller that chose its adapter
+by the document's media type reads `detected` and skips **ask**; **ask** stays
+for choosing among adapters.
+
 **The caller asks for the findings, the census, both or neither, and neither is
 the default.** The census is the findings of each path no accounting entry
 carries ([`sparql.md`](sparql.md#running-an-adapter)); the findings are every

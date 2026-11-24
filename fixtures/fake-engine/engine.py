@@ -396,6 +396,7 @@ def run_library(args):
                 elif operation == "ask":
                     result = ask(given, loaded, args.library)
                 elif operation == "convert":
+                    result = {"detected": ask(given, loaded, args.library)["answer"]}
                     for name, data in convert_document(given, loaded, args.library).items():
                         (written / f"{position}.{name}").write_text(data, encoding="utf-8")
                 else:

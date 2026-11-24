@@ -8,6 +8,7 @@
     "A vocabulary checkout to run the synthetic adapters with · fixtures/synthetic-vocabularies/",
     "Library cases an engine is run through · fixtures/library/manifest.ttl, shapes/bridge.shapes.ttl",
     "Commands an engine offers · engine/command.md, fixtures/fake-engine/engine.py",
+    "Results an engine's library command writes · engine/library-result.schema.json, engine/command.md",
     "Manifests that list the vectors · fixtures/*/manifest.ttl, shapes/bridge.shapes.ttl",
     "Terms of the Bridge vocabulary · vocab/bridge.ttl",
     "Results a benchmark harness writes · bench/result.schema.json, bench/glossary.json, fixtures/bench/result.json",

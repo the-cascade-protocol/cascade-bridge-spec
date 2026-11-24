@@ -41,6 +41,12 @@
     },
     {
       "type": "object",
+      "required": ["detected"],
+      "additionalProperties": false,
+      "properties": { "detected": { "type": "boolean" } }
+    },
+    {
+      "type": "object",
       "additionalProperties": false,
       "maxProperties": 0
     }
