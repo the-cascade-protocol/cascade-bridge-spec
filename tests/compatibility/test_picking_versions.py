@@ -1,7 +1,10 @@
 """Which version of each repository a run uses, as Zuul checks out a required project."""
 
+import json
+
 import pytest
 
+from compatibility_tool import github
 from compatibility_tool.console import Stop
 from compatibility_tool.github import Event
 from compatibility_world import MATCHING, depends_on, git
@@ -159,6 +162,95 @@ class TestPickingTheVersionOfEachRepositoryARunUses:
             repositories = world.record()["repositories"]
             assert repositories["adapter"]["how"] == "main, the branch this run is on"
             assert repositories["engine"]["commit"] == git("rev-parse", "HEAD", cwd=engine)
+
+    class TestGivenARunStartedByHandOnABranchWithAnOpenPullRequest:
+        def test_reads_the_pull_request_as_a_run_it_started_would(self, world):
+            world.pull_request("adapter", 7, fill=lambda path: (path / "NOTICE").write_text("named\n"))
+            engine, _ = world.engine_under_test(body=depends_on("adapter", 7))
+            world.pull_requests.get("engine", 1)["head"]["ref"] = "feature"
+
+            said = world.tool(engine, **world.ci(branch="feature"))
+
+            repositories = world.record()["repositories"]
+            assert repositories["adapter"]["how"] == "pull request #7 merged into main"
+            assert repositories["engine"]["how"] == "feature, the head of pull request #1"
+            assert (world.workspace / "adapter" / "NOTICE").read_text() == "named\n"
+            assert "A run started by hand on feature: its open pull request is #1" in said
+
+    class TestGivenARunStartedByHand:
+        @staticmethod
+        def event_of(monkeypatch, tmp_path, api, branch="feature", ref_type="branch", payload=None):
+            event = tmp_path / "event.json"
+            event.write_text(json.dumps(payload or {}), encoding="utf-8")
+            for name, value in {
+                "GITHUB_REPOSITORY": "the-cascade-protocol/engine",
+                "GITHUB_REF_NAME": branch,
+                "GITHUB_REF_TYPE": ref_type,
+                "GITHUB_EVENT_PATH": str(event),
+            }.items():
+                monkeypatch.setenv(name, value)
+            return github.event(api)
+
+        class Listing:
+            """What GitHub says of the branch: which pull request has it as its head, and the repository's default."""
+
+            def __init__(self, open_pull=None, default="main"):
+                self.open_pull, self.default, self.asked = open_pull, default, []
+
+            def default_branch(self, repository):
+                self.asked.append("default branch")
+                return self.default
+
+            def open_pull_request_from(self, repository, branch):
+                self.asked.append(f"pulls from {branch}")
+                return self.open_pull
+
+            def pull_request(self, named):
+                return {"base": {"ref": "stable/x"}}
+
+        def test_is_for_the_open_pull_request_whose_head_is_the_branch(self, monkeypatch, tmp_path):
+            found = self.event_of(monkeypatch, tmp_path, self.Listing(open_pull=7))
+
+            assert found == Event("the-cascade-protocol/engine", 7, "stable/x", hand_started_on="feature")
+
+        def test_is_for_no_pull_request_when_none_is_open(self, monkeypatch, tmp_path):
+            found = self.event_of(monkeypatch, tmp_path, self.Listing())
+
+            assert found == Event("the-cascade-protocol/engine", None, "feature")
+
+        def test_asks_about_no_pull_request_on_the_default_branch(self, monkeypatch, tmp_path):
+            listing = self.Listing(open_pull=7)
+
+            found = self.event_of(monkeypatch, tmp_path, listing, branch="main")
+
+            assert found == Event("the-cascade-protocol/engine", None, "main")
+            assert listing.asked == ["default branch"]
+
+        def test_takes_the_default_branch_from_the_event_when_it_names_one(self, monkeypatch, tmp_path):
+            listing = self.Listing(open_pull=7)
+            payload = {"repository": {"default_branch": "trunk"}}
+
+            found = self.event_of(monkeypatch, tmp_path, listing, branch="trunk", payload=payload)
+
+            assert found == Event("the-cascade-protocol/engine", None, "trunk")
+            assert listing.asked == []
+
+        def test_asks_about_nothing_on_a_tag(self, monkeypatch, tmp_path):
+            listing = self.Listing(open_pull=7)
+
+            found = self.event_of(monkeypatch, tmp_path, listing, branch="v1", ref_type="tag")
+
+            assert found == Event("the-cascade-protocol/engine", None, "v1")
+            assert listing.asked == []
+
+        def test_asks_about_nothing_when_a_pull_request_started_the_run(self, monkeypatch, tmp_path):
+            listing = self.Listing(open_pull=9)
+            payload = {"pull_request": {"number": 3}}
+
+            found = self.event_of(monkeypatch, tmp_path, listing, branch="refs/pull/3/merge", payload=payload)
+
+            assert found == Event("the-cascade-protocol/engine", 3, "stable/x")
+            assert listing.asked == []
 
     class TestGivenASliceThatReadsTheVocabularyBesideTheRepositoryUnderTest:
         @staticmethod

@@ -249,6 +249,17 @@ class PullRequests:
         same = (pulls for name, pulls in self.by_repository.items() if name.lower() == repository.lower())
         return next(same, {}).get(number)
 
+    def open_from(self, repository, head):
+        """The open pull requests whose head is `owner:branch`, newest first, as GitHub lists them."""
+        pulls = next((found for name, found in self.by_repository.items() if name.lower() == repository.lower()), {})
+        listed = [
+            pull
+            for pull in pulls.values()
+            if pull["state"] == "open"
+            and f"{pull['head']['repo']['full_name'].split('/')[0]}:{pull['head'].get('ref')}" == head
+        ]
+        return sorted(listed, key=lambda pull: pull["number"], reverse=True)
+
     def check_run(self, repository, commit, name, status="completed", conclusion="success"):
         run = {
             "id": sum(len(runs) for runs in self.check_runs_by_commit.values()) + 1,
@@ -329,9 +340,13 @@ class Handler(BaseHTTPRequestHandler):
                 return self.answer(status, {"message": message}, headers)
             pull = self.server.pull_requests.get(parts[2], int(parts[4]))
             return self.answer(200 if pull else 404, pull or {"message": "Not Found"})
+        if len(parts) == 4 and parts[0] == "repos" and parts[3] == "pulls":
+            head = parse_qs(urlsplit(self.path).query).get("head", [""])[0]
+            return self.answer(200, self.server.pull_requests.open_from(parts[2], head))
         if len(parts) == 3 and parts[0] == "repos":
             readable = self.server.pull_requests.readable(parts[2])
-            return self.answer(200 if readable else 404, {"name": parts[2]} if readable else {"message": "Not Found"})
+            found = {"name": parts[2], "default_branch": "main"} if readable else {"message": "Not Found"}
+            return self.answer(200 if readable else 404, found)
         return self.answer(404, {"message": "Not Found"})
 
 
@@ -482,6 +497,7 @@ class World:
             "GITHUB_REPOSITORY",
             "GITHUB_EVENT_PATH",
             "GITHUB_REF_NAME",
+            "GITHUB_REF_TYPE",
             "GITHUB_STEP_SUMMARY",
             "GITHUB_TOKEN",
             "CASCADE_GITHUB_TOKEN",
@@ -494,9 +510,10 @@ class World:
         environment.update({key: str(value) for key, value in extra.items()})
         return environment
 
-    def ci(self, repository="engine", event=None, branch="main", gate=None):
+    def ci(self, repository="engine", event=None, branch="main", gate=None, ref_type="branch"):
         """The variables a workflow run gives the tooling."""
         variables = {
+            "GITHUB_REF_TYPE": ref_type,
             "CI": "true",
             "GITHUB_REPOSITORY": f"{OWNER}/{repository}",
             "GITHUB_API_URL": self.api_url,
