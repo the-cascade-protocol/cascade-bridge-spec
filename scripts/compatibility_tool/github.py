@@ -4,9 +4,9 @@ import re
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
-from urllib.parse import urlparse
+from urllib.parse import urlencode, urlparse
 
-from compatibility_tool.console import Stop
+from compatibility_tool.console import Stop, note
 
 DEPENDS_ON = re.compile(r"^[^\S\n]*Depends-On:[^\S\n]*(\S+)[^\S\n]*$", re.IGNORECASE | re.MULTILINE)
 PULL_REQUEST_URL = re.compile(
@@ -173,6 +173,22 @@ class Api:
         found = self.pulls[named]
         return found.said if isinstance(found, Unreadable) and found.out_of_sight else None
 
+    def read(self, path, what):
+        try:
+            return self.get(path)
+        except urllib.error.HTTPError as error:
+            raise Stop(f"{what} could not be read: {unreadable(error, message_of(error)).said}") from error
+
+    def default_branch(self, repository):
+        return self.read(f"repos/{repository}", f"{repository}'s default branch").get("default_branch") or ""
+
+    def open_pull_request_from(self, repository, branch):
+        """The number of the first open pull request whose head is this branch of the repository, else None."""
+        owner = repository.split("/")[0]
+        query = urlencode({"head": f"{owner}:{branch}", "state": "open"})
+        found = self.read(f"repos/{repository}/pulls?{query}", f"{repository}'s open pull requests from {branch}")
+        return found[0]["number"] if found else None
+
     def check_runs(self, path, commit):
         runs = []
         page = 1
@@ -199,6 +215,7 @@ class Event:
     repository: str
     number: int | None
     branch: str
+    hand_started_on: str = ""
 
     @property
     def under_test(self):
@@ -206,7 +223,8 @@ class Event:
 
 
 def event(api):
-    """The pull request's number from the event that started the run; its branch from the API, read now."""
+    """The pull request's number from the event that started the run, else from the open pull request of the branch
+    a run with no pull request event is on; its branch from the API, read now."""
     repository = os.environ.get("GITHUB_REPOSITORY", "")
     branch = os.environ.get("GITHUB_REF_NAME", "")
     path = os.environ.get("GITHUB_EVENT_PATH")
@@ -219,6 +237,26 @@ def event(api):
             raise Stop(f"{path}, the event the run started from, is not JSON: {error}") from error
     number = (payload.get("pull_request") or {}).get("number")
     if not number:
-        return Event(repository, None, branch)
+        return on_a_branch(api, repository, branch, payload)
     pull = api.pull_request(Named(repository, number))
     return Event(repository, number, pull.get("base", {}).get("ref") or branch)
+
+
+def on_a_branch(api, repository, branch, payload):
+    """A run with no pull request event on a branch other than the default one is for the first open pull request
+    whose head is that branch (a fork's has no branch here); with none, or on the default branch or a tag, for none."""
+    for_none = Event(repository, None, branch)
+    if os.environ.get("GITHUB_REF_TYPE") != "branch":
+        return for_none
+    default = (payload.get("repository") or {}).get("default_branch") or api.default_branch(repository)
+    if branch == default:
+        return for_none
+    number = api.open_pull_request_from(repository, branch)
+    if number is None:
+        note(
+            f"A run started by hand on {branch}: no open pull request has it as its head, so the default branches are read."
+        )
+        return for_none
+    note(f"A run started by hand on {branch}: its open pull request is #{number}, whose body names what to read.")
+    base = api.pull_request(Named(repository, number)).get("base", {}).get("ref")
+    return Event(repository, number, base or branch, hand_started_on=branch)
