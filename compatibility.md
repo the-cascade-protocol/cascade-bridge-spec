@@ -110,6 +110,14 @@ Picked when the run starts, as Zuul checks out a job's required projects
   request under test targets, or the one a push, manual or scheduled run is on;
 - otherwise the default branch.
 
+A run with no pull request event, started by hand on a branch other than the
+default one, has a pull request under test too: the first open pull request
+whose head is that branch of the repository it runs in (a fork's has no branch
+there), which the run's log names. The repository under test is then that
+branch's checkout, with the pull requests it names merged in as for any other
+run. With none open, or on the default branch or a tag, the run has none and
+picks as a push does.
+
 The vocabulary repository an adapter's `bridge:cascadeVocabularyRepository`
 names, and each repository a runtime's `cascade-runtime.json` names, is picked
 as a counterpart is.

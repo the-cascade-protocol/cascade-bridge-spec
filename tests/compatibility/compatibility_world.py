@@ -510,8 +510,12 @@ class World:
         environment.update({key: str(value) for key, value in extra.items()})
         return environment
 
-    def ci(self, repository="engine", event=None, branch="main", gate=None, ref_type="branch"):
-        """The variables a workflow run gives the tooling."""
+    def ci(self, repository="engine", event=None, branch="main", gate=None, ref_type="branch", names_default=True):
+        """The variables a workflow run gives the tooling; a run with no pull request event has the repository in its
+        event, and with it the default branch, unless it is a scheduled one (names_default=False)."""
+        if event is None and names_default:
+            event = self.root / "push.json"
+            event.write_text(json.dumps({"repository": {"default_branch": "main"}}), encoding="utf-8")
         variables = {
             "GITHUB_REF_TYPE": ref_type,
             "CI": "true",

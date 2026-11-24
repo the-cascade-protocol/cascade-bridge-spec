@@ -169,7 +169,7 @@ class TestPickingTheVersionOfEachRepositoryARunUses:
             engine, _ = world.engine_under_test(body=depends_on("adapter", 7))
             world.pull_requests.get("engine", 1)["head"]["ref"] = "feature"
 
-            said = world.tool(engine, **world.ci(branch="feature"))
+            said = world.tool(engine, **world.ci(branch="feature", names_default=False))
 
             repositories = world.record()["repositories"]
             assert repositories["adapter"]["how"] == "pull request #7 merged into main"

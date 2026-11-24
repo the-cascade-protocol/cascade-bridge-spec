@@ -18,7 +18,10 @@ def toplevel(directory, fallback):
 def under_test_is(event, merged=()):
     if not event.number:
         return f"{event.branch}, the branch this run is on"
-    tested = f"pull request #{event.number} merged into {event.branch}"
+    if event.hand_started_on:
+        tested = f"{event.hand_started_on}, the head of pull request #{event.number}"
+    else:
+        tested = f"pull request #{event.number} merged into {event.branch}"
     return f"{tested}, and {picking.numbered(merged)} merged into it" if merged else tested
 
 
