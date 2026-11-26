@@ -15,6 +15,19 @@ from adapter_profile_world import FIXTURE, ROOT
 
 SAVED_GRAPHS = Path(__file__).parent / "crate_graphs"
 SAVED_BASE = "https://crate.example/"
+PUBLISHED_ENTRIES = Path(__file__).parent / "published_context_entries.json"
+
+
+@pytest.fixture
+def no_network(monkeypatch):
+    def refused(*arguments, **keywords):
+        raise OSError("the network is denied to this test")
+
+    monkeypatch.setattr(socket, "getaddrinfo", refused)
+    monkeypatch.setattr(socket.socket, "connect", refused)
+    monkeypatch.setattr(socket.socket, "connect_ex", refused)
+
+
 COMMITTED_CRATES = [
     ROOT / name
     for name in subprocess.run(
@@ -45,13 +58,7 @@ class TestCheckingAnAdapterPackageAgainstTheProfile:
     class TestGivenACrateWhoseContextNamesTheRoCrateContextByItsWebAddress:
         """given a crate whose context names the RO-Crate context by its web address"""
 
-        def test_reads_the_crate_without_opening_a_network_connection(self, monkeypatch):
-            def refused(*arguments, **keywords):
-                raise OSError("the network is denied to this test")
-
-            monkeypatch.setattr(socket, "getaddrinfo", refused)
-            monkeypatch.setattr(socket.socket, "connect", refused)
-
+        def test_reads_the_crate_without_opening_a_network_connection(self, no_network):
             crate = _crate.load(FIXTURE)
 
             assert crate.root == URIRef(FIXTURE.resolve().as_uri() + "/")
@@ -72,11 +79,11 @@ class TestCheckingAnAdapterPackageAgainstTheProfile:
         def test_refuses_a_term_the_read_terms_do_not_define(self, tmp_path):
             crate_file = tmp_path / "ro-crate-metadata.json"
             crate_file.write_text(
-                json.dumps({"@context": [_crate.RO_CRATE_CONTEXT], "@graph": [{"@id": "./", "author": "someone"}]}),
+                json.dumps({"@context": [_crate.RO_CRATE_CONTEXT], "@graph": [{"@id": "./", "birthDate": "1970"}]}),
                 encoding="utf-8",
             )
 
-            with pytest.raises(ValueError, match="author"):
+            with pytest.raises(ValueError, match="birthDate"):
                 _crate.parsed(crate_file, SAVED_BASE)
 
         def test_refuses_a_context_named_by_any_other_web_address(self, tmp_path):
@@ -87,3 +94,42 @@ class TestCheckingAnAdapterPackageAgainstTheProfile:
 
             with pytest.raises(ValueError, match="https://example.org/context"):
                 _crate.parsed(crate_file, SAVED_BASE)
+
+        def test_refuses_a_node_context_named_by_a_web_address(self, tmp_path, no_network):
+            crate_file = tmp_path / "ro-crate-metadata.json"
+            crate_file.write_text(
+                json.dumps(
+                    {
+                        "@context": [_crate.RO_CRATE_CONTEXT],
+                        "@graph": [{"@id": "./"}, {"@id": "b", "@context": "https://example.org/node"}],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with pytest.raises(ValueError, match=r"https://example.org/node at \$\.@graph\[1\]\.@context"):
+                _crate.parsed(crate_file, SAVED_BASE)
+
+        def test_refuses_an_import_of_a_web_address(self, tmp_path, no_network):
+            crate_file = tmp_path / "ro-crate-metadata.json"
+            crate_file.write_text(
+                json.dumps(
+                    {
+                        "@context": [_crate.RO_CRATE_CONTEXT, {"@import": "https://example.org/import"}],
+                        "@graph": [{"@id": "./"}],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with pytest.raises(ValueError, match=r"imports https://example.org/import at \$\.@context\[1\]\.@import"):
+                _crate.parsed(crate_file, SAVED_BASE)
+
+    class TestGivenTheReadTermsFile:
+        """given the read terms file"""
+
+        def test_gives_every_term_the_entry_the_published_context_gives_it(self):
+            terms = json.loads(_crate.RO_CRATE_TERMS.read_text(encoding="utf-8"))["@context"]
+            published = json.loads(PUBLISHED_ENTRIES.read_text(encoding="utf-8"))
+
+            assert terms == published
