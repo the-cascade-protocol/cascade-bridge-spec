@@ -1,12 +1,13 @@
 #!/bin/bash
 # The Bridge's performance file for one run, and what is done with it. Called by action.yml, one
-# command at a time: package, packages, run, summary, publish, export, comment. Reads only the environment it is given.
+# command at a time: package, same, packages, run, summary, publish, export, comment. Reads only the environment it is given.
 #
 #   REPOSITORY_PATH      the repository under test, a directory named as its repository; its counterparts are beside it
 #   WHICH                pull-requests | all: the inputs of each adapter's bench/manifest.json to measure
 #   SAMPLES              how many fresh processes time each input
 #   REFERENCE            true: in place of the timing, one convert of each input under the default executor and one under
-#                        the reference executor, for their output digests
+#                        the reference executor, for their output digests; on a scheduled run, not at all where every
+#                        commit is that of the last verdict, and without an input that timed out at it
 #   REFERENCE_MAX_BYTES  with REFERENCE true: an input of more bytes than this is left out of both
 #   OUT                  where the files go
 #   SPECIFICATION        a checkout of the specification: bench/compare.mjs is run from it
@@ -43,8 +44,79 @@ vocabulary_of() {
 
 measured_inputs() {
   # measured_inputs <adapter> <bytes> <test on $most>: "<id> <bytes>" of the manifest's inputs this run measures that the test accepts.
-  jq -r --argjson most "$2" --argjson pull_requests "$([ "$WHICH" = pull-requests ] && echo true || echo false)" \
-    ".inputs[] | select(.onPullRequests or (\$pull_requests | not)) | select($3) | \"\(.id) \(.bytes)\"" "$1/bench/manifest.json"
+  local not_fed='[]'
+  [ -s "$OUT/not-fed.txt" ] && not_fed=$(cut -d' ' -f1 "$OUT/not-fed.txt" | jq -R . | jq -s .)
+  jq -r --argjson most "$2" --argjson not_fed "$not_fed" --argjson pull_requests "$([ "$WHICH" = pull-requests ] && echo true || echo false)" \
+    ".inputs[] | select(.onPullRequests or (\$pull_requests | not)) | select(.id as \$id | \$not_fed | index(\$id) | not) | select($3) | \"\(.id) \(.bytes)\"" "$1/bench/manifest.json"
+}
+
+nightly() {
+  [ "$REFERENCE" = true ] && [ "${GITHUB_EVENT_NAME:-}" = schedule ]
+}
+
+used_repositories() {
+  local adapter
+  echo cascade-bridge-rs
+  for adapter in $(adapters); do
+    basename "$adapter"
+    basename "$(vocabulary_of "$adapter")"
+  done
+}
+
+at_the_last_verdict() {
+  # at_the_last_verdict <repository>...: each is at the commit the last verdict recorded; the engine's is the build timed.
+  local name now
+  for name in "$@"; do
+    if [ "$name" = cascade-bridge-rs ]; then now=$(cat "$OUT/engine-commit"); else now=$(git -C "$workspace/$name" rev-parse HEAD); fi
+    [ "$(jq -r --arg name "$name" '.commit[$name] // empty' "$OUT/last/$(cat "$OUT/last.stem").json" | tr -d '\r')" = "$now" ] || return 1
+  done
+}
+
+last_verdict() {
+  # Keeps the newest reference verdict of perf-data, with its file, in $OUT/last, and its name in $OUT/last.stem; nothing where there is none.
+  local md
+  rm -rf "$OUT/last" "$OUT/last.stem"
+  authenticated clone --quiet --branch perf-data --depth 1 "$(remote)" "$OUT/last" 2>/dev/null || return 0
+  md=$(newest "$OUT/last" 'bridge-reference/*.md')
+  if [ -n "$md" ] && [ -f "$OUT/last/${md%.md}.json" ]; then echo "${md%.md}" > "$OUT/last.stem"; fi
+  return 0
+}
+
+same() {
+  # Writes skip=true to the step's output, and $OUT/skipped.md, where a scheduled run has every commit of the last verdict.
+  local skip=false stem day recorded
+  if nightly; then
+    last_verdict
+    if [ -f "$OUT/last.stem" ]; then
+      stem=$(cat "$OUT/last.stem")
+      recorded=$(jq -r '.commit | keys[]' "$OUT/last/$stem.json" | tr -d '\r' | sort)
+      if [ "$recorded" = "$(used_repositories | sort -u)" ] && at_the_last_verdict $recorded; then
+        skip=true
+        day=$(echo "$stem" | cut -d/ -f2-4 | tr / -)
+        echo "::notice::skipped: same commits as $day"
+        {
+          echo "**Skipped: same commits as $day.** The repository and everything it runs with are at the commits of the last verdict, \`$stem\` on \`perf-data\`, so no reference run was made. This is not a verdict, and nothing was checked. What that run said:"
+          echo
+          grep -E '^(EQUIVALENT|UNVERIFIED|NOT EQUIVALENT)' "$OUT/last/$stem.md" | sed 's/^/- /' || true
+        } > "$OUT/skipped.md"
+      fi
+    fi
+  fi
+  echo "skip=$skip" >> "${GITHUB_OUTPUT:-/dev/null}"
+}
+
+not_fed() {
+  # "<id> <bytes>" of each input of an adapter this scheduled run feeds that timed out at the last verdict, the engine and the adapter being at its commits.
+  local adapter id bytes
+  nightly && [ -f "$OUT/last.stem" ] || return 0
+  for adapter in $(adapters); do
+    at_the_last_verdict cascade-bridge-rs "$(basename "$adapter")" || continue
+    while read -r id bytes; do
+      if jq -e --arg id "$id" '.results[] | select(.name == ($id + "/timeout/convert"))' "$OUT/last/$(cat "$OUT/last.stem").json" > /dev/null; then
+        echo "$id $bytes"
+      fi
+    done < <(measured_inputs "$adapter" "$REFERENCE_MAX_BYTES" '.bytes <= $most')
+  done
 }
 
 release_commit() {
@@ -75,6 +147,7 @@ package() {
     found=$(release_commit "$wanted") || { echo "::error::none of the last 30 commits of $owner/cascade-bridge-rs has a build release"; exit 1; }
   fi
   echo "the package is the build of $owner/cascade-bridge-rs $found (wanted $wanted)"
+  echo "$found" > "$OUT/engine-commit"
   if [ "$found" = "$wanted" ]; then
     echo "The Bridge build timed is \`${found:0:7}\` of \`$owner/cascade-bridge-rs\`." > "$OUT/package.md"
   else
@@ -133,6 +206,9 @@ run() {
     return
   fi
   local adapter
+  : > "$OUT/not-fed.txt"
+  not_fed > "$OUT/not-fed.txt.new"
+  mv "$OUT/not-fed.txt.new" "$OUT/not-fed.txt"
   for adapter in $(adapters); do
     measured_inputs "$adapter" "$REFERENCE_MAX_BYTES" '.bytes > $most'
   done > "$OUT/left-out.txt"
@@ -170,6 +246,14 @@ equivalence() {
       sed 's/^/- /' "$OUT/left-out.txt"
     } >> "$OUT/equivalence.md"
   fi
+  if [ -s "$OUT/not-fed.txt" ]; then
+    {
+      echo
+      echo "Not fed to either, each having timed out at the last verdict, \`$(cat "$OUT/last.stem")\` on \`perf-data\`, with the engine and the adapter at the commits they are at now. Nothing verifies them (id, bytes):"
+      echo
+      sed 's/^/- /' "$OUT/not-fed.txt"
+    } >> "$OUT/equivalence.md"
+  fi
 }
 
 summary() {
@@ -183,7 +267,9 @@ summary() {
     echo
     cat "$OUT/package.md"
     echo
-    if [ "$REFERENCE" = true ]; then
+    if [ -f "$OUT/skipped.md" ]; then
+      cat "$OUT/skipped.md"
+    elif [ "$REFERENCE" = true ]; then
       cat "$OUT/equivalence.md"
     else
       for adapter in $(adapters); do
@@ -309,11 +395,12 @@ comment() {
 
 case "${1:-}" in
   package) package ;;
+  same) same ;;
   packages) packages ;;
   run) run ;;
-  summary) [ "$REFERENCE" = true ] && equivalence; summary ;;
+  summary) if [ "$REFERENCE" = true ] && [ ! -f "$OUT/skipped.md" ]; then equivalence; fi; summary ;;
   publish) if [ "$REFERENCE" = true ] && [ ! -f "$OUT/equivalence.md" ]; then equivalence; fi; publish ;;
   export) $compare export "$OUT/default/run.json" > "$OUT/history.json" ;;
   comment) comment ;;
-  *) echo "usage: perf.sh package|packages|run|summary|publish|export|comment" >&2; exit 2 ;;
+  *) echo "usage: perf.sh package|same|packages|run|summary|publish|export|comment" >&2; exit 2 ;;
 esac
