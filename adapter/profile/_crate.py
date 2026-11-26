@@ -75,13 +75,12 @@ def parsed(crate_file, base):
         context.append(part)
 
     defined = {term for part in context for term in part}
-    if "@vocab" not in defined:
-        undefined = sorted({name for name in bare_terms(document) if ":" not in name} - defined)
-        if undefined:
-            raise ValueError(
-                f"{crate_file.name} uses {', '.join(undefined)}, which neither the crate's own @context nor "
-                f"{RO_CRATE_TERMS.relative_to(RO_CRATE_TERMS.parents[1]).as_posix()} defines"
-            )
+    undefined = sorted({name for name in bare_terms(document) if ":" not in name} - defined)
+    if undefined:
+        raise ValueError(
+            f"{crate_file.name} uses {', '.join(undefined)}, which neither the crate's own @context nor "
+            f"{RO_CRATE_TERMS.relative_to(RO_CRATE_TERMS.parents[1]).as_posix()} defines"
+        )
 
     return Graph().parse(data=json.dumps({**document, "@context": context}), format="json-ld", base=base)
 
