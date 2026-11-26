@@ -7,7 +7,8 @@
 #   SAMPLES              how many fresh processes time each input
 #   REFERENCE            true: in place of the timing, one convert of each input under the default executor and one under
 #                        the reference executor, for their output digests; on a scheduled run, not at all where every
-#                        commit is that of the last verdict, and without an input that timed out at it
+#                        commit is that of the last verdict, which is under 7 days old and has a row for every input
+#                        fed, and without an input that timed out at it
 #   REFERENCE_MAX_BYTES  with REFERENCE true: an input of more bytes than this is left out of both
 #   OUT                  where the files go
 #   SPECIFICATION        a checkout of the specification: bench/compare.mjs is run from it
@@ -82,21 +83,41 @@ last_verdict() {
   return 0
 }
 
+last_verdict_is_a_week_old() {
+  # True where the last verdict's day is 7 or more days ago, or cannot be read.
+  local day then
+  day=$(cut -d/ -f2-4 "$OUT/last.stem" | tr / -)
+  then=$(date -u -d "$day" +%s 2>/dev/null) || return 0
+  [ $(($(date -u +%s) - then)) -ge $((7 * 86400)) ]
+}
+
+last_verdict_covers_every_input() {
+  # Every input this run would feed has a row, an output or a timeout, in the last verdict.
+  local adapter id bytes
+  for adapter in $(adapters); do
+    while read -r id bytes; do
+      jq -e --arg id "$id" '[.results[] | select(.name | startswith($id + "/output/") or startswith($id + "/timeout/"))] | length > 0' \
+        "$OUT/last/$(cat "$OUT/last.stem").json" > /dev/null 2>&1 || return 1
+    done < <(measured_inputs "$adapter" "$REFERENCE_MAX_BYTES" '.bytes <= $most')
+  done
+}
+
 same() {
   # Writes skip=true to the step's output, and $OUT/skipped.md, where a scheduled run has every commit of the last verdict.
   local skip=false stem day recorded
   if nightly; then
     last_verdict
-    if [ -f "$OUT/last.stem" ]; then
+    if [ -f "$OUT/last.stem" ] && ! last_verdict_is_a_week_old; then
       stem=$(cat "$OUT/last.stem")
-      recorded=$(jq -r '.commit | keys[]' "$OUT/last/$stem.json" | tr -d '\r' | sort)
-      if [ "$recorded" = "$(used_repositories | sort -u)" ] && at_the_last_verdict $recorded; then
+      recorded=$(jq -r '.commit | keys[]' "$OUT/last/$stem.json" 2>/dev/null | tr -d '\r' | sort) || recorded=
+      if [ -n "$recorded" ] && [ "$recorded" = "$(used_repositories | sort -u)" ] && at_the_last_verdict $recorded && last_verdict_covers_every_input; then
         skip=true
         day=$(echo "$stem" | cut -d/ -f2-4 | tr / -)
         echo "::notice::skipped: same commits as $day"
         {
           echo "**Skipped: same commits as $day.** The repository and everything it runs with are at the commits of the last verdict, \`$stem\` on \`perf-data\`, so no reference run was made. This is not a verdict, and nothing was checked. What that run said:"
           echo
+          sed '/^$/q' "$OUT/last/$stem.md"
           grep -E '^(EQUIVALENT|UNVERIFIED|NOT EQUIVALENT)' "$OUT/last/$stem.md" | sed 's/^/- /' || true
         } > "$OUT/skipped.md"
       fi
@@ -106,13 +127,13 @@ same() {
 }
 
 not_fed() {
-  # "<id> <bytes>" of each input of an adapter this scheduled run feeds that timed out at the last verdict, the engine and the adapter being at its commits.
+  # "<id> <bytes>" of each input of an adapter this scheduled run feeds that timed out at the last verdict, the engine and the adapter being at its commits; none when that verdict is a week old.
   local adapter id bytes
-  nightly && [ -f "$OUT/last.stem" ] || return 0
+  nightly && [ -f "$OUT/last.stem" ] && ! last_verdict_is_a_week_old || return 0
   for adapter in $(adapters); do
     at_the_last_verdict cascade-bridge-rs "$(basename "$adapter")" || continue
     while read -r id bytes; do
-      if jq -e --arg id "$id" '.results[] | select(.name == ($id + "/timeout/convert"))' "$OUT/last/$(cat "$OUT/last.stem").json" > /dev/null; then
+      if jq -e --arg id "$id" '.results[] | select(.name | startswith($id + "/timeout/"))' "$OUT/last/$(cat "$OUT/last.stem").json" > /dev/null 2>&1; then
         echo "$id $bytes"
       fi
     done < <(measured_inputs "$adapter" "$REFERENCE_MAX_BYTES" '.bytes <= $most')
