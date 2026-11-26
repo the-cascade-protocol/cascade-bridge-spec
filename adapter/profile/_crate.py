@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urlparse
@@ -7,6 +8,9 @@ from rdflib import Graph, URIRef
 from rdflib.namespace import RDF
 
 from _terms import BRIDGE, MF
+
+RO_CRATE_CONTEXT = "https://w3id.org/ro/crate/1.2/context"
+RO_CRATE_TERMS = Path(__file__).resolve().parents[2] / "vocab" / "ro-crate-1.2-read-terms.context.jsonld"
 
 
 def path_of(iri):
@@ -42,10 +46,71 @@ class Crate:
         return str(self.graph.value(test, MF.name) or test)
 
 
+def bare_terms(node):
+    if isinstance(node, list):
+        for item in node:
+            yield from bare_terms(item)
+    elif isinstance(node, dict):
+        for key, value in node.items():
+            if key == "@context":
+                continue
+            if key == "@type":
+                yield from (name for name in (value if isinstance(value, list) else [value]) if isinstance(name, str))
+            elif not key.startswith("@"):
+                yield key
+            yield from bare_terms(value)
+
+
+def without_web_contexts(node, crate_name, where="$"):
+    if isinstance(node, list):
+        return [without_web_contexts(item, crate_name, f"{where}[{index}]") for index, item in enumerate(node)]
+    if not isinstance(node, dict):
+        return node
+
+    resolved = {}
+    for key, value in node.items():
+        here = f"{where}.{key}"
+        if key == "@import" and isinstance(value, str):
+            raise ValueError(f"{crate_name} imports {value} at {here}, and no import is read without the network")
+        if key == "@context":
+            items = value if isinstance(value, list) else [value]
+            swapped = []
+            for index, item in enumerate(items):
+                at = f"{here}[{index}]" if isinstance(value, list) else here
+                if item == RO_CRATE_CONTEXT:
+                    item = json.loads(RO_CRATE_TERMS.read_text(encoding="utf-8"))["@context"]
+                elif isinstance(item, str):
+                    raise ValueError(
+                        f"{crate_name} names the context {item} at {at}, and only {RO_CRATE_CONTEXT} is read without "
+                        "the network"
+                    )
+                swapped.append(without_web_contexts(item, crate_name, at))
+            value = swapped if isinstance(value, list) else swapped[0]
+        else:
+            value = without_web_contexts(value, crate_name, here)
+        resolved[key] = value
+    return resolved
+
+
+def parsed(crate_file, base):
+    document = without_web_contexts(json.loads(crate_file.read_text(encoding="utf-8")), crate_file.name)
+    declared = document.get("@context", [])
+    context = declared if isinstance(declared, list) else [declared]
+
+    defined = {term for part in context for term in part}
+    undefined = sorted({name for name in bare_terms(document) if ":" not in name} - defined)
+    if undefined:
+        raise ValueError(
+            f"{crate_file.name} uses {', '.join(undefined)}, which neither the crate's own @context nor "
+            f"{RO_CRATE_TERMS.relative_to(RO_CRATE_TERMS.parents[1]).as_posix()} defines"
+        )
+
+    return Graph().parse(data=json.dumps({**document, "@context": context}), format="json-ld", base=base)
+
+
 def load(adapter):
     crate_file = adapter / "ro-crate-metadata.json"
-    graph = Graph()
-    graph.parse(crate_file, format="json-ld", base=crate_file.resolve().as_uri())
+    graph = parsed(crate_file, crate_file.resolve().as_uri())
 
     roots = list(graph.subjects(RDF.type, BRIDGE.Adapter))
     if len(roots) != 1:
