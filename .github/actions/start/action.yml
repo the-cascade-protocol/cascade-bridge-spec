@@ -173,7 +173,7 @@ runs:
           exit 0
         fi
         {
-          echo "lockfiles=$(cat "${locks[@]}" | sha256sum | cut -d' ' -f1)"
+          echo "lockfiles=$(cat "${locks[@]}" | node -e "process.stdout.write(require('crypto').createHash('sha256').update(require('fs').readFileSync(0)).digest('hex'))")"
           echo "node=$(node --version)"
           echo "npm-cache=$(npm config get cache)"
         } >> "$GITHUB_OUTPUT"
@@ -187,6 +187,7 @@ runs:
           ${{ steps.placed.outputs.npm-cache }}
           !${{ steps.placed.outputs.npm-cache }}/_logs
         key: npm-cache-${{ runner.os }}-${{ runner.arch }}-node-${{ steps.placed.outputs.node }}-${{ steps.placed.outputs.lockfiles }}
+        restore-keys: npm-cache-${{ runner.os }}-${{ runner.arch }}-node-${{ steps.placed.outputs.node }}-
 
     - name: run the check
       shell: bash
