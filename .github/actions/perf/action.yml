@@ -37,7 +37,12 @@ inputs:
       executor and once under the reference executor, and report whether their
       output digests are the same. With publish 'true' the file and the verdict
       are kept under bridge-reference/ on the perf-data branch. Run it as a job
-      of its own: the reference executor is far slower than the default.
+      of its own: the reference executor is far slower than the default. A
+      scheduled run makes none where every commit it runs with is that of the
+      newest verdict kept there, which is under 7 days old and has a row for
+      every input the run would feed; it does not feed an input that timed out
+      at that verdict while the engine and the input's adapter are at the same
+      commits, unless the verdict is 7 days old.
     required: false
     default: 'false'
   reference-max-bytes:
@@ -68,7 +73,22 @@ runs:
         GH_TOKEN: ${{ inputs.token }}
       run: bash "${GITHUB_ACTION_PATH}/perf.sh" package
 
+    - name: skip when every commit is that of the last verdict
+      id: same
+      if: inputs.reference == 'true'
+      shell: bash
+      env:
+        REPOSITORY_PATH: ${{ inputs.path }}
+        OUT: ${{ runner.temp }}/perf
+        SPECIFICATION: ${{ github.action_path }}/../../..
+        WHICH: ${{ inputs.inputs }}
+        REFERENCE: ${{ inputs.reference }}
+        REFERENCE_MAX_BYTES: ${{ inputs.reference-max-bytes }}
+        GH_TOKEN: ${{ inputs.token }}
+      run: bash "${GITHUB_ACTION_PATH}/perf.sh" same
+
     - name: the packages of the Bridge's node host
+      if: steps.same.outputs.skip != 'true'
       shell: bash
       env:
         REPOSITORY_PATH: ${{ inputs.path }}
@@ -79,6 +99,7 @@ runs:
       run: bash "${GITHUB_ACTION_PATH}/perf.sh" packages
 
     - name: time the inputs
+      if: steps.same.outputs.skip != 'true'
       shell: bash
       env:
         REPOSITORY_PATH: ${{ inputs.path }}
@@ -108,7 +129,7 @@ runs:
         bash "${GITHUB_ACTION_PATH}/perf.sh" summary
 
     - name: keep the file on the perf-data branch
-      if: inputs.publish == 'true'
+      if: inputs.publish == 'true' && steps.same.outputs.skip != 'true'
       shell: bash
       env:
         REPOSITORY_PATH: ${{ inputs.path }}
