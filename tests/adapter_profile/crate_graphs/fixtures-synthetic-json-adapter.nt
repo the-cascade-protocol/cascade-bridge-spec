@@ -1,0 +1,368 @@
+<https://crate.example/#envelope-archive> <http://schema.org/name> "archive" .
+<https://crate.example/#envelope-archive> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://ns.cascadeprotocol.org/bridge/v1-draft#Envelope> .
+<https://crate.example/#envelope-archive> <https://ns.cascadeprotocol.org/bridge/v1-draft#docRootMemberName> "kind" .
+<https://crate.example/#envelope-archive> <https://ns.cascadeprotocol.org/bridge/v1-draft#docRootMemberValue> "archive" .
+<https://crate.example/#envelope-archive> <https://ns.cascadeprotocol.org/bridge/v1-draft#jsonPathOfEachRecord> "$['records ~/archive'][*]" .
+<https://crate.example/#envelope-listing> <http://schema.org/name> "listing" .
+<https://crate.example/#envelope-listing> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://ns.cascadeprotocol.org/bridge/v1-draft#Envelope> .
+<https://crate.example/#envelope-listing> <https://ns.cascadeprotocol.org/bridge/v1-draft#docRootMemberName> "kind" .
+<https://crate.example/#envelope-listing> <https://ns.cascadeprotocol.org/bridge/v1-draft#docRootMemberValue> "listing" .
+<https://crate.example/#envelope-listing> <https://ns.cascadeprotocol.org/bridge/v1-draft#jsonPathOfEachRecord> "$.records[*]" .
+<https://crate.example/#envelope-listing> <https://ns.cascadeprotocol.org/bridge/v1-draft#sourceSchema> <https://crate.example/schema/example-listing.schema.json#/definitions/record> .
+<https://crate.example/#envelope-record> <http://schema.org/name> "record" .
+<https://crate.example/#envelope-record> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://ns.cascadeprotocol.org/bridge/v1-draft#Envelope> .
+<https://crate.example/#envelope-record> <https://ns.cascadeprotocol.org/bridge/v1-draft#docRootMemberName> "kind" .
+<https://crate.example/#envelope-record> <https://ns.cascadeprotocol.org/bridge/v1-draft#jsonPathOfEachRecord> "$" .
+<https://crate.example/#envelope-record> <https://ns.cascadeprotocol.org/bridge/v1-draft#pathOfContainedContentBelowContent> "/contained" .
+<https://crate.example/#envelope-record> <https://ns.cascadeprotocol.org/bridge/v1-draft#pathOfContentInRecord> "" .
+<https://crate.example/#envelope-record> <https://ns.cascadeprotocol.org/bridge/v1-draft#pathOfRecordKindBelowContent> "/kind" .
+<https://crate.example/#envelope-set> <http://schema.org/name> "set" .
+<https://crate.example/#envelope-set> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://ns.cascadeprotocol.org/bridge/v1-draft#Envelope> .
+<https://crate.example/#envelope-set> <https://ns.cascadeprotocol.org/bridge/v1-draft#docRootMemberName> "kind" .
+<https://crate.example/#envelope-set> <https://ns.cascadeprotocol.org/bridge/v1-draft#docRootMemberValue> "set" .
+<https://crate.example/#envelope-set> <https://ns.cascadeprotocol.org/bridge/v1-draft#documentSchema> <https://crate.example/schema/example-set.schema.json> .
+<https://crate.example/#envelope-set> <https://ns.cascadeprotocol.org/bridge/v1-draft#jsonPathOfEachRecord> "$.records[*]" .
+<https://crate.example/> <http://purl.org/dc/terms/conformsTo> <https://ns.cascadeprotocol.org/bridge/v1-draft/adapter-profile/> .
+<https://crate.example/> <http://schema.org/datePublished> "2026-09-27" .
+<https://crate.example/> <http://schema.org/description> "An invented adapter package for a JSON source: the adapter profile's JSON test subject." .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/expected/json-0001.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/expected/json-0002.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/expected/json-0003.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/expected/json-0004.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/expected/json-0005.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/expected/json-0006.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/expected/json-0007.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/expected/json-0008.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/expected/json-0009.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/facts/example-registry.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/findings/json-0001.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/findings/json-0002.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/findings/json-0003.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/findings/json-0004.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/findings/json-0005.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/findings/json-0006.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/findings/json-0007.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/findings/json-0008.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/findings/json-0009.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/in/json-0001.json> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/in/json-0002.json> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/in/json-0003.json> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/in/json-0004.json> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/in/json-0006.json> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/in/json-0007.json> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/in/json-0008.json> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/in/json-0009.json> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/fixtures/manifest.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/in/example-contained.rq> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/in/example-detect.rq> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/in/example-findings.rq> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/in/example-record.rq> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/in/example-repeated-accession.rq> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/in/example-table.rq> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/schema/example-listing.schema.json> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/schema/example-record.schema.json> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/schema/example-set.schema.json> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/vocab/example-accounting.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/vocab/example-gaps.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://crate.example/vocab/example-statuses.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://example.org/synthetic-adapter/synthetic-vocabularies> .
+<https://crate.example/> <http://schema.org/identifier> "synthetic-json-example" .
+<https://crate.example/> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/> <http://schema.org/name> "Synthetic Example JSON Records" .
+<https://crate.example/> <http://schema.org/version> "0.1.0" .
+<https://crate.example/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Dataset> .
+<https://crate.example/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://ns.cascadeprotocol.org/bridge/v1-draft#Adapter> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#cascadeVocabularyRepository> <https://example.org/synthetic-adapter/synthetic-vocabularies> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#detectQuery> <https://crate.example/in/example-detect.rq> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#documentTableQuery> <https://crate.example/in/example-table.rq> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#envelope> <https://crate.example/#envelope-archive> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#envelope> <https://crate.example/#envelope-listing> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#envelope> <https://crate.example/#envelope-record> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#envelope> <https://crate.example/#envelope-set> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#findingsQuery> <https://crate.example/in/example-findings.rq> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#findingsQuery> <https://crate.example/in/example-repeated-accession.rq> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#gapScheme> <https://crate.example/vocab/example-gaps.ttl> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#mapping> <https://crate.example/in/example-contained.rq> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#mapping> <https://crate.example/in/example-record.rq> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#requiresProfile> <https://ns.cascadeprotocol.org/bridge/v1-draft#sparql-1.1> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#sourceAccounting> <https://crate.example/vocab/example-accounting.ttl> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#sourceMediaType> "application/example+json" .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#sourceSchema> <https://crate.example/schema/example-record.schema.json> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#table> <https://crate.example/vocab/example-statuses.ttl> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#testManifest> <https://crate.example/fixtures/manifest.ttl> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#vocabulary> <https://example.org/synthetic-adapter/v1#> .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#vocabularyFile> "ontologies/example/v1/example.shapes.ttl" .
+<https://crate.example/> <https://ns.cascadeprotocol.org/bridge/v1-draft#vocabularyFile> "ontologies/example/v1/example.ttl" .
+<https://crate.example/fixtures/expected/json-0001.ttl> <http://schema.org/contentSize> "3037" .
+<https://crate.example/fixtures/expected/json-0001.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/expected/json-0001.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0001.json> .
+<https://crate.example/fixtures/expected/json-0001.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/expected/json-0001.ttl> <http://schema.org/name> "Expected graph for json-0001" .
+<https://crate.example/fixtures/expected/json-0001.ttl> <http://schema.org/sha256> "07749a5c71f677959f74a1dbc0839e155317bcbcc39710e82f8bcac3b3b81c06" .
+<https://crate.example/fixtures/expected/json-0001.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/expected/json-0002.ttl> <http://schema.org/contentSize> "2345" .
+<https://crate.example/fixtures/expected/json-0002.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/expected/json-0002.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0002.json> .
+<https://crate.example/fixtures/expected/json-0002.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/expected/json-0002.ttl> <http://schema.org/name> "Expected graph for json-0002" .
+<https://crate.example/fixtures/expected/json-0002.ttl> <http://schema.org/sha256> "9f2b152dccf23e190ddd5ede3b26f90f29c56d02a4f197a8282d78e9e53c5e40" .
+<https://crate.example/fixtures/expected/json-0002.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/expected/json-0003.ttl> <http://schema.org/contentSize> "2308" .
+<https://crate.example/fixtures/expected/json-0003.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/expected/json-0003.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0003.json> .
+<https://crate.example/fixtures/expected/json-0003.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/expected/json-0003.ttl> <http://schema.org/name> "Expected graph for json-0003" .
+<https://crate.example/fixtures/expected/json-0003.ttl> <http://schema.org/sha256> "25381eac077062cea9de0994a8077c317b5aca86f1e24c9c3d6bce8d2b35d4ba" .
+<https://crate.example/fixtures/expected/json-0003.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/expected/json-0004.ttl> <http://schema.org/contentSize> "2361" .
+<https://crate.example/fixtures/expected/json-0004.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/expected/json-0004.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0004.json> .
+<https://crate.example/fixtures/expected/json-0004.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/expected/json-0004.ttl> <http://schema.org/name> "Expected graph for json-0004" .
+<https://crate.example/fixtures/expected/json-0004.ttl> <http://schema.org/sha256> "dc97938fae875f63a93cc8f2486fbf26ff55fcbfc86138a7232cf407f201beb3" .
+<https://crate.example/fixtures/expected/json-0004.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/expected/json-0005.ttl> <http://schema.org/contentSize> "1483" .
+<https://crate.example/fixtures/expected/json-0005.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/expected/json-0005.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0001.json> .
+<https://crate.example/fixtures/expected/json-0005.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/expected/json-0005.ttl> <http://schema.org/name> "Expected graph for json-0005" .
+<https://crate.example/fixtures/expected/json-0005.ttl> <http://schema.org/sha256> "50a91d0f0378df66e6154d2272125cc7dcb2cb46732ed2bd7922879748a98adb" .
+<https://crate.example/fixtures/expected/json-0005.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/expected/json-0006.ttl> <http://schema.org/contentSize> "3804" .
+<https://crate.example/fixtures/expected/json-0006.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/expected/json-0006.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0006.json> .
+<https://crate.example/fixtures/expected/json-0006.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/expected/json-0006.ttl> <http://schema.org/name> "Expected graph for json-0006" .
+<https://crate.example/fixtures/expected/json-0006.ttl> <http://schema.org/sha256> "85cad23ce2c8c688357d3e71ab03a83fb161e02da5ea173e7484570c0987ebce" .
+<https://crate.example/fixtures/expected/json-0006.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/expected/json-0007.ttl> <http://schema.org/contentSize> "3061" .
+<https://crate.example/fixtures/expected/json-0007.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/expected/json-0007.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0007.json> .
+<https://crate.example/fixtures/expected/json-0007.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/expected/json-0007.ttl> <http://schema.org/name> "Expected graph for json-0007" .
+<https://crate.example/fixtures/expected/json-0007.ttl> <http://schema.org/sha256> "85e59f273f906a743b4b54a0e4db7ac699a38bf8f66f6676f7ebdb0578aaafee" .
+<https://crate.example/fixtures/expected/json-0007.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/expected/json-0008.ttl> <http://schema.org/contentSize> "3001" .
+<https://crate.example/fixtures/expected/json-0008.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/expected/json-0008.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0008.json> .
+<https://crate.example/fixtures/expected/json-0008.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/expected/json-0008.ttl> <http://schema.org/name> "Expected graph for json-0008" .
+<https://crate.example/fixtures/expected/json-0008.ttl> <http://schema.org/sha256> "80cac63f41bbaa8afbde86ea2e028323e3a644371f55d2a4fe499c1c152aff27" .
+<https://crate.example/fixtures/expected/json-0008.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/expected/json-0009.ttl> <http://schema.org/contentSize> "3117" .
+<https://crate.example/fixtures/expected/json-0009.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/expected/json-0009.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0009.json> .
+<https://crate.example/fixtures/expected/json-0009.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/expected/json-0009.ttl> <http://schema.org/name> "Expected graph for json-0009" .
+<https://crate.example/fixtures/expected/json-0009.ttl> <http://schema.org/sha256> "b7e72053287a329d9c31341c89855c4136dc999172216814433760b1eeae07ad" .
+<https://crate.example/fixtures/expected/json-0009.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/facts/example-registry.ttl> <http://schema.org/contentSize> "1129" .
+<https://crate.example/fixtures/facts/example-registry.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/facts/example-registry.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/facts/example-registry.ttl> <http://schema.org/name> "Facts supplied with every synthetic JSON input" .
+<https://crate.example/fixtures/facts/example-registry.ttl> <http://schema.org/sha256> "269dc8892557ed1e360ec52071fb20854b722fd44aa4d9356a59381024157523" .
+<https://crate.example/fixtures/facts/example-registry.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/findings/json-0001.ttl> <http://schema.org/contentSize> "2305" .
+<https://crate.example/fixtures/findings/json-0001.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/findings/json-0001.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0001.json> .
+<https://crate.example/fixtures/findings/json-0001.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/findings/json-0001.ttl> <http://schema.org/name> "Expected findings for json-0001" .
+<https://crate.example/fixtures/findings/json-0001.ttl> <http://schema.org/sha256> "e9b102279aab21c6ccfd6a1a407411f8eab0dc812abbf06558b39dfd201ba318" .
+<https://crate.example/fixtures/findings/json-0001.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/findings/json-0002.ttl> <http://schema.org/contentSize> "1302" .
+<https://crate.example/fixtures/findings/json-0002.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/findings/json-0002.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0002.json> .
+<https://crate.example/fixtures/findings/json-0002.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/findings/json-0002.ttl> <http://schema.org/name> "Expected findings for json-0002" .
+<https://crate.example/fixtures/findings/json-0002.ttl> <http://schema.org/sha256> "924b993e53d913adb6f8ce6edadfc4b07c0a72a34403d8c9ec617a5860d96704" .
+<https://crate.example/fixtures/findings/json-0002.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/findings/json-0003.ttl> <http://schema.org/contentSize> "1841" .
+<https://crate.example/fixtures/findings/json-0003.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/findings/json-0003.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0003.json> .
+<https://crate.example/fixtures/findings/json-0003.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/findings/json-0003.ttl> <http://schema.org/name> "Expected findings for json-0003" .
+<https://crate.example/fixtures/findings/json-0003.ttl> <http://schema.org/sha256> "0bfcaa4ad41d104e6050b99f43a2186689ca2691fdf8ad9a3d3d3c9b34bf062d" .
+<https://crate.example/fixtures/findings/json-0003.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/findings/json-0004.ttl> <http://schema.org/contentSize> "2556" .
+<https://crate.example/fixtures/findings/json-0004.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/findings/json-0004.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0004.json> .
+<https://crate.example/fixtures/findings/json-0004.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/findings/json-0004.ttl> <http://schema.org/name> "Expected findings for json-0004" .
+<https://crate.example/fixtures/findings/json-0004.ttl> <http://schema.org/sha256> "45f977483cf33da06a01425d2296855ac69ea2149dcbb438bcea9d75fdc0eea7" .
+<https://crate.example/fixtures/findings/json-0004.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/findings/json-0005.ttl> <http://schema.org/contentSize> "3510" .
+<https://crate.example/fixtures/findings/json-0005.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/findings/json-0005.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0001.json> .
+<https://crate.example/fixtures/findings/json-0005.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/findings/json-0005.ttl> <http://schema.org/name> "Expected findings for json-0005" .
+<https://crate.example/fixtures/findings/json-0005.ttl> <http://schema.org/sha256> "84aa6a39711f6bdc2b740880ecadc9c447641a9a7426bb01e40dd4a57e303895" .
+<https://crate.example/fixtures/findings/json-0005.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/findings/json-0006.ttl> <http://schema.org/contentSize> "1842" .
+<https://crate.example/fixtures/findings/json-0006.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/findings/json-0006.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0006.json> .
+<https://crate.example/fixtures/findings/json-0006.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/findings/json-0006.ttl> <http://schema.org/name> "Expected findings for json-0006" .
+<https://crate.example/fixtures/findings/json-0006.ttl> <http://schema.org/sha256> "955462f86f07b5409a352c872e344951ce68263458dd895cbfcf11233f30c9a3" .
+<https://crate.example/fixtures/findings/json-0006.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/findings/json-0007.ttl> <http://schema.org/contentSize> "1000" .
+<https://crate.example/fixtures/findings/json-0007.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/findings/json-0007.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0007.json> .
+<https://crate.example/fixtures/findings/json-0007.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/findings/json-0007.ttl> <http://schema.org/name> "Expected findings for json-0007" .
+<https://crate.example/fixtures/findings/json-0007.ttl> <http://schema.org/sha256> "f57a6d5ea5baf083526b7c88fc03848b0ae06fbde24aef51412b4657ad7211a4" .
+<https://crate.example/fixtures/findings/json-0007.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/findings/json-0008.ttl> <http://schema.org/contentSize> "1172" .
+<https://crate.example/fixtures/findings/json-0008.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/findings/json-0008.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0008.json> .
+<https://crate.example/fixtures/findings/json-0008.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/findings/json-0008.ttl> <http://schema.org/name> "Expected findings for json-0008" .
+<https://crate.example/fixtures/findings/json-0008.ttl> <http://schema.org/sha256> "313fea63beb0c01e0d2fbc4a8492275fcd8da21d1819e0e247135256a4db5256" .
+<https://crate.example/fixtures/findings/json-0008.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/findings/json-0009.ttl> <http://schema.org/contentSize> "1028" .
+<https://crate.example/fixtures/findings/json-0009.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/findings/json-0009.ttl> <http://schema.org/isBasedOn> <https://crate.example/fixtures/in/json-0009.json> .
+<https://crate.example/fixtures/findings/json-0009.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/findings/json-0009.ttl> <http://schema.org/name> "Expected findings for json-0009" .
+<https://crate.example/fixtures/findings/json-0009.ttl> <http://schema.org/sha256> "7d3e536bcaf4f09ff1979d3403ea1aba631e79657f8424b2915750f8f41b7fe7" .
+<https://crate.example/fixtures/findings/json-0009.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/in/json-0001.json> <http://schema.org/contentSize> "337" .
+<https://crate.example/fixtures/in/json-0001.json> <http://schema.org/encodingFormat> "application/example+json" .
+<https://crate.example/fixtures/in/json-0001.json> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/in/json-0001.json> <http://schema.org/name> "Synthetic JSON input, set envelope" .
+<https://crate.example/fixtures/in/json-0001.json> <http://schema.org/sha256> "a478c7ab28cebeebecb07e6d7e1c34ebd10902379279c3a6b824011e905fa9f4" .
+<https://crate.example/fixtures/in/json-0001.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/in/json-0002.json> <http://schema.org/contentSize> "176" .
+<https://crate.example/fixtures/in/json-0002.json> <http://schema.org/encodingFormat> "application/example+json" .
+<https://crate.example/fixtures/in/json-0002.json> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/in/json-0002.json> <http://schema.org/name> "Synthetic JSON input, record envelope" .
+<https://crate.example/fixtures/in/json-0002.json> <http://schema.org/sha256> "6386f4065f25931d545d2a96f20631951598e8b39a55cda1b7b30aa7100dd336" .
+<https://crate.example/fixtures/in/json-0002.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/in/json-0003.json> <http://schema.org/contentSize> "165" .
+<https://crate.example/fixtures/in/json-0003.json> <http://schema.org/encodingFormat> "application/example+json" .
+<https://crate.example/fixtures/in/json-0003.json> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/in/json-0003.json> <http://schema.org/name> "Synthetic JSON input whose document and record fail their schemas" .
+<https://crate.example/fixtures/in/json-0003.json> <http://schema.org/sha256> "3933c3312f70dc520cf2d3366ab2311d73812bdeaec805235d157266d9fc7ee5" .
+<https://crate.example/fixtures/in/json-0003.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/in/json-0004.json> <http://schema.org/contentSize> "408" .
+<https://crate.example/fixtures/in/json-0004.json> <http://schema.org/encodingFormat> "application/example+json" .
+<https://crate.example/fixtures/in/json-0004.json> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/in/json-0004.json> <http://schema.org/name> "Synthetic JSON input carrying members the accounting names nowhere" .
+<https://crate.example/fixtures/in/json-0004.json> <http://schema.org/sha256> "6a1b95b17e0773cb02402255d3b307039c01c719dcf64c4d9cfb86f6e24e41a1" .
+<https://crate.example/fixtures/in/json-0004.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/in/json-0006.json> <http://schema.org/contentSize> "416" .
+<https://crate.example/fixtures/in/json-0006.json> <http://schema.org/encodingFormat> "application/example+json" .
+<https://crate.example/fixtures/in/json-0006.json> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/in/json-0006.json> <http://schema.org/name> "Synthetic JSON input holding a record inside another" .
+<https://crate.example/fixtures/in/json-0006.json> <http://schema.org/sha256> "da2df1436cdca58dd79b328ecd0abcafa37d3249ce99e893ec135cb9fc5da345" .
+<https://crate.example/fixtures/in/json-0006.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/in/json-0007.json> <http://schema.org/contentSize> "234" .
+<https://crate.example/fixtures/in/json-0007.json> <http://schema.org/encodingFormat> "application/example+json" .
+<https://crate.example/fixtures/in/json-0007.json> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/in/json-0007.json> <http://schema.org/name> "Synthetic JSON input repeating an accession" .
+<https://crate.example/fixtures/in/json-0007.json> <http://schema.org/sha256> "8e8fd64c07feeb929d3788121c930fbf5b38f94637724fe3752558c63efbd459" .
+<https://crate.example/fixtures/in/json-0007.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/in/json-0008.json> <http://schema.org/contentSize> "183" .
+<https://crate.example/fixtures/in/json-0008.json> <http://schema.org/encodingFormat> "application/example+json" .
+<https://crate.example/fixtures/in/json-0008.json> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/in/json-0008.json> <http://schema.org/name> "Synthetic JSON input, listing envelope" .
+<https://crate.example/fixtures/in/json-0008.json> <http://schema.org/sha256> "d947054520e78fbce7f03e77d28054668e0d56666eca2538efa09bad7885359e" .
+<https://crate.example/fixtures/in/json-0008.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/in/json-0009.json> <http://schema.org/contentSize> "276" .
+<https://crate.example/fixtures/in/json-0009.json> <http://schema.org/encodingFormat> "application/example+json" .
+<https://crate.example/fixtures/in/json-0009.json> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/in/json-0009.json> <http://schema.org/name> "Synthetic JSON input, an archive envelope whose records sit under a member named with characters a JSON Pointer escapes and a fragment encodes" .
+<https://crate.example/fixtures/in/json-0009.json> <http://schema.org/sha256> "347fbc0d1715e3748c16118e93ca4d50bd1dd1f2cad3b739e44cbc5d90849d4a" .
+<https://crate.example/fixtures/in/json-0009.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/fixtures/manifest.ttl> <http://schema.org/contentSize> "8614" .
+<https://crate.example/fixtures/manifest.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/fixtures/manifest.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/fixtures/manifest.ttl> <http://schema.org/name> "Test manifest" .
+<https://crate.example/fixtures/manifest.ttl> <http://schema.org/sha256> "747a91080f668301d740ef1a46dd16623ba62c4aa457a84280970773be99c743" .
+<https://crate.example/fixtures/manifest.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/in/example-contained.rq> <http://schema.org/contentSize> "3564" .
+<https://crate.example/in/example-contained.rq> <http://schema.org/encodingFormat> "application/sparql-query" .
+<https://crate.example/in/example-contained.rq> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/in/example-contained.rq> <http://schema.org/name> "Mapping of a record held inside another" .
+<https://crate.example/in/example-contained.rq> <http://schema.org/sha256> "8a5b138e1ffb8ed2aa322a16960b219027b3d13f990088d157bac64eb14cf06e" .
+<https://crate.example/in/example-contained.rq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/in/example-detect.rq> <http://schema.org/contentSize> "349" .
+<https://crate.example/in/example-detect.rq> <http://schema.org/encodingFormat> "application/sparql-query" .
+<https://crate.example/in/example-detect.rq> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/in/example-detect.rq> <http://schema.org/name> "Detect query" .
+<https://crate.example/in/example-detect.rq> <http://schema.org/sha256> "3edcccf9808025fc3d3a8fdd90c01437e1e3435685117936fb18e37c4d4fe563" .
+<https://crate.example/in/example-detect.rq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/in/example-findings.rq> <http://schema.org/contentSize> "1339" .
+<https://crate.example/in/example-findings.rq> <http://schema.org/encodingFormat> "application/sparql-query" .
+<https://crate.example/in/example-findings.rq> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/in/example-findings.rq> <http://schema.org/name> "Findings query" .
+<https://crate.example/in/example-findings.rq> <http://schema.org/sha256> "59bae38876d4453cae5d221e37d639813926acd534a97f28a9bdd5f8285026eb" .
+<https://crate.example/in/example-findings.rq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/in/example-record.rq> <http://schema.org/contentSize> "2931" .
+<https://crate.example/in/example-record.rq> <http://schema.org/encodingFormat> "application/sparql-query" .
+<https://crate.example/in/example-record.rq> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/in/example-record.rq> <http://schema.org/name> "Mapping" .
+<https://crate.example/in/example-record.rq> <http://schema.org/sha256> "637c321c433b72439e8c3eb2187f6f65dba4a6c8124d889b2c1ec9fbe9909e07" .
+<https://crate.example/in/example-record.rq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/in/example-repeated-accession.rq> <http://schema.org/contentSize> "666" .
+<https://crate.example/in/example-repeated-accession.rq> <http://schema.org/encodingFormat> "application/sparql-query" .
+<https://crate.example/in/example-repeated-accession.rq> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/in/example-repeated-accession.rq> <http://schema.org/name> "Findings query for a repeated accession" .
+<https://crate.example/in/example-repeated-accession.rq> <http://schema.org/sha256> "05a4e13abfb084f0622b1e01d6b527efe8219a180b9c538fc6129a3b03c1ddc9" .
+<https://crate.example/in/example-repeated-accession.rq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/in/example-table.rq> <http://schema.org/contentSize> "269" .
+<https://crate.example/in/example-table.rq> <http://schema.org/encodingFormat> "application/sparql-query" .
+<https://crate.example/in/example-table.rq> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/in/example-table.rq> <http://schema.org/name> "Document table query" .
+<https://crate.example/in/example-table.rq> <http://schema.org/sha256> "dbcd21955cb4be699c65915b86d0333a5ead213eb07952bcbb4e4d6e6fbcf5c9" .
+<https://crate.example/in/example-table.rq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/ro-crate-metadata.json> <http://purl.org/dc/terms/conformsTo> <https://w3id.org/ro/crate/1.2> .
+<https://crate.example/ro-crate-metadata.json> <http://schema.org/about> <https://crate.example/> .
+<https://crate.example/ro-crate-metadata.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CreativeWork> .
+<https://crate.example/schema/example-listing.schema.json> <http://schema.org/contentSize> "586" .
+<https://crate.example/schema/example-listing.schema.json> <http://schema.org/encodingFormat> "application/schema+json" .
+<https://crate.example/schema/example-listing.schema.json> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/schema/example-listing.schema.json> <http://schema.org/name> "Example listing JSON Schema, draft-06, whose record subschema the listing envelope names" .
+<https://crate.example/schema/example-listing.schema.json> <http://schema.org/sha256> "042e2b7959fd6d0a88d8e34b8e919ec9b9913070cc7b50f8cf003eb4b58539a6" .
+<https://crate.example/schema/example-listing.schema.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/schema/example-record.schema.json> <http://schema.org/contentSize> "758" .
+<https://crate.example/schema/example-record.schema.json> <http://schema.org/encodingFormat> "application/schema+json" .
+<https://crate.example/schema/example-record.schema.json> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/schema/example-record.schema.json> <http://schema.org/name> "Example record JSON Schema, draft-06" .
+<https://crate.example/schema/example-record.schema.json> <http://schema.org/sha256> "e7df246ef2d859b342cf95fe3e8ed224dd5f156646f568dede74a4d0f6c5df33" .
+<https://crate.example/schema/example-record.schema.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/schema/example-set.schema.json> <http://schema.org/contentSize> "233" .
+<https://crate.example/schema/example-set.schema.json> <http://schema.org/encodingFormat> "application/schema+json" .
+<https://crate.example/schema/example-set.schema.json> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/schema/example-set.schema.json> <http://schema.org/name> "Example set JSON Schema, this package's wrapper" .
+<https://crate.example/schema/example-set.schema.json> <http://schema.org/sha256> "f5a68778a64104ec8e946de4072ea12f754708f3d1d9f055b97e9238ee7bd1e3" .
+<https://crate.example/schema/example-set.schema.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/vocab/example-accounting.ttl> <http://schema.org/contentSize> "2018" .
+<https://crate.example/vocab/example-accounting.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/vocab/example-accounting.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/vocab/example-accounting.ttl> <http://schema.org/name> "Source accounting" .
+<https://crate.example/vocab/example-accounting.ttl> <http://schema.org/sha256> "2350065eacbf54d66818deaac800a827bfbfae9ab1108e1412f57548d081666a" .
+<https://crate.example/vocab/example-accounting.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/vocab/example-gaps.ttl> <http://schema.org/contentSize> "1038" .
+<https://crate.example/vocab/example-gaps.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/vocab/example-gaps.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/vocab/example-gaps.ttl> <http://schema.org/name> "Gap scheme" .
+<https://crate.example/vocab/example-gaps.ttl> <http://schema.org/sha256> "df80316fc7e25aa1140aca4bb5fc4a6b2aa80543e5d8f198fc66d65d000aa0ef" .
+<https://crate.example/vocab/example-gaps.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://crate.example/vocab/example-statuses.ttl> <http://schema.org/contentSize> "541" .
+<https://crate.example/vocab/example-statuses.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://crate.example/vocab/example-statuses.ttl> <http://schema.org/isBasedOn> <https://example.org/synthetic-adapter/vocabulary/statuses> .
+<https://crate.example/vocab/example-statuses.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/vocab/example-statuses.ttl> <http://schema.org/name> "Status table" .
+<https://crate.example/vocab/example-statuses.ttl> <http://schema.org/sha256> "0df6c1fc930f79b09d6fecc3ae2edce0fa7482c32edb358881caf4f2076d04dc" .
+<https://crate.example/vocab/example-statuses.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://example.org/synthetic-adapter/synthetic-vocabularies> <http://schema.org/name> "synthetic vocabulary repository" .
+<https://example.org/synthetic-adapter/synthetic-vocabularies> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://example.org/synthetic-adapter/synthetic-vocabularies> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/SoftwareSourceCode> .
+<https://example.org/synthetic-adapter/v1#> <http://schema.org/name> "Synthetic example vocabulary" .
+<https://example.org/synthetic-adapter/v1#> <http://schema.org/version> "v1" .
+<https://example.org/synthetic-adapter/v1#> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/DefinedTermSet> .
+<https://ns.cascadeprotocol.org/bridge/v1-draft#sparql-1.1> <http://schema.org/name> "sparql-1.1" .
+<https://ns.cascadeprotocol.org/bridge/v1-draft#sparql-1.1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://ns.cascadeprotocol.org/bridge/v1-draft#Profile> .
+<https://ns.cascadeprotocol.org/bridge/v1-draft/adapter-profile/> <http://schema.org/name> "Cascade Bridge Adapter profile" .
+<https://ns.cascadeprotocol.org/bridge/v1-draft/adapter-profile/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CreativeWork> .
+<https://ns.cascadeprotocol.org/bridge/v1-draft/adapter-profile/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/dx/prof/Profile> .
