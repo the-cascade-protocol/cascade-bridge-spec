@@ -138,6 +138,56 @@ runs:
         echo "name=${CHECK}-${JOB}-${RANDOM}${RANDOM}" >> "$GITHUB_OUTPUT"
         echo "report=report-$(basename "${REPOSITORY_PATH}")" >> "$GITHUB_OUTPUT"
 
+    - name: place the counterparts to key the install cache
+      id: placed
+      if: inputs.check == 'compatibility' && inputs.checkout-only != 'true'
+      shell: bash
+      env:
+        REPOSITORY_PATH: ${{ inputs.path }}
+        CHECK: ${{ inputs.check }}
+        CASCADE_CHECKOUT_ONLY: 'true'
+        ENTRY_POINT: ${{ steps.specification.outputs.entry-point }}
+        SPEC_REPOSITORY: ${{ steps.specification.outputs.repository }}
+        RESULTS: ${{ runner.temp }}/compatibility-placed
+        CASCADE_CHECK_RUN_ID: ${{ job.check_run_id }}
+        CASCADE_REPORT_ARTIFACT: ${{ steps.artifact.outputs.report }}
+        CASCADE_GITHUB_TOKEN: ${{ inputs.token }}
+        GITHUB_TOKEN: ''
+        GH_TOKEN: ''
+      run: |
+        set -uo pipefail
+        python3 "${ENTRY_POINT}" "${REPOSITORY_PATH}" \
+          --check "${CHECK}" \
+          --results "${RESULTS}" \
+          --spec-repository "${SPEC_REPOSITORY}" \
+          || echo "::notice::the counterparts were not placed ahead of the run, so its install is not cached"
+        beside="$(dirname "$(cd "${REPOSITORY_PATH}" && pwd)")"
+        locks=()
+        for runtime in "${beside}"/*/; do
+          if [ -f "${runtime}cascade-runtime.json" ] && [ -f "${runtime}package-lock.json" ]; then
+            locks+=("${runtime}package-lock.json")
+          fi
+        done
+        if [ "${#locks[@]}" -eq 0 ] || ! command -v npm > /dev/null || ! command -v node > /dev/null; then
+          echo "no runtime to install, or no node to install it with: nothing to cache"
+          exit 0
+        fi
+        {
+          echo "lockfiles=$(cat "${locks[@]}" | sha256sum | cut -d' ' -f1)"
+          echo "node=$(node --version)"
+          echo "npm-cache=$(npm config get cache)"
+        } >> "$GITHUB_OUTPUT"
+
+    - name: restore the runtime's install cache
+      id: install-cache
+      if: steps.placed.outputs.lockfiles != ''
+      uses: actions/cache/restore@v6
+      with:
+        path: |
+          ${{ steps.placed.outputs.npm-cache }}
+          !${{ steps.placed.outputs.npm-cache }}/_logs
+        key: npm-cache-${{ runner.os }}-${{ runner.arch }}-node-${{ steps.placed.outputs.node }}-${{ steps.placed.outputs.lockfiles }}
+
     - name: run the check
       shell: bash
       env:
@@ -161,6 +211,30 @@ runs:
           --check "${CHECK}" \
           --results "${RESULTS}" \
           --spec-repository "${SPEC_REPOSITORY}"
+
+    - name: did the runtime's install finish
+      id: installed
+      if: always() && steps.placed.outputs.lockfiles != '' && steps.install-cache.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        REPOSITORY_PATH: ${{ inputs.path }}
+      run: |
+        set -euo pipefail
+        beside="$(dirname "$(cd "${REPOSITORY_PATH}" && pwd)")"
+        for runtime in "${beside}"/*/; do
+          if [ -f "${runtime}cascade-runtime.json" ] && [ -f "${runtime}node_modules/.package-lock.json" ]; then
+            echo "finished=true" >> "$GITHUB_OUTPUT"
+          fi
+        done
+
+    - name: save the runtime's install cache
+      if: always() && steps.installed.outputs.finished == 'true'
+      uses: actions/cache/save@v6
+      with:
+        path: |
+          ${{ steps.placed.outputs.npm-cache }}
+          !${{ steps.placed.outputs.npm-cache }}/_logs
+        key: npm-cache-${{ runner.os }}-${{ runner.arch }}-node-${{ steps.placed.outputs.node }}-${{ steps.placed.outputs.lockfiles }}
 
     - name: name the report the check wrote
       id: report

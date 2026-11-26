@@ -245,6 +245,13 @@ adapter pull request naming it on a `Depends-On:` line. A caller depends on no
 more than the entry point's path, its arguments, the results directory and the
 `table.md` it writes there: those names reach a caller only once they have
 merged, and everything else the run does comes from the version it picked.
+A run that installs a runtime restores npm's download cache from the calling
+repository's caches, under a key of the lockfile as the run checked it out, the
+operating system, the architecture and the Node version, and saves it when the
+install finished. A pull request restores what its base branch saved and saves
+only for its own re-runs, so the first run after a lockfile change installs in
+full, and the saving reaches pull requests through the caller's pushes to its
+default branch and its nightly run.
 A job that needs only the counterparts a `Depends-On:` line picks passes
 `checkout-only: 'true'`. Either way the action merges the pull requests named in
 the repository under test into its checkout, so a step that reads the checkout,
