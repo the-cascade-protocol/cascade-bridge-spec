@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urlparse
@@ -7,6 +8,9 @@ from rdflib import Graph, URIRef
 from rdflib.namespace import RDF
 
 from _terms import BRIDGE, MF
+
+RO_CRATE_CONTEXT = "https://w3id.org/ro/crate/1.2/context"
+RO_CRATE_TERMS = Path(__file__).resolve().parents[2] / "vocab" / "ro-crate-1.2-read-terms.context.jsonld"
 
 
 def path_of(iri):
@@ -42,10 +46,49 @@ class Crate:
         return str(self.graph.value(test, MF.name) or test)
 
 
+def bare_terms(node):
+    if isinstance(node, list):
+        for item in node:
+            yield from bare_terms(item)
+    elif isinstance(node, dict):
+        for key, value in node.items():
+            if key == "@context":
+                continue
+            if key == "@type":
+                yield from (name for name in (value if isinstance(value, list) else [value]) if isinstance(name, str))
+            elif not key.startswith("@"):
+                yield key
+            yield from bare_terms(value)
+
+
+def parsed(crate_file, base):
+    document = json.loads(crate_file.read_text(encoding="utf-8"))
+    declared = document.get("@context", [])
+    context = []
+    for part in declared if isinstance(declared, list) else [declared]:
+        if part == RO_CRATE_CONTEXT:
+            part = json.loads(RO_CRATE_TERMS.read_text(encoding="utf-8"))["@context"]
+        elif isinstance(part, str):
+            raise ValueError(
+                f"{crate_file.name} names the context {part}, and only {RO_CRATE_CONTEXT} is read without the network"
+            )
+        context.append(part)
+
+    defined = {term for part in context for term in part}
+    if "@vocab" not in defined:
+        undefined = sorted({name for name in bare_terms(document) if ":" not in name} - defined)
+        if undefined:
+            raise ValueError(
+                f"{crate_file.name} uses {', '.join(undefined)}, which neither the crate's own @context nor "
+                f"{RO_CRATE_TERMS.relative_to(RO_CRATE_TERMS.parents[1]).as_posix()} defines"
+            )
+
+    return Graph().parse(data=json.dumps({**document, "@context": context}), format="json-ld", base=base)
+
+
 def load(adapter):
     crate_file = adapter / "ro-crate-metadata.json"
-    graph = Graph()
-    graph.parse(crate_file, format="json-ld", base=crate_file.resolve().as_uri())
+    graph = parsed(crate_file, crate_file.resolve().as_uri())
 
     roots = list(graph.subjects(RDF.type, BRIDGE.Adapter))
     if len(roots) != 1:

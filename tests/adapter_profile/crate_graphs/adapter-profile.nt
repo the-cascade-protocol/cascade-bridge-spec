@@ -1,0 +1,73 @@
+<https://crate.example/> <http://schema.org/datePublished> "2026-09-06" .
+<https://crate.example/> <http://schema.org/description> "The RO-Crate 1.2 profile a Cascade Bridge Adapter's crate names in conformsTo. DRAFT." .
+<https://crate.example/> <http://schema.org/hasPart> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/NOTICE> .
+<https://crate.example/> <http://schema.org/hasPart> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/xlink.xsd> .
+<https://crate.example/> <http://schema.org/hasPart> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/xml.xsd> .
+<https://crate.example/> <http://schema.org/hasPart> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/bench/manifest.schema.json> .
+<https://crate.example/> <http://schema.org/hasPart> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/bridge.shapes.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/concept-map.shapes.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/gap-scheme.shapes.ttl> .
+<https://crate.example/> <http://schema.org/hasPart> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/vocab/bridge.ttl> .
+<https://crate.example/> <http://schema.org/identifier> "https://ns.cascadeprotocol.org/bridge/v1-draft/adapter-profile/" .
+<https://crate.example/> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://crate.example/> <http://schema.org/name> "Cascade Bridge Adapter profile" .
+<https://crate.example/> <http://schema.org/version> "0.1.0" .
+<https://crate.example/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Dataset> .
+<https://crate.example/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/dx/prof/Profile> .
+<https://crate.example/> <https://w3id.org/ro/terms/profile#hasResource> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/bench/manifest.schema.json> .
+<https://crate.example/> <https://w3id.org/ro/terms/profile#hasResource> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/bridge.shapes.ttl> .
+<https://crate.example/> <https://w3id.org/ro/terms/profile#hasResource> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/concept-map.shapes.ttl> .
+<https://crate.example/> <https://w3id.org/ro/terms/profile#hasResource> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/gap-scheme.shapes.ttl> .
+<https://crate.example/> <https://w3id.org/ro/terms/profile#hasResource> <https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/vocab/bridge.ttl> .
+<https://crate.example/ro-crate-metadata.json> <http://purl.org/dc/terms/conformsTo> <https://w3id.org/ro/crate/1.2> .
+<https://crate.example/ro-crate-metadata.json> <http://schema.org/about> <https://crate.example/> .
+<https://crate.example/ro-crate-metadata.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CreativeWork> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/NOTICE> <http://schema.org/encodingFormat> "text/plain" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/NOTICE> <http://schema.org/license> <https://www.w3.org/copyright/software-license-2023/> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/NOTICE> <http://schema.org/name> "W3C Software and Document Notice" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/NOTICE> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/xlink.xsd> <http://purl.org/dc/terms/conformsTo> <http://www.w3.org/2001/XMLSchema> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/xlink.xsd> <http://schema.org/encodingFormat> "application/xml" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/xlink.xsd> <http://schema.org/license> <https://www.w3.org/copyright/software-license-2023/> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/xlink.xsd> <http://schema.org/name> "W3C XLink 1.1 schema" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/xlink.xsd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/xml.xsd> <http://purl.org/dc/terms/conformsTo> <http://www.w3.org/2001/XMLSchema> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/xml.xsd> <http://schema.org/encodingFormat> "application/xml" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/xml.xsd> <http://schema.org/license> <https://www.w3.org/copyright/software-license-2023/> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/xml.xsd> <http://schema.org/name> "W3C XML namespace schema" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/adapter/profile/w3c/xml.xsd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/bench/manifest.schema.json> <http://purl.org/dc/terms/conformsTo> <https://json-schema.org/draft/2020-12/schema> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/bench/manifest.schema.json> <http://schema.org/description> "The JSON Schema an adapter's bench/manifest.json is validated against." .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/bench/manifest.schema.json> <http://schema.org/encodingFormat> "application/schema+json" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/bench/manifest.schema.json> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/bench/manifest.schema.json> <http://schema.org/name> "Cascade Bridge benchmark manifest schema" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/bench/manifest.schema.json> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/bridge.shapes.ttl> <http://purl.org/dc/terms/conformsTo> <http://www.w3.org/ns/shacl#> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/bridge.shapes.ttl> <http://schema.org/description> "The SHACL shapes an adapter's crate and test manifest are validated against as one graph." .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/bridge.shapes.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/bridge.shapes.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/bridge.shapes.ttl> <http://schema.org/name> "Cascade Bridge shapes" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/bridge.shapes.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/concept-map.shapes.ttl> <http://purl.org/dc/terms/conformsTo> <http://www.w3.org/ns/shacl#> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/concept-map.shapes.ttl> <http://schema.org/description> "The SHACL shapes a file a bridge:lookupIn names is validated against on its own." .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/concept-map.shapes.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/concept-map.shapes.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/concept-map.shapes.ttl> <http://schema.org/name> "Cascade Bridge concept map shapes" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/concept-map.shapes.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/gap-scheme.shapes.ttl> <http://purl.org/dc/terms/conformsTo> <http://www.w3.org/ns/shacl#> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/gap-scheme.shapes.ttl> <http://schema.org/description> "The SHACL shapes the file a bridge:gapScheme names is validated against on its own." .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/gap-scheme.shapes.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/gap-scheme.shapes.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/gap-scheme.shapes.ttl> <http://schema.org/name> "Cascade Bridge gap scheme shapes" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/shapes/gap-scheme.shapes.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/vocab/bridge.ttl> <http://schema.org/description> "The bridge: vocabulary." .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/vocab/bridge.ttl> <http://schema.org/encodingFormat> "text/turtle" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/vocab/bridge.ttl> <http://schema.org/license> <https://spdx.org/licenses/Apache-2.0> .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/vocab/bridge.ttl> <http://schema.org/name> "Cascade Bridge vocabulary" .
+<https://github.com/the-cascade-protocol/cascade-bridge-spec/blob/main/vocab/bridge.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/MediaObject> .
+<https://spdx.org/licenses/Apache-2.0> <http://schema.org/identifier> "Apache-2.0" .
+<https://spdx.org/licenses/Apache-2.0> <http://schema.org/name> "Apache License 2.0" .
+<https://spdx.org/licenses/Apache-2.0> <http://schema.org/url> <https://www.apache.org/licenses/LICENSE-2.0> .
+<https://spdx.org/licenses/Apache-2.0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CreativeWork> .
+<https://www.w3.org/copyright/software-license-2023/> <http://schema.org/name> "W3C Software and Document License - 2023 version" .
+<https://www.w3.org/copyright/software-license-2023/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CreativeWork> .
