@@ -61,18 +61,41 @@ def bare_terms(node):
             yield from bare_terms(value)
 
 
+def without_web_contexts(node, crate_name, where="$"):
+    if isinstance(node, list):
+        return [without_web_contexts(item, crate_name, f"{where}[{index}]") for index, item in enumerate(node)]
+    if not isinstance(node, dict):
+        return node
+
+    resolved = {}
+    for key, value in node.items():
+        here = f"{where}.{key}"
+        if key == "@import" and isinstance(value, str):
+            raise ValueError(f"{crate_name} imports {value} at {here}, and no import is read without the network")
+        if key == "@context":
+            items = value if isinstance(value, list) else [value]
+            swapped = []
+            for index, item in enumerate(items):
+                at = f"{here}[{index}]" if isinstance(value, list) else here
+                if item == RO_CRATE_CONTEXT:
+                    item = json.loads(RO_CRATE_TERMS.read_text(encoding="utf-8"))["@context"]
+                elif isinstance(item, str):
+                    raise ValueError(
+                        f"{crate_name} names the context {item} at {at}, and only {RO_CRATE_CONTEXT} is read without "
+                        "the network"
+                    )
+                swapped.append(without_web_contexts(item, crate_name, at))
+            value = swapped if isinstance(value, list) else swapped[0]
+        else:
+            value = without_web_contexts(value, crate_name, here)
+        resolved[key] = value
+    return resolved
+
+
 def parsed(crate_file, base):
-    document = json.loads(crate_file.read_text(encoding="utf-8"))
+    document = without_web_contexts(json.loads(crate_file.read_text(encoding="utf-8")), crate_file.name)
     declared = document.get("@context", [])
-    context = []
-    for part in declared if isinstance(declared, list) else [declared]:
-        if part == RO_CRATE_CONTEXT:
-            part = json.loads(RO_CRATE_TERMS.read_text(encoding="utf-8"))["@context"]
-        elif isinstance(part, str):
-            raise ValueError(
-                f"{crate_file.name} names the context {part}, and only {RO_CRATE_CONTEXT} is read without the network"
-            )
-        context.append(part)
+    context = declared if isinstance(declared, list) else [declared]
 
     defined = {term for part in context for term in part}
     undefined = sorted({name for name in bare_terms(document) if ":" not in name} - defined)
