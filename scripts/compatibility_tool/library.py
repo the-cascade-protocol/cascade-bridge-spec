@@ -12,7 +12,7 @@ from compatibility_tool import engines, packages
 from compatibility_tool.bootstrap import SPEC_ROOT
 from compatibility_tool.console import Stop, first_line, report
 from compatibility_tool.document import CRATE, crate_root, hosts, is_adapter, read_file, referenced_id
-from compatibility_tool.judge import EARL, MF, Verdict, faults_of, lists_expected_outcomes, outcome_name
+from compatibility_tool.judge import EARL, MF, Verdict, faults_of, outcome_name
 from compatibility_tool.record import Role, Row
 
 MANIFEST = SPEC_ROOT / "fixtures" / "library" / "manifest.ttl"
@@ -257,7 +257,7 @@ def judged_report(directory, position, call):
     _, root = crate_root(adapter)
     named = referenced_id(root, "bridge:testManifest")
     manifest = rdflib.Graph().parse(adapter / named, format="turtle", publicID=iri + named)
-    faults = faults_of(graph + manifest, lists_expected_outcomes(manifest))
+    faults = faults_of(graph + manifest)
     if faults:
         return f"its report has faults: {'; '.join(faults)}"
     elsewhere = sorted({str(test) for test in graph.objects(None, rdflib.URIRef(EARL + "test"))} - {""})
