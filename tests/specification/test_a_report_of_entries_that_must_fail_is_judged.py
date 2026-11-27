@@ -113,14 +113,13 @@ def mixed_report():
 SYNTHETIC_BASE = SYNTHETIC_MANIFEST.resolve().as_uri()
 
 
-def faults_over(manifest, report, base=SYNTHETIC_BASE, others=()):
+def faults_over(manifest, report, base=SYNTHETIC_BASE):
     """The faults the judge finds in a report, given as outcomes by entry name or as Turtle, over a manifest read at
-    `base` and each other (manifest, base) of `others`."""
+    `base`."""
     if not isinstance(report, str):
         report = written_at(base, report)
     graph = Graph().parse(data=report, format="turtle")
-    for text, at in [(manifest, base), *others]:
-        graph.parse(data=text, format="turtle", publicID=at)
+    graph.parse(data=manifest, format="turtle", publicID=base)
     return [str(row.fault) for row in graph.query(JUDGE.read_text(encoding="utf-8"))]
 
 
@@ -269,10 +268,10 @@ class TestJudgingAReportOfEntriesThatMustFail:
             report = report_of({"a/x": ("failed", OTHER_CHECK), "b/a/x": ("passed", None)})
             assert faults_over(self.MANIFEST, report, self.READ_AT) == []
 
-        def test_refuses_the_longer_reported_failed_naming_it_as_the_manifest_does(self):
+        def test_refuses_the_longer_reported_failed_naming_it_by_its_path_under_the_adapter(self):
             report = report_of({"a/x": ("failed", OTHER_CHECK), "b/a/x": ("failed", None)})
             assert faults_over(self.MANIFEST, report, self.READ_AT) == [
-                f"{ADAPTER_IRI}b/a/x is reported failed: a report that holds gives only passed, cantTell or untested"
+                "b/a/x is reported failed: a report that holds gives only passed, cantTell or untested"
             ]
 
     class TestGivenAnEntryThatMustFailNotReportedBesideOneWhosePathEndsInIt:
@@ -281,32 +280,44 @@ class TestJudgingAReportOfEntriesThatMustFail:
         def test_refuses_the_other_reported_failed_by_its_check(self):
             report = report_of({"d/x": ("failed", OTHER_CHECK)})
             assert faults_over(self.MANIFEST, report, self.READ_AT) == [
-                f"{ADAPTER_IRI}d/x is reported failed: a report that holds gives only passed, cantTell or untested",
-                f"{ADAPTER_IRI}x has no outcome",
+                "d/x is reported failed: a report that holds gives only passed, cantTell or untested",
+                "x has no outcome",
             ]
 
         def test_refuses_the_other_reported_passed(self):
             report = report_of({"d/x": ("passed", None)})
-            assert faults_over(self.MANIFEST, report, self.READ_AT) == [f"{ADAPTER_IRI}x has no outcome"]
+            assert faults_over(self.MANIFEST, report, self.READ_AT) == ["x has no outcome"]
 
-    class TestGivenAnEntryOfAnotherAdapterAtTheSamePath:
-        OTHER_ADAPTER = "https://example.org/adapter2/"
-        MANIFEST, READ_AT = manifest_of(["a/x"], must_fail=["a/x"])
+    class TestGivenAReportWrittenUnderAFolderNamedAsTheFirstFolderOfAnEntry:
+        """The report's one base is the one that makes the most of its tests entries: here `file:///w/t/`, never
+        `file:///w/t/t/`, though `x` ends both of the report's tests."""
 
-        def other(self):
-            return [manifest_of(["a/x"], adapter=self.OTHER_ADAPTER)]
+        MANIFEST, READ_AT = manifest_of(["x", "t/x"])
+        MUST_FAIL, _ = manifest_of(["x", "t/x"], must_fail=["x"])
+        AT = "file:///w/t/"
 
-        def test_holds_for_each_reported_as_its_own_manifest_lists_it(self):
-            report = report_of({"a/x": ("failed", OTHER_CHECK)}, at=ADAPTER_IRI) + report_of(
-                {"a/x": ("passed", None)}, at=self.OTHER_ADAPTER
-            )
-            assert faults_over(self.MANIFEST, report, self.READ_AT, self.other()) == []
+        def test_holds_for_each_reported_as_listed(self):
+            report = report_of({"x": ("passed", None), "t/x": ("passed", None)}, at=self.AT)
+            assert faults_over(self.MANIFEST, report, self.READ_AT) == []
 
-        def test_refuses_the_other_adapters_entry_reported_failed_by_the_check_in_place_of_this_one(self):
-            report = report_of({"a/x": ("failed", OTHER_CHECK)}, at=self.OTHER_ADAPTER)
-            assert faults_over(self.MANIFEST, report, self.READ_AT, self.other()) == [
-                f"{ADAPTER_IRI}a/x has no outcome",
-                f"{self.OTHER_ADAPTER}a/x is reported failed: a report that holds gives only passed, cantTell or untested",
+        def test_holds_for_each_reported_as_listed_where_the_shorter_must_fail(self):
+            report = report_of({"x": ("failed", OTHER_CHECK), "t/x": ("passed", None)}, at=self.AT)
+            assert faults_over(self.MUST_FAIL, report, self.READ_AT) == []
+
+    class TestGivenAReportNoneOfWhoseTestsIsAnEntryUnderAnyBase:
+        MANIFEST, READ_AT = manifest_of(["x", "d/y"])
+
+        def test_refuses_it_for_every_entry_having_no_outcome(self):
+            report = report_of({"z": ("passed", None), "d/w": ("passed", None)})
+            assert faults_over(self.MANIFEST, report, self.READ_AT) == ["d/y has no outcome", "x has no outcome"]
+
+    class TestGivenTwoEntriesWithOneFragmentInFilesOfOneName:
+        MANIFEST, READ_AT = manifest_of(["f.json#a", "d/f.json#a"])
+
+        def test_names_each_by_its_path_under_the_adapter(self):
+            assert faults_over(self.MANIFEST, report_of({"other": ("passed", None)}), self.READ_AT) == [
+                "d/f.json#a has no outcome",
+                "f.json#a has no outcome",
             ]
 
     class TestGivenManifestEntriesWithNoFragment:
