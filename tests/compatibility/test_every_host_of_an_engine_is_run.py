@@ -499,17 +499,20 @@ class TestRunningAnEnginesHostFromItsRelease:
     class TestGivenAForksPullRequest:
         """given a fork's pull request"""
 
-        def test_is_built_at_once_without_reading_the_runs(self, world, monkeypatch, tmp_path):
-            """is built at once, without reading the runs"""
+        def test_is_refused_naming_it_before_anything_is_checked_out(self, world, monkeypatch, tmp_path):
+            """is refused, naming it, before anything is checked out
+
+            A fork's head is code the engine's repository did not push: it is never merged into a checkout that runs.
+            """
             adapter = released_engine(world, monkeypatch, tmp_path)
             variables = named_engine_pull_request(world, adapter, code, fork=True)
             world.pull_requests.run("engine", head_of(world, 2))
-            clock = Clock(monkeypatch)
 
             said = world.tool(adapter, 1, **variables)
 
-            assert clock.slept == [] and world.pull_requests.runs_read == []
-            assert f"  setup {sys.executable} -c raise SystemExit(1)" in said
+            assert "the-cascade-protocol/engine/pull/2 is from a-fork-owner/engine" in said
+            assert world.pull_requests.runs_read == []
+            assert "  setup " not in said
 
     class TestGivenAWaitThatCannotGoOn:
         @pytest.mark.parametrize(

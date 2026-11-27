@@ -82,9 +82,10 @@ jobs:
 
       # Beside the workspace, where two specification files read it: actions/checkout refuses a path outside it.
       - name: cascade-vocabulary beside this repository
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: python3 scripts/place_vocabulary.py ../cascade-vocabulary
+        uses: ./.github/actions/pick
+        with:
+          repository: the-cascade-protocol/cascade-vocabulary
+          checkout: ../cascade-vocabulary
 
       - name: Run pytest
         run: python3 -m pytest ${{ matrix.tests }} --junitxml=junit.xml

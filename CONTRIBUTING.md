@@ -21,7 +21,8 @@ python3 -m pip install --group dev
 
 The `dev` group in [`pyproject.toml`](pyproject.toml) pins pytest, ruff and the validators. Some specification tests
 read [cascade-vocabulary](https://github.com/the-cascade-protocol/cascade-vocabulary) as a sibling folder: clone it beside this
-repository, or run `python3 scripts/place_vocabulary.py ../cascade-vocabulary`, which is what CI does.
+repository, or run `python3 scripts/pick.py the-cascade-protocol/cascade-vocabulary --checkout ../cascade-vocabulary`,
+which is what CI does.
 
 ## Run the checks
 

@@ -39,7 +39,6 @@ class MergedHead:
     commit: str
     label: str
     base: str
-    from_this_repository: bool
 
 
 @dataclass
