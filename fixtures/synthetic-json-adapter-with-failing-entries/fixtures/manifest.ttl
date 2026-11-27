@@ -55,6 +55,7 @@
     <#null-and-array-no-empty-child>
     <#label-written-only-as-empty>
     <#empty-label-written-as-empty>
+    <#label-written-as-a-node-of-nothing>
     <#record-holding-it-is-nearer>
     <#record-below-an-element-held-back>
     <#selector-outside-the-unit>
@@ -717,6 +718,20 @@
   mf:result [
     bridge:expectedGraph <expected/empty-label-written-as-empty.ttl> ;
     bridge:expectedFindings <findings/empty-label-written-as-empty.ttl>
+  ] .
+
+<#label-written-as-a-node-of-nothing> a bridge:IsomorphicConversionTest ;
+  mf:name "label-written-as-a-node-of-nothing" ;
+  rdfs:comment "The path of label-not-written holding a label the mapping writes as a node on the record whose only member is an empty string, and writes nothing else as rdfs:label: a node of nothing is an empty value, and does not meet the label." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/label-written-as-a-node-of-nothing.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/label-written-as-a-node-of-nothing.ttl> ;
+    bridge:expectedFindings <findings/label-written-as-a-node-of-nothing.ttl>
   ] .
 
 <#record-holding-it-is-nearer> a bridge:IsomorphicConversionTest ;
