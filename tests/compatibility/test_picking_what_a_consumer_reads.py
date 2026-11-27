@@ -9,10 +9,10 @@ import tempfile
 import zipfile
 
 import pytest
-from compatibility_world import MATCHING, OWNER, TOKEN, VOCABULARY, VOCABULARY_FILES, depends_on, git
 
 import pick
 from compatibility_tool import builds
+from compatibility_world import MATCHING, OWNER, TOKEN, VOCABULARY, VOCABULARY_FILES, depends_on, git
 
 CONSUMER = "tables"
 PRODUCER = "adapter"

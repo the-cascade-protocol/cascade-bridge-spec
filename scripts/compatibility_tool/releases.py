@@ -24,7 +24,7 @@ from compatibility_tool.document import FILE, hosts
 TAG = "build-{commit}"
 PACKAGED = "package/"
 ARCHIVES = (".tgz", ".tar.gz")
-SUBRESOURCE_INTEGRITY = re.compile(r"^(sha256|sha384|sha512)-([A-Za-z0-9+/=]+)$")
+SUBRESOURCE_INTEGRITY = re.compile(r"\b(sha256|sha384|sha512)-([A-Za-z0-9+/]+={0,2})")
 HEX_SHA256 = re.compile(r"^[0-9a-fA-F]{64}$")
 DOWNLOAD_TIMEOUT_SECONDS = 60
 POLL_SECONDS = 15
@@ -186,17 +186,16 @@ def release_of(row):
 
 
 def digests(notes):
+    """Each integrity the notes give, wherever in a line, and each SHA-256 in hex given as a line's value."""
     for line in (notes or "").splitlines():
-        _, _, value = line.partition(":")
-        value = value.strip()
-        integrity = SUBRESOURCE_INTEGRITY.match(value)
-        if integrity:
+        for algorithm, encoded in SUBRESOURCE_INTEGRITY.findall(line):
             try:
-                yield integrity[1], base64.b64decode(integrity[2], validate=True)
+                yield algorithm, base64.b64decode(encoded, validate=True)
             except binascii.Error:
                 continue
-        elif HEX_SHA256.match(value):
-            yield "sha256", bytes.fromhex(value)
+        _, _, value = line.partition(":")
+        if HEX_SHA256.match(value.strip()):
+            yield "sha256", bytes.fromhex(value.strip())
 
 
 def vouched_for(data, notes):
