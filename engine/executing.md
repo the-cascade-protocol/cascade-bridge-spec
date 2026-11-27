@@ -51,7 +51,8 @@ is nearer than one whose does not. Records still tied all belong to it, and a pr
 
 **Met.** A `bridge:asProperty` of one of those `bridge:carriedAs` meets the occurrence when it is written on a record
 the occurrence belongs to, on its versions, on their arrivals or on a node they point at that is no record, version or
-arrival of its own; a record of that class written elsewhere in the unit does not meet it. A finding from the same
+arrival of its own; a record of that class written elsewhere in the unit does not meet it, and neither does a property
+whose only value written in those places is empty. A finding from the same
 unit's conversion meets it when either its address is the occurrence's address or below it, or its address is above the
 occurrence's address and its `oa:hasBody` is the `bridge:namesGap` or `bridge:lookupNamesGap` of the path's entry. A
 written property and a finding are alternatives. "Above" is measured on the occurrence's own address, indexes
