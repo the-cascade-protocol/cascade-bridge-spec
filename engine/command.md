@@ -34,8 +34,8 @@ element above it with the path's accounting entry made `bridge:carriedInPart` na
 gap ([`../adapter/README.md`](../adapter/README.md)). The result's description gives, for
 each of the first three, the path, then the properties looked for on the class owed, then the
 address, as `<path>: no <property> on its <class> is written, and no finding is about it, at
-"<address>"`, nothing of it cut; where there are more, it ends `; and <n> more: run `test`
-with `--owed` to list every one`. A record that cannot be placed
+"<address>"`, nothing of it cut; where there are more, it ends `; and <n> more`, and where the
+engine offers `--owed`, `: run `test` with `--owed` to list every one`. A record that cannot be placed
 is listed on a line of its own, in the description and under `--owed`, as `the record
 selector "<selector>" <what it selects>, so no occurrence can be held to the record it
 places`, where `<what it selects>` is `selects no node`, `selects <n> nodes`, `is no XPath,
