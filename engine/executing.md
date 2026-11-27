@@ -74,10 +74,16 @@ included, excuses nothing below it: it meets the occurrence only as *Met* says. 
 `bridge:carriedInPart` entry may not name a gap of kind `bridge:elementNotCarried`
 ([`../adapter/profile/must/source_accounting.py`](../adapter/profile/must/source_accounting.py)).
 
-**Empty.** Nothing but white space is left once markup is taken out of the value. An empty or white-space-only
-string; a string holding only XML or XHTML elements with no text in them (`<p> </p>`,
-`<div xmlns="..."><br/></div>`), which is empty even where a tag has an attribute (`<img src="x"/>`), a string being
-read for its text alone; an XML element holding, at any depth, no text and no attribute value other than white
+**Empty.** Whether a text is empty is decided by the syntax of the source, the same way for an occurrence and for a
+value written: a value written is empty exactly when the same text would be an empty occurrence in the unit's source
+syntax. In XML a text or an attribute value is empty when it holds only space, tab, carriage return and line feed
+(U+0020, U+0009, U+000D, U+000A); a no-break space (`&#160;`) or an em space (U+2003) is text, and so is markup
+written as text (`&lt;p&gt; &lt;/p&gt;` is the text `<p> </p>`), so a value written as it stands from any of them is
+a value, not an empty one. In JSON a string is empty when it holds only Unicode white space once each complete tag,
+from `<` to the next `>`, is taken out: an empty or white-space-only string; a string holding only XML or XHTML
+elements with no text in them (`<p> </p>`, `<div xmlns="..."><br/></div>`), which is empty even where a tag has an
+attribute (`<img src="x"/>`), a string being read for its text alone; a `<` with no `>` after it is text. In XML, an
+element holding, at any depth, no text and no attribute value other than white
 space, so that `<value><code code="I10"/></value>` is not empty, the attribute's value being content; an XML
 attribute whose value is white space. In JSON, `null` and an array with no member stand as no occurrence: nothing is
 owed for either, and neither is an empty child of its element. An object holding nothing but empty values, `{}`
