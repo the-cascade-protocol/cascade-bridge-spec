@@ -13,6 +13,7 @@ CONCEPTS_OF_GAP_KINDS = {
     BRIDGE.valueNotMapped,
     BRIDGE.sourceLacksRequired,
     BRIDGE.carriedWithLoss,
+    BRIDGE.elementNotCarried,
     BRIDGE.schemaRuleUnnamed,
     BRIDGE.addressNotOneNode,
     BRIDGE.predicateNotDeclared,

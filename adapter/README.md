@@ -88,6 +88,26 @@ Any other such path wants an entry in the accounting whose `bridge:sourcePath` i
 own form; an entry on a path above it, or on the same place in another form, does not account for it
 ([`profile/must/unaccounted_paths.py`](profile/must/unaccounted_paths.py)).
 
+## When a test entry fails by the accounting
+
+A test entry fails where its input holds a path the accounting marks `bridge:carried` or `bridge:carriedInPart`, and the
+conversion neither writes one of the properties the path's `bridge:carriedAs` names nor reports a finding that meets it.
+The failure names the path, its address in the input, the class and the properties
+([`../engine/executing.md`](../engine/executing.md)); it names a sample where there are many, and an engine that
+offers `--owed` (not every one does) lists every one with `test <adapter> --owed`, one per line, as
+`convert <adapter> <input> --owed` does for one input ([`../engine/command.md`](../engine/command.md)). It is
+answered in one of two ways:
+
+- Write the property: make the mapping construct one of those properties on a record of that class.
+- Report what is not carried: have the findings query report a finding at the value, whatever its body, or at an
+  element above it with the path's entry made `bridge:carriedInPart` naming the `bridge:namesGap` that finding's body
+  is. A `bridge:carried` entry with a finding at the value itself passes. A value of an enclosing element that no
+  record carries is reported by a finding at that value, which meets the occurrence whichever record it is held to.
+
+A finding whose body is a gap of kind `bridge:elementNotCarried`, addressed at the element nothing of which is carried,
+answers for everything in the element where no record the conversion wrote stands in it: nothing in it is owed, and no
+entry names that gap. A `bridge:carriedInPart` entry may not name one.
+
 ## Showing an adapter to a reader
 
 [`../scripts/adapter_explorer.py`](../scripts/adapter_explorer.py) builds a page from a git checkout of an adapter: its

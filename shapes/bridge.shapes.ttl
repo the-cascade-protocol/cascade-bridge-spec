@@ -126,6 +126,12 @@
     sh:path bridge:testsUnaccountedSourcePath ;
     sh:datatype xsd:string ;
     sh:message "A test names each path it tests by bridge:testsUnaccountedSourcePath, an xsd:string."
+  ] ;
+  sh:property [
+    sh:path bridge:expectedFailedCheck ;
+    sh:maxCount 1 ;
+    sh:in ( bridge:conversionWritesWhatTheAccountingCarries ) ;
+    sh:message "A test carries at most one bridge:expectedFailedCheck, a check a Bridge fails an entry by."
   ] .
 
 <#IsomorphicConversionTest> a sh:NodeShape ;

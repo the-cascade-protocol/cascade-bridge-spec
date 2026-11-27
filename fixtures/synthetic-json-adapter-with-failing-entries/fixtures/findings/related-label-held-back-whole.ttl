@@ -1,0 +1,21 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix oa:      <http://www.w3.org/ns/oa#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix bridge:  <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+@prefix ex:      <https://example.org/synthetic-adapter/v1#> .
+
+[] a oa:Annotation ;
+  oa:hasTarget [
+    oa:hasSource <../in/related-label-held-back-whole.json> ;
+    oa:hasSelector [
+      a oa:FragmentSelector ;
+      dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+      rdf:value "" ;
+      oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/related" ]
+    ]
+  ] ;
+  oa:hasBody ex:a-related-record-of-which-nothing-is-carried ;
+  oa:motivatedBy oa:classifying ;
+  sh:value "[dropped]" ;
+  sh:resultSeverity sh:Info .

@@ -1,5 +1,5 @@
 import pytest
-from rdflib import BNode, Literal
+from rdflib import BNode, Literal, URIRef
 from rdflib.namespace import RDF, XSD
 
 import shapes
@@ -101,3 +101,8 @@ class TestTheCrateAndItsTestManifestAsOneGraph:
                 crate.graph.add((test, MF.result, result))
             crate.graph.set((result, BRIDGE.recordsProcessedCount, Literal(-1)))
             assert "bridge:recordsProcessedCount" in "\n".join(shapes.violations(crate))
+
+        def test_reports_a_test_listing_a_check_no_bridge_fails_an_entry_by(self, crate):
+            test = next(crate.graph.subjects(RDF.type, BRIDGE.IsomorphicConversionTest))
+            crate.graph.add((test, BRIDGE.expectedFailedCheck, URIRef("https://example.org/a-check-of-another-rule")))
+            assert "bridge:expectedFailedCheck" in "\n".join(shapes.violations(crate))

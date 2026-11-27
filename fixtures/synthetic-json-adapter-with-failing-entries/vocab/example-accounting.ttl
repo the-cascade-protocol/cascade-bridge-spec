@@ -1,0 +1,115 @@
+@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+@prefix ex:     <https://example.org/synthetic-adapter/v1#> .
+@prefix pav:    <http://purl.org/pav/> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/kind" ;
+  bridge:verdict bridge:ignored ;
+  bridge:because "A kind says which envelope a document is in, not what the record says." .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/accession" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty ex:accession ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/version" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty pav:version ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/label" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/contained" ;
+  bridge:verdict bridge:consumed .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/contained/id" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty ex:accession ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/contained/label" ;
+  bridge:verdict bridge:carriedInPart ;
+  bridge:namesGap ex:a-contained-label-the-source-withheld ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/lastUpdated" ;
+  bridge:verdict bridge:carriedInPart ;
+  bridge:namesGap ex:a-last-update-with-no-time-zone ;
+  bridge:carriedAs [ bridge:asProperty pav:lastUpdateOn ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/caption" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/title" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/label/text" ;
+  bridge:verdict bridge:ignored ;
+  bridge:because "The text of a label held as an object is read as the label is." .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/labelOn" ;
+  bridge:verdict bridge:consumed .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/aside" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Annotation ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/remark" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Annotation ] ,
+                   [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/contained/title" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/contained/note" ;
+  bridge:verdict bridge:ignored ;
+  bridge:because "A note on a contained record says nothing the record carries." .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/contained/status" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] ;
+  bridge:lookupIn <example-statuses.ttl> ;
+  bridge:lookupNamesGap ex:a-contained-value-the-source-could-not-map .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/related/twin" ;
+  bridge:verdict bridge:consumed .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/related" ;
+  bridge:verdict bridge:consumed .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/related/accession" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty ex:accession ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/related/label" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/related/title" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .

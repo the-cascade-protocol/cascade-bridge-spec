@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "https://example.org/synthetic-json-adapter-with-failing-entries/schema/example-record.schema.json",
+  "type": "object",
+  "required": ["accession"],
+  "properties": {
+    "kind": {"type": "string"},
+    "accession": {"type": "string"},
+    "version": {"type": "integer", "minimum": 1},
+    "lastUpdated": {"type": "string"},
+    "label": {},
+    "caption": {},
+    "title": {"type": "string"},
+    "related": {"type": "object"},
+    "contained": {"type": "array", "items": {"type": "object"}}
+  }
+}

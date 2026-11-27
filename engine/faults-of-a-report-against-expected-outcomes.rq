@@ -1,0 +1,39 @@
+PREFIX earl: <http://www.w3.org/ns/earl#>
+PREFIX mf: <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#>
+
+SELECT DISTINCT ?name ?fault
+WHERE {
+  {
+    ?manifest mf:entries/rdf:rest*/rdf:first ?entry .
+    BIND (STRAFTER(STR(?entry), "#") AS ?name)
+    OPTIONAL { ?entry bridge:expectedFailedCheck ?check }
+    BIND (IF(BOUND(?check), earl:failed, earl:passed) AS ?expected)
+    OPTIONAL {
+      ?assertion earl:test ?test ;
+        earl:result ?result .
+      FILTER (STRAFTER(STR(?test), "#") = ?name)
+      ?result earl:outcome ?outcome .
+    }
+    BIND (IF(!BOUND(?outcome),
+        CONCAT(?name, " has no outcome"),
+      IF(?outcome != ?expected,
+        CONCAT(?name, " is reported ", STRAFTER(STR(?outcome), STR(earl:)), ", not ", STRAFTER(STR(?expected), STR(earl:))),
+      IF(BOUND(?check) && !EXISTS { ?result bridge:failedCheck ?check },
+        CONCAT(?name, " is reported failed, but not by ", STRAFTER(STR(?check), "#")),
+        ""))) AS ?fault)
+  }
+  UNION
+  {
+    ?assertion earl:test ?reported .
+    BIND (STRAFTER(STR(?reported), "#") AS ?name)
+    FILTER NOT EXISTS {
+      ?manifest mf:entries/rdf:rest*/rdf:first ?entry .
+      FILTER (STRAFTER(STR(?entry), "#") = ?name)
+    }
+    BIND (CONCAT(STR(?reported), " is reported, and is no entry of the manifest") AS ?fault)
+  }
+  FILTER (?fault != "")
+}
+ORDER BY ?name ?fault

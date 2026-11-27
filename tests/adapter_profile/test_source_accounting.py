@@ -231,6 +231,24 @@ class TestAccountingForEveryPathOfASource:
             assert "bridge:carriedWithLoss" in said
             assert A_GAP_WITH_NO_PREDICATE.removeprefix("ex:") in said
 
+        def test_reports_a_carried_in_part_entry_naming_a_gap_of_an_element_not_carried(self, package):
+            """reports a carried-in-part entry naming a gap of an element not carried"""
+            package.edit(
+                "vocab/example-gaps.ttl",
+                "ex:gaps a skos:ConceptScheme .\n",
+                "ex:gaps a skos:ConceptScheme .\n\n"
+                'ex:the-whole-label-is-held-back a skos:Concept ; skos:prefLabel "the whole label is held back" ;\n'
+                "  skos:inScheme ex:gaps ; skos:broader bridge:elementNotCarried .\n",
+            )
+            accounted(
+                package,
+                entry(THE_MAPPING_MENTIONS, verdict=CARRIED_IN_PART, names_gap="ex:the-whole-label-is-held-back"),
+            )
+            said = said_about(package)
+            assert "bridge:elementNotCarried" in said
+            assert "the-whole-label-is-held-back" in said
+            assert "true of a whole element, which no entry's bridge:namesGap can name" in said
+
     class TestGivenAnEntrysVerdictAndWhatTheMappingsMention:
         """given an entry's verdict and what the mappings mention"""
 

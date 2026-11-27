@@ -86,12 +86,34 @@ def test(args, adapter):
     if args.canned == "garbled":
         args.earl.write_text("this is not Turtle {\n", encoding="utf-8")
         return 0
+    if args.canned in ("listed", "everything-passed"):
+        args.earl.write_text(EARL + as_the_manifest_lists(adapter, args.canned == "listed"), encoding="utf-8")
+        return 0
     manifest = (adapter / "fixtures" / "manifest.ttl").as_uri()
     body = EARL + "".join(
         ASSERTION.format(manifest=manifest, test=name, outcome=outcome) for name, outcome in CANNED[args.canned].items()
     )
     args.earl.write_text(body, encoding="utf-8")
     return 0
+
+
+def as_the_manifest_lists(adapter, honour_the_outcomes):
+    """An assertion for each entry: failed by the check it lists, or passed, whatever it lists."""
+    import rdflib
+
+    path = adapter / "fixtures" / "manifest.ttl"
+    manifest = turtle(path.read_bytes(), path.as_uri())
+    listing = next(manifest.subjects(rdflib.URIRef(MF + "entries"), None))
+    assertions = ""
+    for entry in manifest.items(manifest.value(listing, rdflib.URIRef(MF + "entries"))):
+        check = manifest.value(entry, rdflib.URIRef(BRIDGE + "expectedFailedCheck"))
+        outcome = "failed" if honour_the_outcomes and check else "passed"
+        by = f" ; <{BRIDGE}failedCheck> <{check}>" if honour_the_outcomes and check else ""
+        assertions += (
+            f"\n[] a earl:Assertion ; earl:test <{entry}> ;\n"
+            f"  earl:result [ a earl:TestResult ; earl:outcome earl:{outcome}{by} ] .\n"
+        )
+    return assertions
 
 
 def names_a_vocabulary_file(adapter):
@@ -410,7 +432,11 @@ def run_library(args):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--canned", choices=("passed", "failed", "partial", "none", "garbled"), default="passed")
+    parser.add_argument(
+        "--canned",
+        choices=("passed", "failed", "partial", "none", "garbled", "listed", "everything-passed"),
+        default="passed",
+    )
     parser.add_argument("--library", choices=tuple(LIBRARY), default="holds")
     commands = parser.add_subparsers(dest="command", required=True)
     for name in ("test", "convert"):
