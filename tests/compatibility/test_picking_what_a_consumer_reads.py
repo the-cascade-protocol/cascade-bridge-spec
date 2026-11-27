@@ -251,7 +251,9 @@ class TestPickingAnotherRepositorysFilesOrPackageBuild:
 
             said, written = package(world, body="")
 
-            assert written["how"] == f"the newest build of its default branch, the release build-{built}; {DIGEST_CHECKED}"
+            assert (
+                written["how"] == f"the newest build of its default branch, the release build-{built}; {DIGEST_CHECKED}"
+            )
             assert "::warning::" not in said
 
         def test_is_checked_against_both_when_the_notes_give_an_integrity_too(self, world):
@@ -398,9 +400,9 @@ class TestPickingAnotherRepositorysFilesOrPackageBuild:
 
         def test_is_refused_at_once_while_only_a_workflow_that_packs_nothing_is_unfinished(self, world, monkeypatch):
             """is refused at once while only a workflow that packs nothing is unfinished"""
-            earlier = world.pull_request(PRODUCER, 6)
+            earlier = world.pull_request(PRODUCER, 6, fill=lambda path: (path / "SIX").write_text("six\n"))
             an_artifact(world, earlier, {packed(earlier): b"an earlier build"}, workflow_id=1)
-            head = world.pull_request(PRODUCER, 7)
+            head = world.pull_request(PRODUCER, 7, fill=lambda path: (path / "SEVEN").write_text("seven\n"))
             world.pull_requests.run(PRODUCER, head, event="pull_request", status="completed", workflow_id=1)
             world.pull_requests.run(PRODUCER, head, event="pull_request", status="in_progress", workflow_id=2)
             monkeypatch.setattr(builds, "sleep", lambda seconds: pytest.fail("waited on a workflow that packs nothing"))
@@ -450,7 +452,9 @@ class TestPickingAnotherRepositorysFilesOrPackageBuild:
 
             said, written = package(world, body=depends_on(VOCABULARY, 5), expected=1)
 
-            refused = f"{VOCABULARY}/pull/5 is from a-fork-owner" if between_from_a_fork else f"{PRODUCER}/pull/7 is from"
+            refused = (
+                f"{VOCABULARY}/pull/5 is from a-fork-owner" if between_from_a_fork else f"{PRODUCER}/pull/7 is from"
+            )
             assert f"{OWNER}/{refused}" in said
             assert written == {} and nothing_placed(world)
 

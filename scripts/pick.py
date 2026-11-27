@@ -36,6 +36,8 @@ def parse(argv):
 
 
 def files(url, reached, event, into):
+    if into.exists() and not into.is_dir():
+        raise Stop(f"{into} is a file: name a folder that is not there, or is empty")
     if into.exists() and any(into.iterdir()):
         raise Stop(f"{into} is there already and holds files: name a folder that is not there, or is empty")
     choice = picking.choose(url, github.repository_path(url), reached, event)
@@ -59,7 +61,7 @@ def main(argv):
             raise Stop(f"{args.repository} is no owner/repository, as the-cascade-protocol/cascade-vocabulary is")
         url = github.url_on_this_server(args.repository)
         event = github.event(api)
-        reached = picking.follow(api, event, [url], None)
+        reached = picking.follow(api, event, [url], None, merges_here=False)
         if args.checkout:
             picked = files(url, reached, event, args.checkout)
         else:

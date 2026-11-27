@@ -22,7 +22,7 @@ inputs:
     required: false
     default: ''
   python-version:
-    description: The Python the picker runs on.
+    description: The Python the picker runs on. The job's own Python on PATH is left as it was.
     required: false
     default: '3.12'
   token:
@@ -44,14 +44,17 @@ outputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-python@v7
+    - id: python
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ inputs.python-version }}
+        update-environment: false
 
     - name: pick
       id: pick
       shell: bash
       env:
+        PYTHON: ${{ steps.python.outputs.python-path }}
         REPOSITORY: ${{ inputs.repository }}
         CHECKOUT: ${{ inputs.checkout }}
         PACKAGE: ${{ inputs.package }}
@@ -69,4 +72,4 @@ runs:
           echo "::error::give checkout or package, not both and not neither"
           exit 1
         fi
-        python3 -u "${ACTION_PATH}/../../../scripts/pick.py" "${REPOSITORY}" "${what[@]}" --into "${RUNNER_TEMP}/cascade-picked"
+        "${PYTHON}" -u "${ACTION_PATH}/../../../scripts/pick.py" "${REPOSITORY}" "${what[@]}" --into "${RUNNER_TEMP}/cascade-picked"

@@ -38,9 +38,9 @@ merges into it pull requests that change nothing but its `compatibility.json`,
 or fast-forwards it to the head of a named pull request that has that release,
 the asset is placed in place of the host's setup, once its bytes match a digest
 the release's notes give (a `sha256-`, `sha384-` or `sha512-` integrity, or a
-SHA-256 in hex). A missing release is waited for, up to 6 minutes, while a run
-of the engine that a push or a pull request started at that commit is unfinished, unless the commit is the head of a
-fork's pull request. Otherwise the setup runs.
+SHA-256 in hex; an integrity whose length is not its algorithm's is none). A missing release is waited for, up to 6
+minutes, while a run of the engine that a push or a pull request started at that commit is unfinished. Otherwise the
+setup runs.
 
 An adapter's file has only `mustPassWith`, naming engines and runtimes. A runtime it
 names is picked as a counterpart is, run as a vocabulary under test's runtimes are, with the adapter under test
@@ -110,6 +110,13 @@ Picked when the run starts, as Zuul checks out a job's required projects
   request under test targets, or the one a push, manual or scheduled run is on;
 - otherwise the default branch.
 
+An open pull request from a fork, whose head is not in the repository it is
+opened against, stops the run wherever a `Depends-On:` line reaches it, named
+directly or through another pull request's description: its head is code that
+repository did not push, so it is never followed, merged in or installed. To
+test a fork's change, a maintainer pushes its branch to the repository and names
+that pull request.
+
 A run with no pull request event, started by hand on a branch other than the
 default one, has a pull request under test too: the first open pull request
 whose head is that branch of the repository it runs in (a fork's has no branch
@@ -131,8 +138,7 @@ tests a change with those ahead of it. A pull request of that repository reached
 only through another repository's is not merged in and is listed as not used,
 so a vocabulary pull request two runtime pull requests both follow does not
 bundle them: to test pull requests of one repository together, name each other
-directly. One closed without merging, one from a fork (the checkout runs with
-the job's token), one targeting another branch, or one that does not merge
+directly. One closed without merging, one targeting another branch, or one that does not merge
 cleanly into what is merged before it, fails the check; for a closed one, the
 check names the pull request whose line to cut.
 
@@ -163,18 +169,22 @@ step, `.github/actions/pick`. Files are picked as a counterpart is. A package is
 the build of the producer's open pull request a `Depends-On:` line names, as
 that pull request's run at its head made it, else the newest build of the
 producer's default branch, as a runtime picks the Bridge's: a merged one named adds nothing, and one
-closed without merging, or two of one producer, stops the step. The producer's
+closed without merging, one from a fork, or two of one producer, stops the step. The consumer's own pull requests
+name nothing for it, as the step merges nothing into the consumer's checkout. The producer's
 pull request runs the contract check its consumer names, with the consumer's
 files picked by this step, and a consumer's release records each build it
 installed.
 
 A build of a commit of a default branch is the release `build-<commit>`, or an
-asset of the release `package-builds` whose name carries `-commit-<commit>`. It is
-used once its bytes match an integrity the release's notes give, refused when
-they give one it matches none of, and used saying so when they give none. A pull
-request's build is the `package` artifact of the newest run of a pull request at
-its head, waited for up to 20 minutes while a run at that head is unfinished; it
-has no notes to give an integrity.
+asset of the release `package-builds` whose name carries `-commit-<commit>`: the
+newest of the last 100 first-parent commits with a build holding the file, the
+step saying how many commits behind the branch's head it is and why. Its bytes
+are checked against GitHub's digest of the asset, and against an integrity the
+release's notes give, which it is refused for matching none of; with neither the
+step warns. A pull request's build is the `package` artifact of the newest run
+of a pull request from a branch of the producer at its head, checked against
+GitHub's digest of the artifact, and waited for up to 20 minutes while a run of
+the workflow that packs is unfinished at that head.
 
 ```yaml
 - id: vocabulary
@@ -185,7 +195,9 @@ has no notes to give an integrity.
 ```
 
 A caller depends on the action's path, its inputs `repository`, and `checkout`
-or `package`, and `token`, and its outputs `path`, `commit` and `how`. The
+or `package`, `token` and `python-version`, and its outputs `path`, `commit` and
+`how`. The Python it runs on is set up off the job's PATH, so a later step's
+Python is the job's own. The
 action runs the picker at the ref the caller names, as `rerun-when-edited` is
 decided: a change to it is tried from a caller naming `pick@<branch>`, not from
 a `Depends-On:` line.
