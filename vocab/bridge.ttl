@@ -600,6 +600,30 @@ bridge:IdentityRelationTest a owl:Class ;
   rdfs:comment "Convert each bridge:conversion of the action on its own: its bridge:input, in its bridge:envelope, supplied with the facts its bridge:facts names. Each conversion names one record: the record of the version whose arrival's oa:hasSelector has the conversion's bridge:selector as its rdf:value or, where the conversion carries none, the one record of its graph a version arrived for. Where the result's bridge:sameRecord is true the two records' names must be equal, and where it is false they must differ. A conversion naming no record, or more than one, fails the entry."@en ;
   rdfs:isDefinedBy <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
 
+bridge:Check a owl:Class ;
+  rdfs:label "Check"@en ;
+  rdfs:isDefinedBy <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+
+bridge:conversionWritesWhatTheAccountingCarries a bridge:Check ;
+  rdfs:label "the conversion writes what the accounting carries"@en ;
+  rdfs:isDefinedBy <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+
+bridge:expectedOutcome a owl:ObjectProperty ;
+  rdfs:label "expected outcome"@en ;
+  rdfs:domain mf:ManifestEntry ;
+  rdfs:isDefinedBy <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+
+bridge:expectedFailedCheck a owl:ObjectProperty ;
+  rdfs:label "expected failed check"@en ;
+  rdfs:domain mf:ManifestEntry ;
+  rdfs:range bridge:Check ;
+  rdfs:isDefinedBy <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+
+bridge:failedCheck a owl:ObjectProperty ;
+  rdfs:label "failed check"@en ;
+  rdfs:range bridge:Check ;
+  rdfs:isDefinedBy <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+
 bridge:conversion a owl:ObjectProperty ;
   rdfs:label "conversion"@en ;
   rdfs:isDefinedBy <https://ns.cascadeprotocol.org/bridge/v1-draft#> .

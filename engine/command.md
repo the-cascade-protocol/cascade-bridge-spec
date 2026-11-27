@@ -27,6 +27,13 @@ The library's `test`. `<adapter directory>` is the adapter's map and
 no report does not hold. The tooling appends `test`, the adapter directory,
 `--earl` and the report file, and `--vocabularies` and the checkout it picked.
 
+An entry fails when its conversion does not write what the accounting carries
+([`executing.md`](executing.md)). The run prints, for each such path, the path, where it
+stood in the input, the class it is carried on and the properties it looked for. The
+adapter's author answers by having the mapping write one of them, or by having it report a
+finding about the path and giving the path's accounting entry `bridge:carriedInPart`
+([`../adapter/README.md`](../adapter/README.md)).
+
 ## `convert`
 
 ```

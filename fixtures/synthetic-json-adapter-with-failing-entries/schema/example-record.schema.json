@@ -8,6 +8,7 @@
     "accession": {"type": "string"},
     "version": {"type": "integer", "minimum": 1},
     "lastUpdated": {"type": "string"},
-    "label": {"type": "string"}
+    "label": {"type": "string"},
+    "contained": {"type": "array", "items": {"type": "object"}}
   }
 }

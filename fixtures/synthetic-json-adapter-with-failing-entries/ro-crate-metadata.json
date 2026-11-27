@@ -86,6 +86,9 @@
       "bridge:mapping": [
         {
           "@id": "in/example-record.rq"
+        },
+        {
+          "@id": "in/example-contained.rq"
         }
       ],
       "bridge:findingsQuery": [
@@ -113,6 +116,9 @@
           "@id": "in/example-record.rq"
         },
         {
+          "@id": "in/example-contained.rq"
+        },
+        {
           "@id": "in/example-findings.rq"
         },
         {
@@ -137,6 +143,12 @@
           "@id": "fixtures/facts/example-registry.ttl"
         },
         {
+          "@id": "fixtures/expected/contained-label-not-written.ttl"
+        },
+        {
+          "@id": "fixtures/expected/contained-label-of-a-record-the-adapter-does-not-map.ttl"
+        },
+        {
           "@id": "fixtures/expected/every-carried-path-written.ttl"
         },
         {
@@ -155,6 +167,12 @@
           "@id": "fixtures/expected/last-update-not-written.ttl"
         },
         {
+          "@id": "fixtures/findings/contained-label-not-written.ttl"
+        },
+        {
+          "@id": "fixtures/findings/contained-label-of-a-record-the-adapter-does-not-map.ttl"
+        },
+        {
           "@id": "fixtures/findings/every-carried-path-written.ttl"
         },
         {
@@ -171,6 +189,12 @@
         },
         {
           "@id": "fixtures/findings/last-update-not-written.ttl"
+        },
+        {
+          "@id": "fixtures/in/contained-label-not-written.json"
+        },
+        {
+          "@id": "fixtures/in/contained-label-of-a-record-the-adapter-does-not-map.json"
         },
         {
           "@id": "fixtures/in/every-carried-path-written.json"
@@ -244,6 +268,17 @@
       }
     },
     {
+      "@id": "in/example-contained.rq",
+      "@type": "File",
+      "name": "Mapping of contained records",
+      "encodingFormat": "application/sparql-query",
+      "contentSize": "3485",
+      "sha256": "b4fb1d3db6c9da7ba119aa206c34fb4fbaee57fdcefe9734e6549cb6acb75183",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "in/example-findings.rq",
       "@type": "File",
       "name": "Findings query",
@@ -281,8 +316,8 @@
       "@type": "File",
       "name": "Example record JSON Schema, draft-06",
       "encodingFormat": "application/schema+json",
-      "contentSize": "431",
-      "sha256": "56122a1c52da90af0b8395b63726fbcb51670bcb57c27a3ac34b51cdacc88f75",
+      "contentSize": "496",
+      "sha256": "4a7e7b76fa1f5157dd4ba1b490d795bae983e59eba52b8ecc7b724f962660060",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -303,8 +338,8 @@
       "@type": "File",
       "name": "Source accounting",
       "encodingFormat": "text/turtle",
-      "contentSize": "1200",
-      "sha256": "4bd3dab10d9da51a98e9cf00e55fbeec91f5820ecf1ecfc6a1b5663e67e8bef6",
+      "contentSize": "1668",
+      "sha256": "b7feb6ceacc84c81380471f8bcb5a89376a3b69fdc87bc97d7496133bf9f9285",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -314,8 +349,8 @@
       "@type": "File",
       "name": "Test manifest",
       "encodingFormat": "text/turtle",
-      "contentSize": "4237",
-      "sha256": "6eaadd593c85d66450ee608fac35bdf61c5f322bf96565359b4e0e1a8cfdce02",
+      "contentSize": "5997",
+      "sha256": "c1ac4204bde3f9c101f69d0e6b4cad1d13f20606809b352ec4db2e23deabe5fd",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -327,6 +362,34 @@
       "encodingFormat": "text/turtle",
       "contentSize": "1129",
       "sha256": "269dc8892557ed1e360ec52071fb20854b722fd44aa4d9356a59381024157523",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/contained-label-not-written.ttl",
+      "@type": "File",
+      "name": "Expected graph for contained-label-not-written",
+      "encodingFormat": "text/turtle",
+      "contentSize": "3284",
+      "sha256": "9d512d4ac33001e4aaf47afd3abbed5be7b4dcf01f5010c156e803da6fc730db",
+      "isBasedOn": {
+        "@id": "fixtures/in/contained-label-not-written.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/contained-label-of-a-record-the-adapter-does-not-map.ttl",
+      "@type": "File",
+      "name": "Expected graph for contained-label-of-a-record-the-adapter-does-not-map",
+      "encodingFormat": "text/turtle",
+      "contentSize": "3284",
+      "sha256": "a94b934f4c6ba688225281cba45ece22f9feff8a36b80796acf54d3c0c79b8ff",
+      "isBasedOn": {
+        "@id": "fixtures/in/contained-label-of-a-record-the-adapter-does-not-map.json"
+      },
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -416,6 +479,34 @@
       }
     },
     {
+      "@id": "fixtures/findings/contained-label-not-written.ttl",
+      "@type": "File",
+      "name": "Expected findings for contained-label-not-written",
+      "encodingFormat": "text/turtle",
+      "contentSize": "339",
+      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
+      "isBasedOn": {
+        "@id": "fixtures/in/contained-label-not-written.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/contained-label-of-a-record-the-adapter-does-not-map.ttl",
+      "@type": "File",
+      "name": "Expected findings for contained-label-of-a-record-the-adapter-does-not-map",
+      "encodingFormat": "text/turtle",
+      "contentSize": "339",
+      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
+      "isBasedOn": {
+        "@id": "fixtures/in/contained-label-of-a-record-the-adapter-does-not-map.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/findings/every-carried-path-written.ttl",
       "@type": "File",
       "name": "Expected findings for every-carried-path-written",
@@ -495,6 +586,28 @@
       "isBasedOn": {
         "@id": "fixtures/in/last-update-not-written.json"
       },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/contained-label-not-written.json",
+      "@type": "File",
+      "name": "Synthetic JSON input contained-label-not-written",
+      "encodingFormat": "application/example+json",
+      "contentSize": "209",
+      "sha256": "f6730cb5ba5cba9932e1ca71b7501b89eb0b42323ec1b36b718c67b998ef5c91",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/contained-label-of-a-record-the-adapter-does-not-map.json",
+      "@type": "File",
+      "name": "Synthetic JSON input contained-label-of-a-record-the-adapter-does-not-map",
+      "encodingFormat": "application/example+json",
+      "contentSize": "162",
+      "sha256": "c538270e017ec5c52e5ca29c4bf7370a29b32b7c7c238b453990b5aaa4fa2424",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }

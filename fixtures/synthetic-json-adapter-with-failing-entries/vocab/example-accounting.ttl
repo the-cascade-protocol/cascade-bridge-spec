@@ -24,6 +24,20 @@
   bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
 
 [] a bridge:PathEntry ;
+  bridge:sourcePath "/contained" ;
+  bridge:verdict bridge:consumed .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/contained/id" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty ex:accession ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/contained/label" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
   bridge:sourcePath "/lastUpdated" ;
   bridge:verdict bridge:carriedInPart ;
   bridge:namesGap ex:a-last-update-with-no-time-zone ;

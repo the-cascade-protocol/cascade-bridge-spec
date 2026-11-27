@@ -69,6 +69,11 @@ class TestCheckingAnAdapterPackageAgainstTheProfile:
             result = validated(JSON_FIXTURE)
             assert result.passed(), "\n".join(issue.message for issue in result.get_issues())
 
+        def test_passes_the_json_adapter_whose_entries_must_fail(self):
+            """passes the JSON adapter whose entries must fail"""
+            result = validated(ROOT / "fixtures" / "synthetic-json-adapter-with-failing-entries")
+            assert result.passed(), "\n".join(issue.message for issue in result.get_issues())
+
         @VALIDATED_ONCE
         def test_runs_every_file_the_profile_makes_a_check_of_skipping_none(self, the_committed_fixture):
             """runs every file the profile makes a check of, skipping none"""

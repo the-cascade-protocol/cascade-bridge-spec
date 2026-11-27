@@ -13,6 +13,8 @@
     <#label-empty>
     <#last-update-not-written-and-reported>
     <#last-update-not-written>
+    <#contained-label-not-written>
+    <#contained-label-of-a-record-the-adapter-does-not-map>
   ) .
 
 <#every-carried-path-written> a bridge:IsomorphicConversionTest ;
@@ -98,4 +100,33 @@
   mf:result [
     bridge:expectedGraph <expected/last-update-not-written.ttl> ;
     bridge:expectedFindings <findings/last-update-not-written.ttl>
+  ] .
+
+<#contained-label-not-written> a bridge:IsomorphicConversionTest ;
+  mf:name "contained-label-not-written" ;
+  rdfs:comment "One unit holding three source records, one a contained record the mapping writes a record from and one a contained record it does not: both hold the label, the path is owed for the first only, and the mapping does not write it." ;
+  bridge:expectedOutcome earl:failed ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/contained-label-not-written.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/contained-label-not-written.ttl> ;
+    bridge:expectedFindings <findings/contained-label-not-written.ttl>
+  ] .
+
+<#contained-label-of-a-record-the-adapter-does-not-map> a bridge:IsomorphicConversionTest ;
+  mf:name "contained-label-of-a-record-the-adapter-does-not-map" ;
+  rdfs:comment "The unit of contained-label-not-written without the label of the contained record the mapping writes a record from: the label of the one it does not is owed to no record, the container's included." ;
+  bridge:expectedOutcome earl:passed ;
+  mf:action [
+    bridge:input <in/contained-label-of-a-record-the-adapter-does-not-map.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/contained-label-of-a-record-the-adapter-does-not-map.ttl> ;
+    bridge:expectedFindings <findings/contained-label-of-a-record-the-adapter-does-not-map.ttl>
   ] .

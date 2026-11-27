@@ -1,10 +1,12 @@
 import pytest
-from rdflib import BNode, Literal
+from rdflib import BNode, Literal, URIRef
 from rdflib.namespace import RDF, XSD
 
 import shapes
 from _terms import BRIDGE, MF
 from adapter_profile_world import AT_MOST_ONE_CONCERN, THE_CONCERNS
+
+EARL = "http://www.w3.org/ns/earl#"
 
 
 def result_of_a_conversion_test(crate):
@@ -101,3 +103,19 @@ class TestTheCrateAndItsTestManifestAsOneGraph:
                 crate.graph.add((test, MF.result, result))
             crate.graph.set((result, BRIDGE.recordsProcessedCount, Literal(-1)))
             assert "bridge:recordsProcessedCount" in "\n".join(shapes.violations(crate))
+
+        def test_reports_a_test_listing_a_failed_outcome_and_no_check_to_fail_by(self, crate):
+            test = next(crate.graph.subjects(RDF.type, BRIDGE.IsomorphicConversionTest))
+            crate.graph.add((test, BRIDGE.expectedOutcome, URIRef(EARL + "failed")))
+            assert "exactly when its bridge:expectedOutcome is earl:failed" in "\n".join(shapes.violations(crate))
+
+        def test_reports_a_test_listing_a_check_to_fail_by_and_a_passed_outcome(self, crate):
+            test = next(crate.graph.subjects(RDF.type, BRIDGE.IsomorphicConversionTest))
+            crate.graph.add((test, BRIDGE.expectedOutcome, URIRef(EARL + "passed")))
+            crate.graph.add((test, BRIDGE.expectedFailedCheck, BRIDGE.conversionWritesWhatTheAccountingCarries))
+            assert "exactly when its bridge:expectedOutcome is earl:failed" in "\n".join(shapes.violations(crate))
+
+        def test_reports_a_test_listing_an_outcome_outside_passed_and_failed(self, crate):
+            test = next(crate.graph.subjects(RDF.type, BRIDGE.IsomorphicConversionTest))
+            crate.graph.add((test, BRIDGE.expectedOutcome, URIRef(EARL + "cantTell")))
+            assert "earl:passed or earl:failed" in "\n".join(shapes.violations(crate))

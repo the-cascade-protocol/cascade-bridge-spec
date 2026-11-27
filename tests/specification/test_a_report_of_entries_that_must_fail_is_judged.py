@@ -13,8 +13,9 @@ JUDGE = ROOT / "engine" / "faults-of-a-report-against-expected-outcomes.rq"
 MANIFEST = ADAPTER / "fixtures" / "manifest.ttl"
 
 THE_CHECK = "https://ns.cascadeprotocol.org/bridge/v1-draft#conversionWritesWhatTheAccountingCarries"
-MUST_FAIL = ["label-not-written", "last-update-not-written"]
+MUST_FAIL = ["contained-label-not-written", "label-not-written", "last-update-not-written"]
 MUST_PASS = [
+    "contained-label-of-a-record-the-adapter-does-not-map",
     "every-carried-path-written",
     "label-empty",
     "label-not-written-and-reported",
