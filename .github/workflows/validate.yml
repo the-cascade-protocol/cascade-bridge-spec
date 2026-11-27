@@ -98,7 +98,7 @@ jobs:
 
   # The slices' reports as one, which the tests page on the hub reads.
   report:
-    name: the tests read as a specification
+    name: the slices' reports as one report
     needs: slice
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
