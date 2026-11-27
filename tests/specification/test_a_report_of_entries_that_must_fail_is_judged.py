@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 import pytest
-from rdflib import Graph, URIRef
+from rdflib import RDF, Graph, URIRef
 
 ROOT = Path(__file__).resolve().parents[2]
 ADAPTER = ROOT / "fixtures" / "synthetic-json-adapter-with-failing-entries"
@@ -15,26 +15,34 @@ MANIFEST = ADAPTER / "fixtures" / "manifest.ttl"
 CHECK = URIRef("https://ns.cascadeprotocol.org/bridge/v1-draft#expectedFailedCheck")
 THE_CHECK = "https://ns.cascadeprotocol.org/bridge/v1-draft#conversionWritesWhatTheAccountingCarries"
 MUST_FAIL = [
-    "contained-label-in-an-element-reported-by-a-value-gap",
+    "caption-repeat-empty-beside-full",
     "contained-label-not-written",
-    "contained-label-reported-by-a-gap-the-entry-does-not-name",
-    "contained-label-reported-on-a-sibling-contained-record",
+    "contained-label-reported-other-gap",
+    "contained-label-sibling-reported",
+    "contained-record-held-back-whole",
+    "empty-label-beside-last-update",
+    "finding-of-the-other-unit",
+    "held-back-note-beside-label",
+    "label-false-not-written",
+    "label-finding-at-the-unit",
+    "label-finding-by-value-only",
     "label-not-written",
-    "label-of-the-nearer-record-not-written",
+    "label-written-on-a-pointed-record",
     "last-update-not-written",
+    "nearer-label-not-written",
+    "related-label-unmapped-value-gap",
+    "remark-of-two-classes-one-held",
+    "respelled-selector-label-unwritten",
+    "selector-selects-no-node",
+    "unmapped-contained-label-unreported",
 ]
-MUST_PASS = [
-    "contained-label-in-an-element-not-carried-at-all",
-    "contained-label-of-a-record-the-adapter-does-not-map",
-    "contained-label-reported-by-the-gap-the-entry-names",
-    "every-carried-path-written",
-    "label-empty",
-    "label-empty-beside-a-caption",
-    "label-holding-only-markup",
-    "label-not-written-and-reported",
-    "label-of-the-nearer-record-written",
-    "last-update-not-written-and-reported",
-]
+ENTRIES = {
+    str(entry).rpartition("#")[2]
+    for entry in Graph()
+    .parse(MANIFEST, format="turtle", publicID=MANIFEST.resolve().as_uri())
+    .subjects(RDF.type, URIRef("https://ns.cascadeprotocol.org/bridge/v1-draft#IsomorphicConversionTest"))
+}
+MUST_PASS = sorted(ENTRIES - set(MUST_FAIL))
 
 
 def as_listed():

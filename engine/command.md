@@ -28,16 +28,26 @@ no report does not hold. The tooling appends `test`, the adapter directory,
 `--earl` and the report file, and `--vocabularies` and the checkout it picked.
 
 An entry fails when its conversion does not write what the accounting carries
-([`executing.md`](executing.md)). The run prints, for each such path, the path, where it
-stood in the input, the class it is carried on and the properties it looked for. The
-adapter's author answers by having the mapping write one of them, or by having it report a
-finding at the value, or at an element above it with the path's accounting entry made `bridge:carriedInPart` naming that
-gap ([`../adapter/README.md`](../adapter/README.md)). The result's description gives a
-sample of them; **`--owed` lists every one**, one per line after the entries and before the
-tally: `Owed`, the entry's name, then the path, `at`, the occurrence's address, and the
-properties looked for on the class owed, as `<path> at "<address>": no <property> on its
-<class> is written, and no finding is about it`, the property and the class by IRI, several
-joined by `or`. It changes nothing in the report.
+([`executing.md`](executing.md)). The adapter's author answers by having the mapping write
+one of the properties looked for, or by having it report a finding at the value, or at an
+element above it with the path's accounting entry made `bridge:carriedInPart` naming that
+gap ([`../adapter/README.md`](../adapter/README.md)). The result's description gives, for
+each of the first three, the path, then the properties looked for on the class owed, then the
+address, as `<path>: no <property> on its <class> is written, and no finding is about it, at
+"<address>"`, nothing of it cut; where there are more, it ends `; and <n> more: run `test`
+with `--owed` to list every one`. A record that cannot be placed
+is listed on a line of its own, in the description and under `--owed`, as `the record
+selector "<selector>" <what it selects>, so no occurrence can be held to the record it
+places`, where `<what it selects>` is `selects no node`, `selects <n> nodes`, `is no XPath,
+or selects no set of nodes`, or `selects a node outside the unit at "<unit's selector>"`.
+
+An engine may offer `--owed`; the compatibility tooling never passes it, and an engine
+without it is as conformant as one with it. Where it does, `--owed` lists every unmet
+occurrence, one per line after the entries and before the tally: `Owed`, the entry's name,
+then the path, `at`, the occurrence's address, and the properties looked for on the class
+owed, as `<path> at "<address>": no <property> on its <class> is written, and no finding is
+about it`, the property and the class by IRI, several joined by `or`. It changes nothing in
+the report. The line is read by an author, not by tooling, and its words may be reworded.
 
 ## `convert`
 
@@ -63,11 +73,14 @@ Where the library returns none, a run given `--findings` produces nothing.
 no report: zero when the graph was produced, non-zero when it was not, and
 standard output carries nothing in that case.
 
-With `--owed`, `convert` writes no graph: it prints `Owed`, the document's IRI and the count
-of unmet occurrences (`<n> unmet`), then each one on a line of its own indented by two spaces,
-in the form `test --owed` gives it without the entry's name, and exits zero. It is for an
-adapter's author, to see what a document would fail a test entry for
-([`../adapter/README.md`](../adapter/README.md)); the tooling never appends it.
+An engine may offer `--owed` on `convert` too, on the same terms: the compatibility tooling
+never passes it, and an engine without it is as conformant as one with it. Where it does,
+`convert` writes no graph: it prints `Owed`, the document's IRI and the count of unmet
+occurrences (`<n> unmet`), then each one on a line of its own indented by two spaces, in the
+form `test --owed` gives it without the entry's name, and exits zero. It is for an adapter's
+author, to see what a document would fail a test entry for
+([`../adapter/README.md`](../adapter/README.md)), and the line's words are for a person, not
+for parsing.
 
 ## `library`
 

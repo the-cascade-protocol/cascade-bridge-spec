@@ -1,0 +1,74 @@
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX oa:     <http://www.w3.org/ns/oa#>
+PREFIX prov:  <http://www.w3.org/ns/prov#>
+PREFIX fx:     <http://sparql.xyz/facade-x/ns/>
+PREFIX xyz:    <http://sparql.xyz/facade-x/data/>
+PREFIX bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#>
+PREFIX ex:     <https://example.org/synthetic-adapter/v1#>
+PREFIX cascade: <https://ns.cascadeprotocol.org/cascade#>
+
+CONSTRUCT {
+  ?version rdfs:label ?versionLabel .
+  [] bridge:arrivedAs ?arrivedVersion ;
+    rdfs:label ?arrivalLabel .
+  ?version prov:wasDerivedFrom ?pointed .
+  ?pointed rdfs:label ?pointedLabel .
+  ?pointedRecord a ex:Record ;
+    ex:accession ?pointedAccession .
+  ?pointedVersion prov:specializationOf ?pointedRecord .
+  ?pointedArrival bridge:arrivedAs ?pointedVersion ;
+    oa:hasSelector ?pointedSelection .
+  ?pointedSelection a oa:FragmentSelector ;
+    dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+    rdf:value "/kind" .
+}
+WHERE {
+  ?exampleRecord a fx:root ;
+    xyz:accession ?accession ;
+    xyz:label ?label ;
+    xyz:labelOn ?on .
+  bridge:thisDocument bridge:sha256 ?document .
+  bridge:thisRecord bridge:selector ?selector .
+  OPTIONAL { bridge:thisDocument cascade:serverBaseUrl ?server }
+  {
+    SELECT ?accession (COUNT(?holder) AS ?holders)
+    WHERE { ?holder ex:holdsAccession ?accession }
+    GROUP BY ?accession
+  }
+  BIND(IF(BOUND(?server) && ?holders = 1,
+          CONCAT("90c60849-c5ef-4ca6-bfb8-8662bd07d2b5|https://ns.cascadeprotocol.org/cascade#RecordFromServerNamingRule",
+                 "|", REPLACE(REPLACE(?server, "%", "%25"), "\\|", "%7C"),
+                 "|", "ExampleRecord",
+                 "|", REPLACE(REPLACE(?accession, "%", "%25"), "\\|", "%7C")),
+          CONCAT("90c60849-c5ef-4ca6-bfb8-8662bd07d2b5|https://ns.cascadeprotocol.org/cascade#RecordFromDocumentNamingRule",
+                 "|", REPLACE(REPLACE(?document, "%", "%25"), "\\|", "%7C"),
+                 "|", REPLACE(REPLACE(?selector, "%", "%25"), "\\|", "%7C"))) AS ?named)
+  BIND(SHA256(?named) AS ?hash)
+  BIND(REPLACE(REPLACE(REPLACE(REPLACE(SUBSTR(?hash, 17, 1),
+         "[048c]", "8"), "[159d]", "9"), "[26ae]", "a"), "[37bf]", "b") AS ?variant)
+  BIND(CONCAT(SUBSTR(?hash, 1, 8), "-", SUBSTR(?hash, 9, 4), "-8", SUBSTR(?hash, 14, 3),
+              "-", ?variant, SUBSTR(?hash, 18, 3), "-", SUBSTR(?hash, 21, 12)) AS ?uuid)
+  BIND(IRI(CONCAT("https://example.org/synthetic-adapter/version/", ?uuid)) AS ?version)
+  BIND(CONCAT("90c60849-c5ef-4ca6-bfb8-8662bd07d2b5|https://ns.cascadeprotocol.org/cascade#RecordFromDocumentNamingRule",
+              "|", REPLACE(REPLACE(?document, "%", "%25"), "\\|", "%7C"),
+              "|", REPLACE(REPLACE(CONCAT(?selector, "/labelOn"), "%", "%25"), "\\|", "%7C")) AS ?pointedNamed)
+  BIND(SHA256(?pointedNamed) AS ?pointedHash)
+  BIND(REPLACE(REPLACE(REPLACE(REPLACE(SUBSTR(?pointedHash, 17, 1),
+         "[048c]", "8"), "[159d]", "9"), "[26ae]", "a"), "[37bf]", "b") AS ?pointedVariant)
+  BIND(CONCAT(SUBSTR(?pointedHash, 1, 8), "-", SUBSTR(?pointedHash, 9, 4), "-8", SUBSTR(?pointedHash, 14, 3),
+              "-", ?pointedVariant, SUBSTR(?pointedHash, 18, 3), "-", SUBSTR(?pointedHash, 21, 12)) AS ?pointedUuid)
+  BIND(IF(?on = "version", ?label, ?none) AS ?versionLabel)
+  BIND(IF(?on = "arrival", ?version, ?none) AS ?arrivedVersion)
+  BIND(IF(?on = "arrival", ?label, ?none) AS ?arrivalLabel)
+  BIND(IF(?on = "node", IRI(CONCAT(STR(?version), "#1")),
+          IF(?on = "record", IRI(CONCAT("urn:uuid:", ?pointedUuid)), ?none)) AS ?pointed)
+  BIND(IF(?on = "node" || ?on = "record", ?label, ?none) AS ?pointedLabel)
+  BIND(IF(?on = "record", ?pointed, ?none) AS ?pointedRecord)
+  BIND(IF(?on = "record", CONCAT(?accession, "-pointed"), ?none) AS ?pointedAccession)
+  BIND(IF(?on = "record", IRI(CONCAT("https://example.org/synthetic-adapter/version/", ?pointedUuid)), ?none)
+       AS ?pointedVersion)
+  BIND(IF(?on = "record", BNODE(), ?none) AS ?pointedArrival)
+  BIND(IF(?on = "record", BNODE(), ?none) AS ?pointedSelection)
+}

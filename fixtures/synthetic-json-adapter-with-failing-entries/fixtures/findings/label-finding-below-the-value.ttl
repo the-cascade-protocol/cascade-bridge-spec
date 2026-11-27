@@ -7,15 +7,15 @@
 
 [] a oa:Annotation ;
   oa:hasTarget [
-    oa:hasSource <../in/contained-label-in-an-element-reported-by-a-value-gap.json> ;
+    oa:hasSource <../in/label-finding-below-the-value.json> ;
     oa:hasSelector [
       a oa:FragmentSelector ;
       dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
       rdf:value "" ;
-      oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/contained/0" ]
+      oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/label/text" ]
     ]
   ] ;
-  oa:hasBody ex:a-contained-value-the-source-could-not-map ;
+  oa:hasBody ex:a-label-the-source-withheld ;
   oa:motivatedBy oa:classifying ;
-  sh:value "[unmapped]" ;
+  sh:value "[redacted]" ;
   sh:resultSeverity sh:Info .

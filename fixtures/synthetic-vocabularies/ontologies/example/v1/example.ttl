@@ -7,6 +7,8 @@
 
 ex:Record a owl:Class .
 
+ex:Annotation a owl:Class .
+
 ex:accession a owl:DatatypeProperty ; rdfs:domain ex:Record .
 
 rdfs:label a owl:AnnotationProperty .

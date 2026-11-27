@@ -7,15 +7,15 @@
 
 [] a oa:Annotation ;
   oa:hasTarget [
-    oa:hasSource <../in/contained-label-reported-on-a-sibling-contained-record.json> ;
+    oa:hasSource <../in/held-back-note-beside-label.json> ;
     oa:hasSelector [
       a oa:FragmentSelector ;
       dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
       rdf:value "" ;
-      oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/contained/0" ]
+      oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/contained/0/note" ]
     ]
   ] ;
-  oa:hasBody ex:a-contained-label-the-source-withheld ;
+  oa:hasBody ex:a-contained-record-the-source-held-back-whole ;
   oa:motivatedBy oa:classifying ;
-  sh:value "[withheld]" ;
+  sh:value "[dropped]" ;
   sh:resultSeverity sh:Info .

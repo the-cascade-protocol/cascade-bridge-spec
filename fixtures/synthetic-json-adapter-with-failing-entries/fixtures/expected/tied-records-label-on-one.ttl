@@ -1,0 +1,78 @@
+@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+@prefix cascade: <https://ns.cascadeprotocol.org/cascade#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ex: <https://example.org/synthetic-adapter/v1#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<ni:///sha-256;D9f6RONeBVz3nC4iKqjyvGHTtCqHBZMdLxfxo5g1flQ> prov:specializationOf <urn:uuid:61f5944d-fcd5-871c-8176-3dd72056ad42> .
+
+<ni:///sha-256;T7T6yoA9Enky5Lx4cbqX1chDLiFvsEywvLW3PvCNcdw> prov:specializationOf <urn:uuid:b0a57520-91be-87a7-8ebc-a583553b1d74> .
+
+<ni:///sha-256;jgveBzlM2_PmVuFuobdZp7-nyqXPbLo7iGKVAeqIsQQ> prov:specializationOf <urn:uuid:781cbd3d-1ac0-815b-85da-a163cc62e5d1> .
+
+<urn:uuid:61f5944d-fcd5-871c-8176-3dd72056ad42> a ex:Record ;
+    ex:accession "EX000260" .
+
+<urn:uuid:781cbd3d-1ac0-815b-85da-a163cc62e5d1> a ex:Record ;
+    rdfs:label "a label the twin writes" ;
+    ex:accession "EX000261" .
+
+<urn:uuid:b0a57520-91be-87a7-8ebc-a583553b1d74> a ex:Record ;
+    ex:accession "EX000259" .
+
+<ni:///sha-256;8Jh5pLDVRVvxIe18cI6ZecO9HyNnQhUNlGjKs0ylBB4> a prov:Entity ;
+    pav:retrievedFrom <https://records.example.org/api/ExampleRecordSet> ;
+    pav:retrievedOn "2026-08-30T22:14:00Z"^^xsd:dateTime ;
+    prov:wasAttributedTo _:n805e50e089054ae1b6972cbbb0d1a515b9 ;
+    prov:wasGeneratedBy [ prov:qualifiedAssociation [ prov:agent _:n805e50e089054ae1b6972cbbb0d1a515b9 ;
+                    prov:hadRole cascade:AuthorRole ],
+                [ prov:agent [ rdfs:label "Example Fetcher" ] ;
+                    prov:hadRole cascade:TransmitterRole ] ] ;
+    cascade:authenticatedAsProxy false ;
+    cascade:authenticatedPatient "Patient/example-patient" ;
+    cascade:serverBaseUrl "https://records.example.org/api" ;
+    cascade:sourceFormatVersion "1" .
+
+[] pav:version "1" ;
+    oa:hasSelector [ a oa:FragmentSelector ;
+            dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+            rdf:value "" ] ;
+    oa:hasSource <ni:///sha-256;8Jh5pLDVRVvxIe18cI6ZecO9HyNnQhUNlGjKs0ylBB4> ;
+    prov:wasDerivedFrom <ni:///sha-256;8Jh5pLDVRVvxIe18cI6ZecO9HyNnQhUNlGjKs0ylBB4> ;
+    prov:wasGeneratedBy _:n805e50e089054ae1b6972cbbb0d1a515b6 ;
+    bridge:arrivedAs <ni:///sha-256;T7T6yoA9Enky5Lx4cbqX1chDLiFvsEywvLW3PvCNcdw> .
+
+[] oa:hasSelector [ a oa:FragmentSelector ;
+            dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+            rdf:value "/related" ] ;
+    oa:hasSource <ni:///sha-256;8Jh5pLDVRVvxIe18cI6ZecO9HyNnQhUNlGjKs0ylBB4> ;
+    prov:wasDerivedFrom <ni:///sha-256;8Jh5pLDVRVvxIe18cI6ZecO9HyNnQhUNlGjKs0ylBB4> ;
+    prov:wasGeneratedBy _:n805e50e089054ae1b6972cbbb0d1a515b6 ;
+    bridge:arrivedAs <ni:///sha-256;D9f6RONeBVz3nC4iKqjyvGHTtCqHBZMdLxfxo5g1flQ> .
+
+[] oa:hasSelector [ a oa:FragmentSelector ;
+            dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+            rdf:value "/related" ] ;
+    oa:hasSource <ni:///sha-256;8Jh5pLDVRVvxIe18cI6ZecO9HyNnQhUNlGjKs0ylBB4> ;
+    prov:wasDerivedFrom <ni:///sha-256;8Jh5pLDVRVvxIe18cI6ZecO9HyNnQhUNlGjKs0ylBB4> ;
+    prov:wasGeneratedBy _:n805e50e089054ae1b6972cbbb0d1a515b6 ;
+    bridge:arrivedAs <ni:///sha-256;jgveBzlM2_PmVuFuobdZp7-nyqXPbLo7iGKVAeqIsQQ> .
+
+_:n805e50e089054ae1b6972cbbb0d1a515b13 prov:agent [ ] ;
+    prov:hadPlan [ a prov:Plan ;
+            rdfs:label "synthetic-json-example-with-failing-entries" ;
+            pav:version "0.1.0" ] .
+
+_:n805e50e089054ae1b6972cbbb0d1a515b9 rdfs:label "Example Records Registry" .
+
+_:n805e50e089054ae1b6972cbbb0d1a515b6 a prov:Activity ;
+    rdfs:label "synthetic example import" ;
+    prov:qualifiedAssociation _:n805e50e089054ae1b6972cbbb0d1a515b13 ;
+    prov:startedAtTime "2026-09-01T10:00:00Z"^^xsd:dateTime ;
+    prov:used <ni:///sha-256;8Jh5pLDVRVvxIe18cI6ZecO9HyNnQhUNlGjKs0ylBB4> .
+

@@ -25,6 +25,8 @@ WHERE {
   OPTIONAL { ?exampleRecord xyz:label ?label }
   OPTIONAL { ?exampleRecord xyz:title ?title }
   OPTIONAL { ?exampleRecord xyz:caption ?caption }
+  OPTIONAL { ?exampleRecord xyz:aside ?aside }
+  OPTIONAL { ?exampleRecord xyz:remark ?remark }
   OPTIONAL { ?exampleRecord xyz:lastUpdated ?lastUpdated }
   {
     SELECT ?accession (COUNT(?holder) AS ?holders)

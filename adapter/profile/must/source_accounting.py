@@ -182,10 +182,16 @@ def faulty(crate):
                     "which is no gap of the adapter's bridge:gapScheme"
                 )
                 continue
+            kinds = set(scheme.objects(gap, SKOS.broader))
+            if BRIDGE.elementNotCarried in kinds:
+                yield (
+                    f"{source_path} names {gap}, a gap of kind {shortened(BRIDGE.elementNotCarried)}, "
+                    "true of a whole element, which no entry's bridge:namesGap can name"
+                )
+                continue
             wanted = THE_KINDS_A_VERDICT_MAY_NAME.get(verdict)
             if wanted is None:
                 continue
-            kinds = set(scheme.objects(gap, SKOS.broader))
             if kinds.isdisjoint(wanted):
                 yield (
                     f"{source_path} names {gap}, which is skos:broader "

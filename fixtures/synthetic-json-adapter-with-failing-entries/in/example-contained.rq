@@ -25,7 +25,9 @@ WHERE {
   OPTIONAL { ?exampleRecord xyz:lastUpdated ?containerUpdated }
   ?contained ?slot ?item .
   ?item xyz:id ?id .
+  FILTER(!STRSTARTS(?id, "respelt-") && !STRSTARTS(?id, "nowhere-"))
   OPTIONAL { ?item xyz:label ?label }
+  OPTIONAL { ?item xyz:status ?status }
   bridge:thisDocument bridge:sha256 ?document .
   bridge:thisRecord bridge:selector ?selector .
   OPTIONAL { bridge:thisDocument cascade:serverBaseUrl ?server }

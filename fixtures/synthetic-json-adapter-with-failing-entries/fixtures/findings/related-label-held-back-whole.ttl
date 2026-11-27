@@ -7,15 +7,15 @@
 
 [] a oa:Annotation ;
   oa:hasTarget [
-    oa:hasSource <../in/last-update-not-written-and-reported.json> ;
+    oa:hasSource <../in/related-label-held-back-whole.json> ;
     oa:hasSelector [
       a oa:FragmentSelector ;
       dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
       rdf:value "" ;
-      oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/lastUpdated" ]
+      oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/related" ]
     ]
   ] ;
-  oa:hasBody ex:a-last-update-with-no-time-zone ;
+  oa:hasBody ex:a-related-record-of-which-nothing-is-carried ;
   oa:motivatedBy oa:classifying ;
-  sh:value "2026-07-15" ;
-  sh:resultSeverity sh:Warning .
+  sh:value "[dropped]" ;
+  sh:resultSeverity sh:Info .

@@ -1,0 +1,47 @@
+@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+@prefix cascade: <https://ns.cascadeprotocol.org/cascade#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ex: <https://example.org/synthetic-adapter/v1#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<ni:///sha-256;luKlCHVv7Gs1mrQ2Na55zNR_Mlo3OyJfoxYL1qX_9fA> prov:specializationOf <urn:uuid:0cfd854b-7d46-8a03-9268-b54303a2de3a> .
+
+<urn:uuid:0cfd854b-7d46-8a03-9268-b54303a2de3a> a ex:Record ;
+    ex:accession "EX000245" .
+
+<ni:///sha-256;6l7ICGU109xIpxMFCvJRr9u2aT0Uf8q4ZjKfH9y7Mis> a prov:Entity ;
+    pav:retrievedFrom <https://records.example.org/api/ExampleRecordSet> ;
+    pav:retrievedOn "2026-08-30T22:14:00Z"^^xsd:dateTime ;
+    prov:wasAttributedTo _:nd351e787ca9d4714a484b40b2f5cd19fb5 ;
+    prov:wasGeneratedBy [ prov:qualifiedAssociation [ prov:agent _:nd351e787ca9d4714a484b40b2f5cd19fb5 ;
+                    prov:hadRole cascade:AuthorRole ],
+                [ prov:agent [ rdfs:label "Example Fetcher" ] ;
+                    prov:hadRole cascade:TransmitterRole ] ] ;
+    cascade:authenticatedAsProxy false ;
+    cascade:authenticatedPatient "Patient/example-patient" ;
+    cascade:serverBaseUrl "https://records.example.org/api" ;
+    cascade:sourceFormatVersion "1" .
+
+[] pav:version "1" ;
+    oa:hasSelector [ a oa:FragmentSelector ;
+            dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+            rdf:value "" ] ;
+    oa:hasSource <ni:///sha-256;6l7ICGU109xIpxMFCvJRr9u2aT0Uf8q4ZjKfH9y7Mis> ;
+    prov:wasDerivedFrom <ni:///sha-256;6l7ICGU109xIpxMFCvJRr9u2aT0Uf8q4ZjKfH9y7Mis> ;
+    prov:wasGeneratedBy [ a prov:Activity ;
+            rdfs:label "synthetic example import" ;
+            prov:qualifiedAssociation [ prov:agent [ ] ;
+                    prov:hadPlan [ a prov:Plan ;
+                            rdfs:label "synthetic-json-example-with-failing-entries" ;
+                            pav:version "0.1.0" ] ] ;
+            prov:startedAtTime "2026-09-01T10:00:00Z"^^xsd:dateTime ;
+            prov:used <ni:///sha-256;6l7ICGU109xIpxMFCvJRr9u2aT0Uf8q4ZjKfH9y7Mis> ] ;
+    bridge:arrivedAs <ni:///sha-256;luKlCHVv7Gs1mrQ2Na55zNR_Mlo3OyJfoxYL1qX_9fA> .
+
+_:nd351e787ca9d4714a484b40b2f5cd19fb5 rdfs:label "Example Records Registry" .
+

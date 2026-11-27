@@ -7,7 +7,7 @@
 
 [] a oa:Annotation ;
   oa:hasTarget [
-    oa:hasSource <../in/contained-label-in-an-element-not-carried-at-all.json> ;
+    oa:hasSource <../in/contained-label-sibling-reported.json> ;
     oa:hasSelector [
       a oa:FragmentSelector ;
       dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
@@ -15,7 +15,7 @@
       oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/contained/0" ]
     ]
   ] ;
-  oa:hasBody ex:a-contained-record-the-source-held-back-whole ;
+  oa:hasBody ex:a-contained-label-the-source-withheld ;
   oa:motivatedBy oa:classifying ;
-  sh:value "[dropped]" ;
+  sh:value "[withheld]" ;
   sh:resultSeverity sh:Info .

@@ -247,6 +247,7 @@ class TestAccountingForEveryPathOfASource:
             said = said_about(package)
             assert "bridge:elementNotCarried" in said
             assert "the-whole-label-is-held-back" in said
+            assert "true of a whole element, which no entry's bridge:namesGap can name" in said
 
     class TestGivenAnEntrysVerdictAndWhatTheMappingsMention:
         """given an entry's verdict and what the mappings mention"""
