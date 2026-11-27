@@ -154,12 +154,13 @@ ASSERTION_OF = """
   earl:subject <https://example.org/fake-engine> ;
   earl:test <{entry}> ;
   earl:mode earl:automatic ;
-  earl:result [ a earl:TestResult ; earl:outcome earl:{outcome} ] .
+  earl:result [ a earl:TestResult ; earl:outcome earl:{outcome}{failed_by} ] .
 """
 OUTCOMES = {"InputOnlyTest": "cantTell", "DatasetCompletionTest": "untested"}
 
 LIBRARY = {
     "holds": {},
+    "test-reports-every-entry-passed": {},
     "document-kind-for-adapter": {"adapterFailure": "documentFailure"},
     "file-iri-in-findings": {},
     "none": {},
@@ -372,7 +373,7 @@ def asked_for(findings, given):
     return findings
 
 
-def test_adapter(given):
+def test_adapter(given, mode):
     import rdflib
 
     iri = given["adapter"]["iri"]
@@ -384,13 +385,17 @@ def test_adapter(given):
     manifest = turtle(adapter[named], iri + named)
     listing = next(manifest.subjects(rdflib.URIRef(BRIDGE + "adapter"), None))
     entries = manifest.items(manifest.value(listing, rdflib.URIRef(MF + "entries")))
-    report = EARL + "".join(
-        ASSERTION_OF.format(
+    report = EARL
+    for entry in entries:
+        check = manifest.value(entry, rdflib.URIRef(BRIDGE + "expectedFailedCheck"))
+        fails = check is not None and mode != "test-reports-every-entry-passed"
+        report += ASSERTION_OF.format(
             entry=entry,
-            outcome=OUTCOMES.get(str(manifest.value(entry, rdflib.RDF.type)).removeprefix(BRIDGE), "passed"),
+            outcome="failed"
+            if fails
+            else OUTCOMES.get(str(manifest.value(entry, rdflib.RDF.type)).removeprefix(BRIDGE), "passed"),
+            failed_by=f" ; <{BRIDGE}failedCheck> <{check}>" if fails else "",
         )
-        for entry in entries
-    )
     return report
 
 
@@ -422,7 +427,7 @@ def run_library(args):
                     for name, data in convert_document(given, loaded, args.library).items():
                         (written / f"{position}.{name}").write_text(data, encoding="utf-8")
                 else:
-                    (written / f"{position}.report").write_text(test_adapter(given), encoding="utf-8")
+                    (written / f"{position}.report").write_text(test_adapter(given, args.library), encoding="utf-8")
             except Failure as failure:
                 result = failure.result(args.library)
             (written / f"{position}.json").write_text(json.dumps(result), encoding="utf-8")

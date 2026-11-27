@@ -12,6 +12,7 @@
     <#ask-answers-the-detect-query>
     <#ask-on-a-document-that-does-not-parse>
     <#test-names-every-entry-under-the-adapter-iri>
+    <#test-reports-each-entry-as-its-manifest-lists-it>
     <#a-document-that-does-not-parse-then-a-good-one>
     <#facts-that-do-not-parse>
     <#facts-supplying-a-base-url-that-is-refused>
@@ -48,6 +49,10 @@ _:synthetic-json-adapter-to-load
   bridge:iri <https://example.org/adapters/synthetic-json-adapter/> ;
   bridge:directory <../synthetic-json-adapter/> ;
   bridge:withholds "fixtures/" .
+
+_:synthetic-json-adapter-with-failing-entries
+  bridge:iri <https://example.org/adapters/synthetic-json-adapter-with-failing-entries/> ;
+  bridge:directory <../synthetic-json-adapter-with-failing-entries/> .
 
 _:synthetic-vocabularies
   bridge:iri <https://example.org/vocabularies/synthetic/> ;
@@ -170,6 +175,14 @@ _:load-the-synthetic-adapter a bridge:LoadCall ;
   mf:action (
     [ a bridge:TestCall ;
       bridge:adapterFiles _:synthetic-adapter ;
+      bridge:vocabularyFiles _:synthetic-vocabularies ]
+  ) .
+
+<#test-reports-each-entry-as-its-manifest-lists-it> a bridge:LibraryTest ;
+  mf:name "test-reports-each-entry-as-its-manifest-lists-it" ;
+  mf:action (
+    [ a bridge:TestCall ;
+      bridge:adapterFiles _:synthetic-json-adapter-with-failing-entries ;
       bridge:vocabularyFiles _:synthetic-vocabularies ]
   ) .
 
