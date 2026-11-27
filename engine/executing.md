@@ -90,11 +90,13 @@ owed for either, and neither is an empty child of its element. An object holding
 included, is empty. A number, `true` and `false` are values, never empty.
 
 **Judge a report against the outcomes a manifest lists.** An entry that lists a `bridge:expectedFailedCheck` must be
-reported `earl:failed` with that check as the `bridge:failedCheck` of its result, and every other entry
-`earl:passed`. A report's assertion is matched to the entry whose IRI has the fragment of the reported
-`earl:test`; a reported test whose fragment is no entry of the manifest is a fault, and so is an entry not reported.
-[`faults-of-a-report-against-expected-outcomes.rq`](faults-of-a-report-against-expected-outcomes.rq) finds each
-fault. A Bridge is held to
+reported `earl:failed` with that check as the `bridge:failedCheck` of its result;
+[`faults-of-a-report.rq`](faults-of-a-report.rq) finds each fault of a report, of these entries and every other. A
+report has one base, the one under which the most of its tests are entries at the same path, and a test is the entry
+at the same path under that base and no other; where no base makes any test an entry, every entry has no outcome.
+With `?everyOutcome` bound it also returns each result it finds no fault in, its fault empty, which is how the
+compatibility tool's case report learns which entry each test is. A
+Bridge is held to
 [`../fixtures/synthetic-json-adapter-with-failing-entries/`](../fixtures/synthetic-json-adapter-with-failing-entries/)
 this way: a report that gives every entry `earl:passed` is refused.
 

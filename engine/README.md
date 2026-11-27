@@ -19,6 +19,6 @@ An engine (a Cascade Bridge) runs adapters.
 | the smallest thing that meets them | [`../fixtures/fake-engine/engine.py`](../fixtures/fake-engine/engine.py) |
 | loading and reporting a test manifest | [`executing.md`](executing.md) |
 | each fault of a report of an adapter's tests, over it and that adapter's test manifest; none means it holds (the report of the vocabulary's naming manifest is not put through it: its entries without a `qt:query` are `earl:inapplicable` by design) | [`faults-of-a-report.rq`](faults-of-a-report.rq) |
-| an adapter whose entries must be reported failed, and each fault of a report of it, over the report and its manifest | [`../fixtures/synthetic-json-adapter-with-failing-entries/`](../fixtures/synthetic-json-adapter-with-failing-entries/), [`faults-of-a-report-against-expected-outcomes.rq`](faults-of-a-report-against-expected-outcomes.rq) |
+| an adapter whose entries must be reported failed | [`../fixtures/synthetic-json-adapter-with-failing-entries/`](../fixtures/synthetic-json-adapter-with-failing-entries/) |
 | the stages around a mapping | [`stages.md`](stages.md) |
 | which adapters you must pass with, and the workflow your CI runs | [`../compatibility.md`](../compatibility.md) |

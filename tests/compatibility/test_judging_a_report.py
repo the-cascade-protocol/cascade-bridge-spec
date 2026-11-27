@@ -1,14 +1,18 @@
 import json
 import shutil
+import subprocess
+import sys
 import time
 
 import pytest
-from rdflib import Graph
+from rdflib import Graph, URIRef
 
 from compatibility_tool import judge
 from compatibility_tool.judge import judge_report
-from compatibility_world import ROOT, SYNTHETIC_ADAPTER
+from compatibility_world import FAKE_ENGINE, ROOT, SYNTHETIC_ADAPTER, SYNTHETIC_VOCABULARIES
 
+ADAPTER_WHOSE_ENTRIES_MUST_FAIL = ROOT / "fixtures" / "synthetic-json-adapter-with-failing-entries"
+EXPECTED_FAILED_CHECK = URIRef("https://ns.cascadeprotocol.org/bridge/v1-draft#expectedFailedCheck")
 MANIFEST = (SYNTHETIC_ADAPTER / "fixtures" / "manifest.ttl").resolve().as_uri()
 FAULTS_OF_A_REPORT = ROOT / "engine" / "faults-of-a-report.rq"
 EVERY_TEST = (
@@ -67,6 +71,25 @@ def report_from_elsewhere(tmp_path, outcomes):
         ),
         encoding="utf-8",
     )
+    return report
+
+
+def entries_that_must_fail():
+    manifest = ADAPTER_WHOSE_ENTRIES_MUST_FAIL / "fixtures" / "manifest.ttl"
+    graph = Graph().parse(manifest, format="turtle", publicID=manifest.resolve().as_uri())
+    return sorted(str(entry).rpartition("#")[2] for entry in graph.subjects(EXPECTED_FAILED_CHECK, None))
+
+
+def reported_by_a_stand_in_engine(tmp_path, canned):
+    report = tmp_path / "report.ttl"
+    run = subprocess.run(
+        [sys.executable, str(FAKE_ENGINE / "engine.py"), "--canned", canned, "test"]
+        + [str(ADAPTER_WHOSE_ENTRIES_MUST_FAIL), "--earl", str(report), "--vocabularies", str(SYNTHETIC_VOCABULARIES)],
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    assert run.returncode == 0, run.stdout + run.stderr
     return report
 
 
@@ -394,6 +417,34 @@ class TestJudgingAnEARLReport:
             verdict = judge_report(report, SYNTHETIC_ADAPTER)
             assert verdict.faults == [
                 f"example-0002 is reported {outcome}: a report that holds gives only passed, cantTell or untested"
+            ]
+
+    class TestGivenAnAdapterWhoseManifestListsEntriesThatMustFail:
+        def test_refuses_a_report_giving_every_entry_passed(self, tmp_path):
+            report = reported_by_a_stand_in_engine(tmp_path, "everything-passed")
+            verdict = judge_report(report, ADAPTER_WHOSE_ENTRIES_MUST_FAIL)
+            assert not verdict.holds
+            assert verdict.faults == [f"{name} is reported passed, not failed" for name in entries_that_must_fail()]
+
+        def test_holds_for_a_report_giving_each_entry_the_outcome_it_lists(self, tmp_path):
+            report = reported_by_a_stand_in_engine(tmp_path, "listed")
+            verdict = judge_report(report, ADAPTER_WHOSE_ENTRIES_MUST_FAIL)
+            assert verdict.holds
+            assert verdict.tally == {"failed": 26, "passed": 26}
+
+        def test_refuses_an_entry_that_must_pass_reported_failed(self, tmp_path):
+            report = reported_by_a_stand_in_engine(tmp_path, "listed")
+            text = report.read_text(encoding="utf-8")
+            must_pass = "#label-empty>"
+            assert must_pass in text
+            before, _, after = text.partition(must_pass)
+            report.write_text(
+                before + must_pass + after.replace("earl:outcome earl:passed", "earl:outcome earl:failed", 1),
+                encoding="utf-8",
+            )
+            verdict = judge_report(report, ADAPTER_WHOSE_ENTRIES_MUST_FAIL)
+            assert verdict.faults == [
+                "label-empty is reported failed: a report that holds gives only passed, cantTell or untested"
             ]
 
     class TestGivenAManifestEntryWithoutAFragment:

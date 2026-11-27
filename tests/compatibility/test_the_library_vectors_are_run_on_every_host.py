@@ -84,6 +84,21 @@ class TestLibraryCasesRunOnEveryHostOfAnEngine:
             assert row["holds"] is False, row
             assert names_a_case(row["result"]), row["result"]
 
+    class TestGivenALibraryTestThatReportsEveryEntryPassed:
+        def test_fails_the_row_naming_the_case_of_the_adapter_whose_entries_must_fail(self, world):
+            engine = world.engine_beside_adapter(host=one_host("test-reports-every-entry-passed"))
+
+            said = world.tool(engine, 1, library_cases=True)
+
+            row = on_host(world, "native")
+            assert row is not None, said
+            assert row["holds"] is False, row
+            assert (
+                "test-reports-each-entry-as-its-manifest-lists-it: call 1, test, its report has faults:"
+                in (row["result"])
+            ), row["result"]
+            assert "label-not-written is reported passed, not failed" in row["result"], row["result"]
+
     class TestGivenAnEngineWritingNoLibraryResults:
         def test_fails_the_row_saying_it_wrote_none(self, world):
             """fails the row, saying it wrote none"""

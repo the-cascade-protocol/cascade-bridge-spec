@@ -282,6 +282,25 @@ class TestAReportOfEveryCaseAnEngineRan:
             assert case_named(world, "example-0003")["status"] == "passed"
             assert case_named(world, "example-0002")["status"] == "other"
 
+        def test_gives_an_entry_only_the_outcome_of_the_test_at_its_own_path_as_the_judge_does(self, world):
+            """gives an entry only the outcome of the test at its own path, never that of a test whose path ends in it"""
+            elsewhere = "file:///elsewhere/adapter/"
+            below = "d/fixtures/manifest.ttl#example-0001"
+            more = (
+                f"[] a earl:Assertion ; earl:test <{elsewhere}{below}> ; "
+                "earl:result [ a earl:TestResult ; earl:outcome earl:untested ] .\n"
+            )
+            engine = engine_writing(world, PASSING, more, manifest=f"{elsewhere}fixtures/manifest.ttl")
+            manifest = world.workspace / "adapter" / "fixtures" / "manifest.ttl"
+            text = manifest.read_text(encoding="utf-8").replace("mf:entries (", f"mf:entries ( <../{below}>", 1)
+            manifest.write_text(f'{text}\n<../{below}> mf:name "example-0001 one folder down" .\n', encoding="utf-8")
+
+            world.tool(engine)
+
+            assert case_named(world, "example-0001")["extra"]["outcome"] == ["passed"]
+            assert case_named(world, "example-0001")["status"] == "passed"
+            assert case_named(world, "example-0001 one folder down")["status"] == "skipped"
+
     class TestGivenAHostWhoseReportCannotBeJudged:
         """given a host whose report cannot be judged
 
