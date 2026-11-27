@@ -443,7 +443,9 @@ class TestJudgingAnEARLReport:
                 encoding="utf-8",
             )
             verdict = judge_report(report, ADAPTER_WHOSE_ENTRIES_MUST_FAIL)
-            assert verdict.faults == ["label-empty is reported failed, not passed"]
+            assert verdict.faults == [
+                "label-empty is reported failed: a report that holds gives only passed, cantTell or untested"
+            ]
 
     class TestGivenAManifestEntryWithoutAFragment:
         def test_is_named_by_its_iri(self, tmp_path):
