@@ -280,13 +280,15 @@ class PullRequests:
                     return run
         return None
 
-    def run(self, repository, commit, event="push", status="in_progress"):
+    def run(self, repository, commit, event="push", status="in_progress", workflow_id=1, fork=False):
         number = sum(len(runs) for runs in self.runs_by_commit.values()) + 1
         run = {
             "id": number,
             "event": event,
             "status": status,
+            "workflow_id": workflow_id,
             "html_url": f"https://example.org/{repository}/runs/{number}",
+            "head_repository": {"full_name": f"{'a-fork-owner' if fork else OWNER}/{repository}"},
         }
         self.runs_by_commit.setdefault((repository, commit), []).append(run)
         return run
@@ -294,6 +296,21 @@ class PullRequests:
     def runs(self, repository, commit):
         self.runs_read.append((repository, commit))
         return {"workflow_runs": self.runs_by_commit.get((repository, commit), [])}
+
+    def run_by_id(self, identifier):
+        return next((run for runs in self.runs_by_commit.values() for run in runs if run["id"] == identifier), None)
+
+    def artifacts(self, repository, name):
+        """The repository's artifacts of that name, newest first, each naming the run that made it."""
+        found = [
+            {**artifact, "workflow_run": {"id": run["id"]}}
+            for (holder, _), runs in self.runs_by_commit.items()
+            if holder == repository
+            for run in runs
+            for artifact in self.artifacts_by_run.get(run["id"], [])
+            if artifact.get("name") == name
+        ]
+        return {"artifacts": sorted(found, key=lambda artifact: artifact["id"], reverse=True)}
 
     def check_runs(self, repository, commit, page, per_page):
         runs = self.check_runs_by_commit.get((repository, commit), [])
@@ -341,6 +358,12 @@ class Handler(BaseHTTPRequestHandler):
         if len(parts) == 5 and parts[0] == "repos" and parts[3:5] == ["actions", "runs"]:
             commit = parse_qs(urlsplit(self.path).query).get("head_sha", [""])[0]
             return self.answer(200, self.server.pull_requests.runs(parts[2], commit))
+        if len(parts) == 6 and parts[0] == "repos" and parts[3:5] == ["actions", "runs"]:
+            run = self.server.pull_requests.run_by_id(int(parts[5]))
+            return self.answer(200, run) if run else self.answer(404, {"message": "Not Found"})
+        if len(parts) == 5 and parts[0] == "repos" and parts[3:5] == ["actions", "artifacts"]:
+            name = parse_qs(urlsplit(self.path).query).get("name", [""])[0]
+            return self.answer(200, self.server.pull_requests.artifacts(parts[2], name))
         if len(parts) == 7 and parts[0] == "repos" and parts[3:5] == ["actions", "runs"] and parts[6] == "artifacts":
             return self.answer(200, {"artifacts": self.server.pull_requests.artifacts_by_run.get(int(parts[5]), [])})
         if len(parts) == 3 and parts[0] == "artifacts" and parts[2] == "zip":  # as GitHub sends it, to its storage
