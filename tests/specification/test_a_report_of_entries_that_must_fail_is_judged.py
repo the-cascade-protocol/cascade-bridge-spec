@@ -15,16 +15,18 @@ MANIFEST = ADAPTER / "fixtures" / "manifest.ttl"
 CHECK = URIRef("https://ns.cascadeprotocol.org/bridge/v1-draft#expectedFailedCheck")
 THE_CHECK = "https://ns.cascadeprotocol.org/bridge/v1-draft#conversionWritesWhatTheAccountingCarries"
 MUST_FAIL = [
+    "contained-label-in-an-element-reported-by-a-value-gap",
     "contained-label-not-written",
+    "contained-label-reported-by-a-gap-the-entry-does-not-name",
     "contained-label-reported-on-a-sibling-contained-record",
-    "contained-label-reported-on-its-element-by-a-gap-the-entry-does-not-name",
     "label-not-written",
-    "label-of-the-nearer-record-not-written-while-the-farther-has-one",
+    "label-of-the-nearer-record-not-written",
     "last-update-not-written",
 ]
 MUST_PASS = [
+    "contained-label-in-an-element-not-carried-at-all",
     "contained-label-of-a-record-the-adapter-does-not-map",
-    "contained-label-reported-on-its-element-by-the-gap-the-entry-names",
+    "contained-label-reported-by-the-gap-the-entry-names",
     "every-carried-path-written",
     "label-empty",
     "label-empty-beside-a-caption",

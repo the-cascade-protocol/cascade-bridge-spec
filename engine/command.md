@@ -13,7 +13,7 @@ arguments to each host's `command`.
 ## `test`
 
 ```
-test <adapter directory> [--earl <file>] [--datasets] [--vocabularies <directory>]
+test <adapter directory> [--earl <file>] [--datasets] [--vocabularies <directory>] [--owed]
 ```
 
 The library's `test`. `<adapter directory>` is the adapter's map and
@@ -32,12 +32,17 @@ An entry fails when its conversion does not write what the accounting carries
 stood in the input, the class it is carried on and the properties it looked for. The
 adapter's author answers by having the mapping write one of them, or by having it report a
 finding at the value, or at an element above it with the path's accounting entry made `bridge:carriedInPart` naming that
-gap ([`../adapter/README.md`](../adapter/README.md)).
+gap ([`../adapter/README.md`](../adapter/README.md)). The result's description gives a
+sample of them; **`--owed` lists every one**, one per line after the entries and before the
+tally: `Owed`, the entry's name, then the path, `at`, the occurrence's address, and the
+properties looked for on the class owed, as `<path> at "<address>": no <property> on its
+<class> is written, and no finding is about it`, the property and the class by IRI, several
+joined by `or`. It changes nothing in the report.
 
 ## `convert`
 
 ```
-convert <adapter directory> <document> [--envelope <iri>] [--facts <file>] [--out <file>] [--findings <file>] [--format turtle|ntriples] [--vocabularies <directory>]
+convert <adapter directory> <document> [--envelope <iri>] [--facts <file>] [--out <file>] [--findings <file>] [--format turtle|ntriples] [--vocabularies <directory>] [--owed]
 ```
 
 The library's `convert`, on the adapter loaded from `<adapter directory>` and,
@@ -57,6 +62,12 @@ Where the library returns none, a run given `--findings` produces nothing.
 **The exit code is the whole of what a caller learns**, because `convert` writes
 no report: zero when the graph was produced, non-zero when it was not, and
 standard output carries nothing in that case.
+
+With `--owed`, `convert` writes no graph: it prints `Owed`, the document's IRI and the count
+of unmet occurrences (`<n> unmet`), then each one on a line of its own indented by two spaces,
+in the form `test --owed` gives it without the entry's name, and exits zero. It is for an
+adapter's author, to see what a document would fail a test entry for
+([`../adapter/README.md`](../adapter/README.md)); the tooling never appends it.
 
 ## `library`
 

@@ -93,12 +93,17 @@ own form; an entry on a path above it, or on the same place in another form, doe
 A test entry fails where its input holds a path the accounting marks `bridge:carried` or `bridge:carriedInPart`, and the
 conversion neither writes one of the properties the path's `bridge:carriedAs` names nor reports a finding that meets it.
 The failure names the path, its address in the input, the class and the properties
-([`../engine/executing.md`](../engine/executing.md)). It is answered in one of two ways:
+([`../engine/executing.md`](../engine/executing.md)); it names a sample where there are many, and
+`test <adapter> --owed` lists every one, one per line, as `convert <adapter> <input> --owed` does for one
+input ([`../engine/command.md`](../engine/command.md)). It is answered in one of two ways:
 
 - Write the property: make the mapping construct one of those properties on a record of that class.
 - Report what is not carried: have the findings query report a finding at the value, whatever its body, or at an
   element above it with the path's entry made `bridge:carriedInPart` naming the `bridge:namesGap` that finding's body
   is. A `bridge:carried` entry with a finding at the value itself passes.
+
+A finding whose body is a gap of kind `bridge:elementNotCarried`, addressed at an element, answers for everything in
+the element: nothing in it is owed, and no entry names that gap. A `bridge:carriedInPart` entry may not name one.
 
 ## Showing an adapter to a reader
 

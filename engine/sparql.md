@@ -237,7 +237,9 @@ A Bridge reports from an entry whose verdict is `bridge:carriedInPart` or
 `bridge:sourceLacksRequired` is true of the path, and the entry naming it
 reports it. A gap of kind `bridge:carriedWithLoss`, `bridge:valueNotMapped`,
 `bridge:schemaRuleUnnamed` or `bridge:idRepeated` is true of what a record holds
-at the path, which a verdict cannot name, and reports nothing.
+at the path, which a verdict cannot name, and reports nothing. A gap of kind
+`bridge:elementNotCarried` is true of a whole element, not of a path, and reports
+nothing; an entry whose verdict is `bridge:carriedInPart` may not name one.
 
 A finding an entry reports is addressed as a census finding is, and carries the
 gap as its body, `oa:classifying` as its `oa:motivatedBy`, the path as its

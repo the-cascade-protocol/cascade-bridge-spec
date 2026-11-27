@@ -6,6 +6,7 @@ from _terms import BRIDGE, CASCADE
 
 KINDS_A_GAP_MAY_NAME = (
     BRIDGE.carriedWithLoss,
+    BRIDGE.elementNotCarried,
     BRIDGE.idRepeated,
     BRIDGE.noPredicate,
     BRIDGE.schemaRuleUnnamed,

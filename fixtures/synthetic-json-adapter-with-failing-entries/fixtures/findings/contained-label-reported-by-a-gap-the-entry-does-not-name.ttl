@@ -7,7 +7,7 @@
 
 [] a oa:Annotation ;
   oa:hasTarget [
-    oa:hasSource <../in/contained-label-reported-on-its-element-by-a-gap-the-entry-does-not-name.json> ;
+    oa:hasSource <../in/contained-label-reported-by-a-gap-the-entry-does-not-name.json> ;
     oa:hasSelector [
       a oa:FragmentSelector ;
       dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;

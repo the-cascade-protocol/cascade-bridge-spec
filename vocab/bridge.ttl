@@ -338,6 +338,11 @@ bridge:carriedWithLoss a skos:Concept ;
   skos:inScheme bridge:gapKinds ;
   rdfs:isDefinedBy <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
 
+bridge:elementNotCarried a skos:Concept ;
+  skos:prefLabel "an element of the source of which nothing, neither the element nor anything in it, is carried"@en ;
+  skos:inScheme bridge:gapKinds ;
+  rdfs:isDefinedBy <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+
 bridge:schemaRuleUnnamed a skos:Concept ;
   skos:prefLabel "a value at a source path failing a schema rule its specification names no anchor for"@en ;
   skos:inScheme bridge:gapKinds ;

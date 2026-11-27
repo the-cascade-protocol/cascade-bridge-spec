@@ -15,6 +15,16 @@ ex:a-contained-label-the-source-withheld a skos:Concept ;
   skos:inScheme ex:gaps ;
   skos:broader bridge:carriedWithLoss .
 
+ex:a-contained-record-the-source-held-back-whole a skos:Concept ;
+  skos:prefLabel "a contained record of which nothing is carried" ;
+  skos:inScheme ex:gaps ;
+  skos:broader bridge:elementNotCarried .
+
+ex:a-contained-value-the-source-could-not-map a skos:Concept ;
+  skos:prefLabel "a value of a contained record outside the set the vocabulary fixes" ;
+  skos:inScheme ex:gaps ;
+  skos:broader bridge:valueNotMapped .
+
 ex:a-last-update-with-no-time-zone a skos:Concept ;
   skos:prefLabel "a last update stated with no time or no time zone" ;
   skos:inScheme ex:gaps ;

@@ -28,7 +28,8 @@ findings are data there, never failures ([`library.md`](library.md)).
 - *Empty*: nothing but white space is left once markup is taken out of the value. An empty or white-space-only
   string; a string holding only XML or XHTML elements with no text in them (`<p> </p>`,
   `<div xmlns="..."><br/></div>`); an XML element holding, at any depth, no text and no attribute value other than
-  white space.
+  white space, so that `<value><code code="I10"/></value>` is not empty, the attribute's value being content; an XML
+  attribute whose value is white space.
 - *Met*: a `bridge:asProperty` of one of those `bridge:carriedAs` is written on a record the occurrence belongs to,
   on its versions, on their arrivals or on a node they point at that is no record, version or arrival of its own (a
   record of that class written elsewhere in the unit does not meet it); or a finding from the same unit's conversion
@@ -53,6 +54,13 @@ nothing more. **The record an occurrence belongs to** is found so:
    address, or an ancestor of it) is nearer than one whose does not. Records still tied all hold it. A datum of an
    enclosing element that the adapter carries on no record is reported by a finding at it, which meets the
    occurrence whichever record it is held to.
+3. An element reported as not carried at all holds nothing. An occurrence belongs to no record, and is not owed, where
+   a finding of the same unit's conversion is addressed at it or at an element holding it, and that finding's
+   `oa:hasBody` is a gap of kind `bridge:elementNotCarried`. It is the same case as an occurrence inside a nested
+   record the conversion wrote nothing from. A gap of any other kind, `bridge:valueNotMapped` included, drops nothing
+   below it: it meets the occurrence only as *Met* says. A `bridge:carriedInPart` entry may not name a gap of kind
+   `bridge:elementNotCarried`
+   ([`../adapter/profile/must/source_accounting.py`](../adapter/profile/must/source_accounting.py)).
 
 **Judge a report against the outcomes a manifest lists.** An entry that lists a `bridge:expectedFailedCheck` must be
 reported `earl:failed` with that check as the `bridge:failedCheck` of its result, and every other entry

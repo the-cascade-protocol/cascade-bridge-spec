@@ -31,7 +31,7 @@ ADAPTER_URL = f"https://github.com/{OWNER}/adapter"
 CRATE = "ro-crate-metadata.json"
 MATCHING = "main, the branch matching the pull request's target"
 NOWHERE = "https://example.invalid/gone.git"
-VECTORS_ONLY_THESE_TESTS_READ = ("lift", "naming", "versioning")
+VECTORS_ONLY_THESE_TESTS_READ = ("lift", "naming", "synthetic-json-adapter-with-failing-entries", "versioning")
 
 VOCABULARY = "spec"
 VOCABULARY_OWNER = "the-cascade-protocol"

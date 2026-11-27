@@ -10,6 +10,7 @@ KINDS_AN_ENTRY_REPORTS = (BRIDGE.noPredicate, BRIDGE.sourceLacksRequired)
 KINDS_AN_ENTRY_REPORTS_NOTHING_OF = (
     BRIDGE.carriedWithLoss,
     BRIDGE.valueNotMapped,
+    BRIDGE.elementNotCarried,
     BRIDGE.schemaRuleUnnamed,
     BRIDGE.idRepeated,
 )

@@ -7,7 +7,7 @@
 
 [] a oa:Annotation ;
   oa:hasTarget [
-    oa:hasSource <../in/contained-label-reported-on-its-element-by-the-gap-the-entry-names.json> ;
+    oa:hasSource <../in/contained-label-in-an-element-not-carried-at-all.json> ;
     oa:hasSelector [
       a oa:FragmentSelector ;
       dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
@@ -15,7 +15,7 @@
       oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/contained/0" ]
     ]
   ] ;
-  oa:hasBody ex:a-contained-label-the-source-withheld ;
+  oa:hasBody ex:a-contained-record-the-source-held-back-whole ;
   oa:motivatedBy oa:classifying ;
-  sh:value "[withheld]" ;
+  sh:value "[dropped]" ;
   sh:resultSeverity sh:Info .
