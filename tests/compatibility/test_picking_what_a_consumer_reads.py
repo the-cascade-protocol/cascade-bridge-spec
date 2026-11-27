@@ -268,6 +268,16 @@ class TestPickingAnotherRepositorysFilesOrPackageBuild:
 
             assert f"{OWNER}/{PRODUCER}/pull/7 has no package artifact at its head {head}" in said
 
+    class TestGivenAPackageOfTwoNamedOpenPullRequestsOfTheProducer:
+        def test_is_refused_naming_both(self, world):
+            """is refused, naming both"""
+            world.pull_request(PRODUCER, 7)
+            world.pull_request(PRODUCER, 8)
+
+            said, _ = package(world, body=depends_on(PRODUCER, 7) + depends_on(PRODUCER, 8), expected=1)
+
+            assert "name #7 and #8 of" in said
+
     class TestGivenAPackageOfANamedMergedPullRequest:
         def test_is_the_newest_build_of_the_default_branch(self, world):
             world.pull_request(PRODUCER, 7, merged=True, state="closed")

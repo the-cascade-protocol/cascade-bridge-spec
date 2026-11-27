@@ -38,7 +38,7 @@ class Picked:
 def the_one(names, pattern, holder):
     matching = [name for name in names if fnmatch.fnmatchcase(name, pattern)]
     if len(matching) != 1:
-        raise Stop(f"{holder} holds {len(matching)} files named {pattern}, and one is picked: {', '.join(names)}")
+        raise Stop(f"{holder} holds {len(matching)} files named {pattern}, where one is wanted: {', '.join(names)}")
     return matching[0]
 
 

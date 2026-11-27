@@ -14,12 +14,15 @@ path, commit and how to $GITHUB_OUTPUT when it is set. Exit status is 1 when not
 
 import argparse
 import os
+import re
 import sys
 import tempfile
 from pathlib import Path
 
 from compatibility_tool import builds, git, github, picking
 from compatibility_tool.console import Stop
+
+OWNER_AND_REPOSITORY = re.compile(r"^[A-Za-z0-9-]+/(?!\.\.?$)[A-Za-z0-9._-]+$")
 
 
 def parse(argv):
@@ -52,7 +55,9 @@ def main(argv):
     github.take_token()
     api = github.Api()
     try:
-        url = github.url_on_this_server(github.repository_path(f"/{args.repository}"))
+        if not OWNER_AND_REPOSITORY.match(args.repository):
+            raise Stop(f"{args.repository} is no owner/repository, as the-cascade-protocol/cascade-vocabulary is")
+        url = github.url_on_this_server(args.repository)
         event = github.event(api)
         reached = picking.follow(api, event, [url], None)
         if args.checkout:
