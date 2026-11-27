@@ -323,9 +323,6 @@
           "@id": "fixtures/expected/selector-selects-no-node.ttl"
         },
         {
-          "@id": "fixtures/expected/selector-selects-two-nodes.ttl"
-        },
-        {
           "@id": "fixtures/expected/tied-records-label-on-one.ttl"
         },
         {
@@ -480,9 +477,6 @@
         },
         {
           "@id": "fixtures/findings/selector-selects-no-node.ttl"
-        },
-        {
-          "@id": "fixtures/findings/selector-selects-two-nodes.ttl"
         },
         {
           "@id": "fixtures/findings/tied-records-label-on-one.ttl"
@@ -641,9 +635,6 @@
           "@id": "fixtures/in/selector-selects-no-node.json"
         },
         {
-          "@id": "fixtures/in/selector-selects-two-nodes.json"
-        },
-        {
           "@id": "fixtures/in/tied-records-label-on-one.json"
         },
         {
@@ -723,8 +714,8 @@
       "@type": "File",
       "name": "Mapping of contained records",
       "encodingFormat": "application/sparql-query",
-      "contentSize": "3590",
-      "sha256": "da27349a081501e68b4282aa7bce678cf1e10e5de6191e9c760da81d53d68413",
+      "contentSize": "3584",
+      "sha256": "56854447cedfe1ee4d9f5d0a926f4f221b4fe9bcddc047fb2b9aa3493addb390",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -734,8 +725,8 @@
       "@type": "File",
       "name": "Mapping of contained records placed by other selectors",
       "encodingFormat": "application/sparql-query",
-      "contentSize": "3937",
-      "sha256": "680416015b51e541d93826fa18e2daab9270aca5707bd70039591b1d5f8bf471",
+      "contentSize": "3865",
+      "sha256": "5eb1387e6cbe500e8ed42c9e4e4fdd40a0acd5a891e74683c5147362079868ab",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -833,8 +824,8 @@
       "@type": "File",
       "name": "Source accounting",
       "encodingFormat": "text/turtle",
-      "contentSize": "4421",
-      "sha256": "14f4e95922f77bbb5e954a6b966d97fefa5d03bfdc5df61475cd7bd376da4a40",
+      "contentSize": "4237",
+      "sha256": "6880a2c12187e3a66fb983b418ef4b88b756e943c0847fa749453558ea3a8942",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -858,8 +849,8 @@
       "@type": "File",
       "name": "Test manifest",
       "encodingFormat": "text/turtle",
-      "contentSize": "35196",
-      "sha256": "80f8fc42a2f6783bc4b09b25e875336e777301ab960bb4cac02afeb29c989b55",
+      "contentSize": "34521",
+      "sha256": "a087fcaed0d0fe5c551378ea939967d9a5e77d285b3b7ab939982a2734237264",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -1441,7 +1432,7 @@
       "name": "Expected graph for null-and-array-no-empty-child",
       "encodingFormat": "text/turtle",
       "contentSize": "2514",
-      "sha256": "48cfb936eaebce980a3f589850f2750ab222da3a48dc5f6affc513e07fdbd22d",
+      "sha256": "4718e64ec703ca9b18f33c02a52745c42491ff7ea80daf4aaaa99fb88ec8044d",
       "isBasedOn": {
         "@id": "fixtures/in/null-and-array-no-empty-child.json"
       },
@@ -1570,20 +1561,6 @@
       "sha256": "9200a9dfed64f65be5fa4d105bf71d0bc13953e1048e6fb47da5b78fed2196ac",
       "isBasedOn": {
         "@id": "fixtures/in/selector-selects-no-node.json"
-      },
-      "license": {
-        "@id": "https://spdx.org/licenses/Apache-2.0"
-      }
-    },
-    {
-      "@id": "fixtures/expected/selector-selects-two-nodes.ttl",
-      "@type": "File",
-      "name": "Expected graph for selector-selects-two-nodes",
-      "encodingFormat": "text/turtle",
-      "contentSize": "3279",
-      "sha256": "0e8fe28bbfe0e396b94a33f2ab8eaa15959209f668b8316d7b47cd0db4b9a2ed",
-      "isBasedOn": {
-        "@id": "fixtures/in/selector-selects-two-nodes.json"
       },
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
@@ -2318,20 +2295,6 @@
       }
     },
     {
-      "@id": "fixtures/findings/selector-selects-two-nodes.ttl",
-      "@type": "File",
-      "name": "Expected findings for selector-selects-two-nodes",
-      "encodingFormat": "text/turtle",
-      "contentSize": "339",
-      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
-      "isBasedOn": {
-        "@id": "fixtures/in/selector-selects-two-nodes.json"
-      },
-      "license": {
-        "@id": "https://spdx.org/licenses/Apache-2.0"
-      }
-    },
-    {
       "@id": "fixtures/findings/tied-records-label-on-one.ttl",
       "@type": "File",
       "name": "Expected findings for tied-records-label-on-one",
@@ -2807,8 +2770,8 @@
       "@type": "File",
       "name": "Synthetic JSON input null-and-array-no-empty-child",
       "encodingFormat": "application/example+json",
-      "contentSize": "137",
-      "sha256": "9475dd32dfb2451ec3cd44ce2ccf8e6fcf98dd9e71f650903a7a997b184c004f",
+      "contentSize": "138",
+      "sha256": "4ca8f923f3ee03d36589bb72085e18c7d03b4c8e31d0d34ad9a6fa9ba63e14b5",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -2908,17 +2871,6 @@
       "encodingFormat": "application/example+json",
       "contentSize": "96",
       "sha256": "e176e2655545628b44bec110b020c378c9b0d4ddae794efce51f19dacf699045",
-      "license": {
-        "@id": "https://spdx.org/licenses/Apache-2.0"
-      }
-    },
-    {
-      "@id": "fixtures/in/selector-selects-two-nodes.json",
-      "@type": "File",
-      "name": "Synthetic JSON input selector-selects-two-nodes",
-      "encodingFormat": "application/example+json",
-      "contentSize": "118",
-      "sha256": "1d2e917fefd6e9855a8f16af1214249fefbf5420c1aba15a597b738f28712d6d",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }

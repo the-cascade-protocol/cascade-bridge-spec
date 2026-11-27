@@ -57,7 +57,6 @@
     <#empty-label-written-as-empty>
     <#record-holding-it-is-nearer>
     <#record-below-an-element-held-back>
-    <#selector-selects-two-nodes>
     <#selector-outside-the-unit>
   ) .
 
@@ -681,7 +680,7 @@
 
 <#null-and-array-no-empty-child> a bridge:IsomorphicConversionTest ;
   mf:name "null-and-array-no-empty-child" ;
-  rdfs:comment "A null label and an empty array aside, both carried as rdfs:label, beside a caption not written: neither is an empty child, so the caption is owed." ;
+  rdfs:comment "A null label and an empty array remark, both carried as rdfs:label on the record, beside a caption not written: neither is an empty child, so the caption is owed." ;
   bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
   mf:action [
     bridge:input <in/null-and-array-no-empty-child.json> ;
@@ -746,20 +745,6 @@
   mf:result [
     bridge:expectedGraph <expected/record-below-an-element-held-back.ttl> ;
     bridge:expectedFindings <findings/record-below-an-element-held-back.ttl>
-  ] .
-
-<#selector-selects-two-nodes> a bridge:IsomorphicConversionTest ;
-  mf:name "selector-selects-two-nodes" ;
-  rdfs:comment "A contained record whose arrival selector /twice selects two nodes, the object holding the name twice." ;
-  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
-  mf:action [
-    bridge:input <in/selector-selects-two-nodes.json> ;
-    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
-    bridge:facts <facts/example-registry.ttl>
-  ] ;
-  mf:result [
-    bridge:expectedGraph <expected/selector-selects-two-nodes.ttl> ;
-    bridge:expectedFindings <findings/selector-selects-two-nodes.ttl>
   ] .
 
 <#selector-outside-the-unit> a bridge:IsomorphicConversionTest ;

@@ -21,9 +21,8 @@ names the path, the occurrence's address, the class owed and the properties look
 findings are data there, never failures ([`library.md`](library.md)).
 
 **Owed.** An occurrence is owed when the accounting marks its path `bridge:carried` or `bridge:carriedInPart`; its
-value is not empty; no child of its element at another path is empty and carried as one of the same properties (one
-value written from several children cannot be written when one of them is empty); and it belongs to a record of a
-class that a `bridge:inRecordClass` of one of the path's `bridge:carriedAs` names. A repeat of its own path at another
+value is not empty; and no child of its element at another path is empty and carried as one of the same properties (one
+value written from several children cannot be written when one of them is empty). A repeat of its own path at another
 index is no other child, and an empty repeat un-owes nothing but itself.
 
 **Where things stand.** An occurrence's *address* is where it stands in the document: the unit's selector, then the
@@ -36,8 +35,8 @@ and writing the node they select as the occurrence addresses are written, so
 `*[namespace-uri()='urn:hl7-org:v3' and local-name()='section'][1]` and
 `*[local-name()='section' and namespace-uri()='urn:hl7-org:v3'][1]` are one step, as are a JSON Pointer and its
 percent-encoded spelling. A record whose arrival selector selects no node, more than one, or a node outside the unit
-cannot be placed, and fails the entry by this check, the result naming the selector: a record that cannot be placed
-must not silently own nothing.
+cannot be placed, and fails the entry by `bridge:conversionWritesWhatTheAccountingCarries`, the result naming the
+selector: a record that cannot be placed must not silently own nothing.
 
 **The record an occurrence belongs to.** Where the envelope the unit was read in declares
 `bridge:pathOfContainedContentBelowContent`, each member at that path below the unit's content
@@ -48,12 +47,15 @@ nested record can: so a contained Medication that the mapping reads into its Med
 to that record. Of the records it can belong to, it belongs to the nearest: those whose address shares the most leading
 steps with its address. On a tie, a record whose address holds the occurrence (the same address, or an ancestor of it)
 is nearer than one whose does not. Records still tied all belong to it, and a property written on any of them meets it.
+An occurrence is owed only when that record is of a class that a `bridge:inRecordClass` of one of the path's
+`bridge:carriedAs` names.
 
 **Met.** A `bridge:asProperty` of one of those `bridge:carriedAs` meets the occurrence when it is written on a record
 the occurrence belongs to, on its versions, on their arrivals or on a node they point at that is no record, version or
 arrival of its own; a record of that class written elsewhere in the unit does not meet it, and neither does a property
-whose only value written in those places is empty. A finding from the same
-unit's conversion meets it when either its address is the occurrence's address or below it, or its address is above the
+whose only value written in those places is empty.
+
+A finding from the same unit's conversion meets it when either its address is the occurrence's address or below it, or its address is above the
 occurrence's address and its `oa:hasBody` is the `bridge:namesGap` or `bridge:lookupNamesGap` of the path's entry. A
 written property and a finding are alternatives. "Above" is measured on the occurrence's own address, indexes
 included, never on the path. A finding addressed at the unit's selector is above every occurrence in the unit. A

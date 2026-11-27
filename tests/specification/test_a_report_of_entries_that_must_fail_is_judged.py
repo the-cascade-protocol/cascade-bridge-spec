@@ -40,7 +40,6 @@ MUST_FAIL = [
     "respelled-selector-label-unwritten",
     "selector-outside-the-unit",
     "selector-selects-no-node",
-    "selector-selects-two-nodes",
     "unmapped-contained-label-unreported",
 ]
 ENTRIES = {

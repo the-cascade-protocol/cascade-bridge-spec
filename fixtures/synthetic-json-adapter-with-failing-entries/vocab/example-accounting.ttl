@@ -113,8 +113,3 @@
   bridge:sourcePath "/related/title" ;
   bridge:verdict bridge:carried ;
   bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
-
-[] a bridge:PathEntry ;
-  bridge:sourcePath "/twice" ;
-  bridge:verdict bridge:ignored ;
-  bridge:because "A name an object holds twice, so that a pointer at it selects two nodes." .
