@@ -51,6 +51,14 @@
     <#finding-of-the-other-unit>
     <#contained-status-lookup-gap>
     <#tied-records-label-on-one>
+    <#label-zero-not-written>
+    <#null-and-array-no-empty-child>
+    <#label-written-only-as-empty>
+    <#empty-label-written-as-empty>
+    <#record-holding-it-is-nearer>
+    <#record-below-an-element-held-back>
+    <#selector-selects-two-nodes>
+    <#selector-outside-the-unit>
   ) .
 
 <#every-carried-path-written> a bridge:IsomorphicConversionTest ;
@@ -160,7 +168,7 @@
 
 <#contained-label-not-written> a bridge:IsomorphicConversionTest ;
   mf:name "contained-label-not-written" ;
-  rdfs:comment "One unit holding two contained members, one a record the mapping writes and one it does not: both hold the label, the path is owed for the first only, and the mapping does not write it." ;
+  rdfs:comment "One unit holding two contained members, one a record the mapping writes and one it does not: both hold the label, which is owed for both, the first to the record the mapping writes and the second to the container's, and the mapping writes it for neither." ;
   bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
   mf:action [
     bridge:input <in/contained-label-not-written.json> ;
@@ -655,4 +663,115 @@
   mf:result [
     bridge:expectedGraph <expected/tied-records-label-on-one.ttl> ;
     bridge:expectedFindings <findings/tied-records-label-on-one.ttl>
+  ] .
+
+<#label-zero-not-written> a bridge:IsomorphicConversionTest ;
+  mf:name "label-zero-not-written" ;
+  rdfs:comment "The path of label-not-written holding 0, which is a value, not written." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/label-zero-not-written.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/label-zero-not-written.ttl> ;
+    bridge:expectedFindings <findings/label-zero-not-written.ttl>
+  ] .
+
+<#null-and-array-no-empty-child> a bridge:IsomorphicConversionTest ;
+  mf:name "null-and-array-no-empty-child" ;
+  rdfs:comment "A null label and an empty array aside, both carried as rdfs:label, beside a caption not written: neither is an empty child, so the caption is owed." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/null-and-array-no-empty-child.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/null-and-array-no-empty-child.ttl> ;
+    bridge:expectedFindings <findings/null-and-array-no-empty-child.ttl>
+  ] .
+
+<#label-written-only-as-empty> a bridge:IsomorphicConversionTest ;
+  mf:name "label-written-only-as-empty" ;
+  rdfs:comment "The path of label-not-written holding a label the mapping writes as an empty string on the record, and writes nothing else as rdfs:label: it does not meet the label." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/label-written-only-as-empty.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/label-written-only-as-empty.ttl> ;
+    bridge:expectedFindings <findings/label-written-only-as-empty.ttl>
+  ] .
+
+<#empty-label-written-as-empty> a bridge:IsomorphicConversionTest ;
+  mf:name "empty-label-written-as-empty" ;
+  rdfs:comment "The same mapping on an empty label: nothing is owed, so the empty string it writes fails nothing." ;
+  mf:action [
+    bridge:input <in/empty-label-written-as-empty.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/empty-label-written-as-empty.ttl> ;
+    bridge:expectedFindings <findings/empty-label-written-as-empty.ttl>
+  ] .
+
+<#record-holding-it-is-nearer> a bridge:IsomorphicConversionTest ;
+  mf:name "record-holding-it-is-nearer" ;
+  rdfs:comment "Two records sharing as many leading steps with the label's address, the first at the related element, which holds the label, and the second at the twin below it: the label is written on the second, and the first is nearer." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/record-holding-it-is-nearer.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/record-holding-it-is-nearer.ttl> ;
+    bridge:expectedFindings <findings/record-holding-it-is-nearer.ttl>
+  ] .
+
+<#record-below-an-element-held-back> a bridge:IsomorphicConversionTest ;
+  mf:name "record-below-an-element-held-back" ;
+  rdfs:comment "A contained member reported as held back whole, with a record standing below it and none at it: the record contradicts the finding, and the label is still owed." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/record-below-an-element-held-back.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/record-below-an-element-held-back.ttl> ;
+    bridge:expectedFindings <findings/record-below-an-element-held-back.ttl>
+  ] .
+
+<#selector-selects-two-nodes> a bridge:IsomorphicConversionTest ;
+  mf:name "selector-selects-two-nodes" ;
+  rdfs:comment "A contained record whose arrival selector /twice selects two nodes, the object holding the name twice." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/selector-selects-two-nodes.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/selector-selects-two-nodes.ttl> ;
+    bridge:expectedFindings <findings/selector-selects-two-nodes.ttl>
+  ] .
+
+<#selector-outside-the-unit> a bridge:IsomorphicConversionTest ;
+  mf:name "selector-outside-the-unit" ;
+  rdfs:comment "A contained record of the first unit whose arrival selector /records/1 selects a node of the second." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/selector-outside-the-unit.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-set> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/selector-outside-the-unit.ttl> ;
+    bridge:expectedFindings <findings/selector-outside-the-unit.ttl>
   ] .

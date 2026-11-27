@@ -1,0 +1,78 @@
+@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+@prefix cascade: <https://ns.cascadeprotocol.org/cascade#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ex: <https://example.org/synthetic-adapter/v1#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<ni:///sha-256;8gGp3aLwnPRPutv0pm80O6B_pM7AWjCHAObO1LnRlko> prov:specializationOf <urn:uuid:6026ec08-9430-8ac8-b934-2624b0358b24> .
+
+<ni:///sha-256;U3AAPbGa8SE5ldl8_ORN0MBL2yE1BdQlpdRDCX5c3ME> prov:specializationOf <urn:uuid:05b31f74-6433-8acb-8fa4-1754d26c1cd2> .
+
+<ni:///sha-256;WX1bWeVEciFSne0BcgWTTAtCwN5DZPSBrE4dAs-D930> prov:specializationOf <urn:uuid:795abe7c-c550-8064-8aee-75955e4f301e> .
+
+<urn:uuid:05b31f74-6433-8acb-8fa4-1754d26c1cd2> a ex:Record ;
+    ex:accession "outside-273" .
+
+<urn:uuid:6026ec08-9430-8ac8-b934-2624b0358b24> a ex:Record ;
+    ex:accession "EX000274" .
+
+<urn:uuid:795abe7c-c550-8064-8aee-75955e4f301e> a ex:Record ;
+    ex:accession "EX000273" .
+
+<ni:///sha-256;qxaydX08DnKtqYjDsEH01bA0MvQUcUix9TdXr1c6DCQ> a prov:Entity ;
+    pav:retrievedFrom <https://records.example.org/api/ExampleRecordSet> ;
+    pav:retrievedOn "2026-08-30T22:14:00Z"^^xsd:dateTime ;
+    prov:wasAttributedTo _:nfe01579c4431419887cee954bb4851ddb9 ;
+    prov:wasGeneratedBy [ prov:qualifiedAssociation [ prov:agent _:nfe01579c4431419887cee954bb4851ddb9 ;
+                    prov:hadRole cascade:AuthorRole ],
+                [ prov:agent [ rdfs:label "Example Fetcher" ] ;
+                    prov:hadRole cascade:TransmitterRole ] ] ;
+    cascade:authenticatedAsProxy false ;
+    cascade:authenticatedPatient "Patient/example-patient" ;
+    cascade:serverBaseUrl "https://records.example.org/api" ;
+    cascade:sourceFormatVersion "1" .
+
+[] oa:hasSelector [ a oa:FragmentSelector ;
+            dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+            rdf:value "/records/1" ] ;
+    oa:hasSource <ni:///sha-256;qxaydX08DnKtqYjDsEH01bA0MvQUcUix9TdXr1c6DCQ> ;
+    prov:wasDerivedFrom <ni:///sha-256;qxaydX08DnKtqYjDsEH01bA0MvQUcUix9TdXr1c6DCQ> ;
+    prov:wasGeneratedBy _:nfe01579c4431419887cee954bb4851ddb4 ;
+    bridge:arrivedAs <ni:///sha-256;U3AAPbGa8SE5ldl8_ORN0MBL2yE1BdQlpdRDCX5c3ME> .
+
+[] pav:version "1" ;
+    oa:hasSelector [ a oa:FragmentSelector ;
+            dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+            rdf:value "/records/0" ] ;
+    oa:hasSource <ni:///sha-256;qxaydX08DnKtqYjDsEH01bA0MvQUcUix9TdXr1c6DCQ> ;
+    prov:wasDerivedFrom <ni:///sha-256;qxaydX08DnKtqYjDsEH01bA0MvQUcUix9TdXr1c6DCQ> ;
+    prov:wasGeneratedBy _:nfe01579c4431419887cee954bb4851ddb4 ;
+    bridge:arrivedAs <ni:///sha-256;WX1bWeVEciFSne0BcgWTTAtCwN5DZPSBrE4dAs-D930> .
+
+[] pav:version "1" ;
+    oa:hasSelector [ a oa:FragmentSelector ;
+            dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+            rdf:value "/records/1" ] ;
+    oa:hasSource <ni:///sha-256;qxaydX08DnKtqYjDsEH01bA0MvQUcUix9TdXr1c6DCQ> ;
+    prov:wasDerivedFrom <ni:///sha-256;qxaydX08DnKtqYjDsEH01bA0MvQUcUix9TdXr1c6DCQ> ;
+    prov:wasGeneratedBy _:nfe01579c4431419887cee954bb4851ddb4 ;
+    bridge:arrivedAs <ni:///sha-256;8gGp3aLwnPRPutv0pm80O6B_pM7AWjCHAObO1LnRlko> .
+
+_:nfe01579c4431419887cee954bb4851ddb13 prov:agent [ ] ;
+    prov:hadPlan [ a prov:Plan ;
+            rdfs:label "synthetic-json-example-with-failing-entries" ;
+            pav:version "0.1.0" ] .
+
+_:nfe01579c4431419887cee954bb4851ddb9 rdfs:label "Example Records Registry" .
+
+_:nfe01579c4431419887cee954bb4851ddb4 a prov:Activity ;
+    rdfs:label "synthetic example import" ;
+    prov:qualifiedAssociation _:nfe01579c4431419887cee954bb4851ddb13 ;
+    prov:startedAtTime "2026-09-01T10:00:00Z"^^xsd:dateTime ;
+    prov:used <ni:///sha-256;qxaydX08DnKtqYjDsEH01bA0MvQUcUix9TdXr1c6DCQ> .
+

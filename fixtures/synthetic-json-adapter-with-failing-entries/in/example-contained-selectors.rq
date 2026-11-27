@@ -27,7 +27,7 @@ WHERE {
   OPTIONAL { ?exampleRecord xyz:lastUpdated ?containerUpdated }
   ?contained ?slot ?item .
   ?item xyz:id ?id .
-  FILTER(STRSTARTS(?id, "respelt-") || STRSTARTS(?id, "nowhere-"))
+  FILTER(REGEX(?id, "^(respelt|nowhere|below|twice|outside)-"))
   OPTIONAL { ?item xyz:title ?title }
   bridge:thisDocument bridge:sha256 ?document .
   bridge:thisRecord bridge:selector ?selector .
@@ -61,7 +61,9 @@ WHERE {
   BIND(IRI(CONCAT("urn:uuid:", ?heldUuid)) AS ?held)
   BIND(IRI(CONCAT("https://example.org/synthetic-adapter/version/", ?heldUuid)) AS ?heldVersion)
   BIND(STR(xsd:integer(STRAFTER(STR(?slot), "#_")) - 1) AS ?index)
-  BIND(IF(STRSTARTS(?id, "respelt-"),
-          CONCAT(?selector, "/%63ontained/", ?index),
-          CONCAT(?selector, "/contained/9")) AS ?heldSelector)
+  BIND(IF(STRSTARTS(?id, "respelt-"), CONCAT(?selector, "/%63ontained/", ?index),
+       IF(STRSTARTS(?id, "below-"), CONCAT(?selector, "/contained/", ?index, "/id"),
+       IF(STRSTARTS(?id, "twice-"), CONCAT(?selector, "/twice"),
+       IF(STRSTARTS(?id, "outside-"), "/records/1",
+          CONCAT(?selector, "/contained/9"))))) AS ?heldSelector)
 }
