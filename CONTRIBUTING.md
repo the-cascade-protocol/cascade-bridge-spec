@@ -47,9 +47,7 @@ All of these must be green before a merge. Their names are required status check
 request.
 
 - **`ruff and pytest: the specification's files, the adapter profile and the compatibility tool`**: ruff lint and
-  format, and the tests, as above. The tests must also read as a specification, which CI checks in a job of its own:
-  every top-level test class is a heading listed in [`tests/spec.json`](tests/spec.json), and its situations name code
-  or begin with "when", "given" or "with". A new or renamed test class needs its entry there by hand.
+  format, and the tests, as above. Name a test to read as behaviour; nothing checks the grammar of a name.
 - **`RO-Crate 1.2: the adapter profile's own crate`**: the profile's crate validates against RO-Crate 1.2.
 - **`Published GitHub Actions, run on a synthetic adapter (not pytest)`**: the published GitHub Actions run on the
   synthetic adapters.

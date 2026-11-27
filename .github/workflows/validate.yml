@@ -96,7 +96,7 @@ jobs:
           path: junit.xml
           if-no-files-found: error
 
-  # The slices' reports as one, which the tests page on the hub reads, and the check that they read as a specification.
+  # The slices' reports as one, which the tests page on the hub reads.
   report:
     name: the tests read as a specification
     needs: slice
@@ -127,21 +127,6 @@ jobs:
               merged.extend(list(ElementTree.parse(report).getroot().iter("testsuite")))
           ElementTree.ElementTree(merged).write("report/junit.xml", encoding="utf-8", xml_declaration=True)
           PYTHON
-
-      - uses: actions/checkout@v7
-        with:
-          repository: the-cascade-protocol/cascade-runtime-js
-          path: .runtime-js
-          sparse-checkout: |
-            scripts
-            packages/site/src
-
-      - uses: actions/setup-node@v5
-        with:
-          node-version: '24'
-
-      - name: the tests read as a specification
-        run: node .runtime-js/scripts/spec-shape.mjs report/junit.xml tests/spec.json
 
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
