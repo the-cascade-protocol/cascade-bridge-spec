@@ -225,6 +225,8 @@ class PullRequests:
         self.runs_by_commit = {}
         self.runs_read = []
         self.authorizations = []
+        self.artifacts_by_run = {}
+        self.blobs = {}
 
     def refuse(self, repository, number, status, headers=None, message="refused"):
         self.refusals[(repository, number)] = (status, dict(headers or {}), message)
@@ -297,6 +299,12 @@ class PullRequests:
         runs = self.check_runs_by_commit.get((repository, commit), [])
         return {"total_count": len(runs), "check_runs": runs[(page - 1) * per_page : page * per_page]}
 
+    def assets(self, release_id, page, per_page):
+        """A release's assets a page at a time, every one of them, where the release itself may list only some."""
+        release = next((found for found in self.releases.values() if found.get("id") == release_id), {})
+        listed = release.get("all_assets", release.get("assets", []))
+        return listed[(page - 1) * per_page : page * per_page]
+
 
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *arguments):
@@ -327,9 +335,22 @@ class Handler(BaseHTTPRequestHandler):
         if len(parts) == 6 and parts[0] == "repos" and parts[3:5] == ["releases", "tags"]:
             release = self.server.pull_requests.releases.get((parts[2], parts[5]))
             return self.answer(200 if release else 404, release or {"message": "Not Found"})
+        if len(parts) == 6 and parts[0] == "repos" and parts[3] == "releases" and parts[5] == "assets":
+            page, per_page = self.query("page", 1), self.query("per_page", 30)
+            return self.answer(200, self.server.pull_requests.assets(int(parts[4]), page, per_page))
         if len(parts) == 5 and parts[0] == "repos" and parts[3:5] == ["actions", "runs"]:
             commit = parse_qs(urlsplit(self.path).query).get("head_sha", [""])[0]
             return self.answer(200, self.server.pull_requests.runs(parts[2], commit))
+        if len(parts) == 7 and parts[0] == "repos" and parts[3:5] == ["actions", "runs"] and parts[6] == "artifacts":
+            return self.answer(200, {"artifacts": self.server.pull_requests.artifacts_by_run.get(int(parts[5]), [])})
+        if len(parts) == 3 and parts[0] == "artifacts" and parts[2] == "zip":  # as GitHub sends it, to its storage
+            return self.answer(302, {}, {"Location": f"http://{self.headers['Host']}/blobs/{parts[1]}"})
+        if len(parts) == 2 and parts[0] == "blobs":
+            payload = self.server.pull_requests.blobs[int(parts[1])]
+            self.send_response(200)
+            self.send_header("Content-Length", str(len(payload)))
+            self.end_headers()
+            return self.wfile.write(payload)
         if len(parts) == 5 and parts[0] == "repos" and parts[3] == "check-runs":
             run = self.server.pull_requests.check_run_by_id(int(parts[4]))
             return self.answer(200, run) if run else self.answer(404, {"message": "Not Found"})
