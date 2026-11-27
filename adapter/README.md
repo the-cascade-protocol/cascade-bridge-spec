@@ -104,6 +104,14 @@ answered in one of two ways:
   is. A `bridge:carried` entry with a finding at the value itself passes. A value of an enclosing element that no
   record carries is reported by a finding at that value, which meets the occurrence whichever record it is held to.
 
+A path no Cascade predicate carries whose loss your own findings query reports at each value, such as a contact point
+with the number it holds, is `bridge:noHome` naming that gap by `bridge:adapterReportsGap` instead of `bridge:namesGap`:
+a Bridge then reports nothing for it, and fails a test entry whose input holds the path where no finding of that gap is
+addressed at the value or at an element holding it, in a record of any kind, or in no record. A path that some kinds of
+record carry and others lose stays `bridge:carriedInPart`, and names by `bridge:adapterReportsGap` the gap each other
+kind loses it to; there, an occurrence no record of its `bridge:carriedAs` classes holds is met by that gap alone. Name
+as many as your queries report.
+
 A finding whose body is a gap of kind `bridge:elementNotCarried`, addressed at the element nothing of which is carried,
 answers for everything in the element where no record the conversion wrote stands in it: nothing in it is owed, and no
 entry names that gap. A `bridge:carriedInPart` entry may not name one.

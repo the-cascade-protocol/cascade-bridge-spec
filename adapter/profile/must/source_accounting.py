@@ -20,6 +20,8 @@ THE_KINDS_A_VERDICT_MAY_NAME = {
     BRIDGE.noHome: (BRIDGE.noPredicate, BRIDGE.sourceLacksRequired),
 }
 
+THE_KINDS_TRUE_OF_A_PATH = THE_KINDS_A_VERDICT_MAY_NAME[BRIDGE.noHome]
+
 VERDICTS_CLAIMING_CARRIAGE = (BRIDGE.carried, BRIDGE.carriedInPart)
 
 A_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_.-]*")
@@ -198,6 +200,21 @@ def faulty(crate):
                     f"{', '.join(sorted(shortened(kind) for kind in kinds)) or 'nothing'}, where an entry whose "
                     f"verdict is {shortened(verdict)} names a gap skos:broader one of "
                     f"{' or '.join(shortened(kind) for kind in wanted)}"
+                )
+        for gap in sorted(accounting.objects(entry, BRIDGE.adapterReportsGap)):
+            if gap not in gaps:
+                yield (
+                    f"{source_path} names {gap} as its bridge:adapterReportsGap, "
+                    "which is no gap of the adapter's bridge:gapScheme"
+                )
+                continue
+            kinds = set(scheme.objects(gap, SKOS.broader))
+            if kinds.isdisjoint(THE_KINDS_TRUE_OF_A_PATH):
+                yield (
+                    f"{source_path} names {gap} as its bridge:adapterReportsGap, which is skos:broader "
+                    f"{', '.join(sorted(shortened(kind) for kind in kinds)) or 'nothing'}, where a gap an adapter "
+                    "reports at each occurrence of a path is skos:broader "
+                    f"{' or '.join(shortened(kind) for kind in THE_KINDS_TRUE_OF_A_PATH)}, a kind true of the path"
                 )
         if verdict not in VERDICTS_CLAIMING_CARRIAGE or mentioned is None or steps is None:
             continue

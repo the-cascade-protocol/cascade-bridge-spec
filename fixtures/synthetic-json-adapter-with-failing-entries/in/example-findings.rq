@@ -152,4 +152,22 @@ WHERE {
     BIND(ex:a-last-update-with-no-time-zone AS ?gap)
     BIND(sh:Warning AS ?severity)
   }
+  UNION
+  {
+    ?record xyz:lastUpdated ?written .
+    FILTER NOT EXISTS { ?record xyz:version ?number }
+    FILTER(?written != "2026-07-17")
+    BIND("/lastUpdated" AS ?pointer)
+    BIND(ex:a-last-update-of-a-record-no-mapping-reads AS ?gap)
+    BIND(sh:Info AS ?severity)
+  }
+  UNION
+  {
+    ?record xyz:phone ?phones .
+    ?phones ?slot ?written .
+    FILTER(STRSTARTS(STR(?slot), STR(rdf:_)) && ?written != "[unreported]")
+    BIND(CONCAT("/phone/", STR(xsd:integer(STRAFTER(STR(?slot), "#_")) - 1)) AS ?pointer)
+    BIND(ex:a-phone-number-no-predicate-carries AS ?gap)
+    BIND(sh:Info AS ?severity)
+  }
 }

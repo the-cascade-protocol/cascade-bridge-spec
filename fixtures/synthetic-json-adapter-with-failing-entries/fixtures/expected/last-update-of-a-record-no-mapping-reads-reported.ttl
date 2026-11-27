@@ -1,0 +1,30 @@
+@prefix cascade: <https://ns.cascadeprotocol.org/cascade#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<ni:///sha-256;Frq4qA2CPOXahaBXBlYE_TTmgfJc7cV65QKYV31zhl4> a prov:Entity ;
+    pav:retrievedFrom <https://records.example.org/api/ExampleRecordSet> ;
+    pav:retrievedOn "2026-08-30T22:14:00Z"^^xsd:dateTime ;
+    prov:wasAttributedTo _:n70f0cf8391254244805d7dc83778286cb2 ;
+    prov:wasGeneratedBy [ prov:qualifiedAssociation [ prov:agent _:n70f0cf8391254244805d7dc83778286cb2 ;
+                    prov:hadRole cascade:AuthorRole ],
+                [ prov:agent [ rdfs:label "Example Fetcher" ] ;
+                    prov:hadRole cascade:TransmitterRole ] ] ;
+    cascade:authenticatedAsProxy false ;
+    cascade:authenticatedPatient "Patient/example-patient" ;
+    cascade:serverBaseUrl "https://records.example.org/api" ;
+    cascade:sourceFormatVersion "1" .
+
+[] a prov:Activity ;
+    rdfs:label "synthetic example import" ;
+    prov:qualifiedAssociation [ prov:agent [ ] ;
+            prov:hadPlan [ a prov:Plan ;
+                    rdfs:label "synthetic-json-example-with-failing-entries" ;
+                    pav:version "0.1.0" ] ] ;
+    prov:startedAtTime "2026-09-01T10:00:00Z"^^xsd:dateTime ;
+    prov:used <ni:///sha-256;Frq4qA2CPOXahaBXBlYE_TTmgfJc7cV65QKYV31zhl4> .
+
+_:n70f0cf8391254244805d7dc83778286cb2 rdfs:label "Example Records Registry" .
+

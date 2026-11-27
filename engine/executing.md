@@ -17,11 +17,12 @@ its own.
 **Fail an entry whose conversion does not write what the accounting carries.** `test` reports an entry that
 converts an input, of any type, `earl:failed`, with `bridge:conversionWritesWhatTheAccountingCarries` as the
 `bridge:failedCheck` of its result, when an occurrence of a source path in that input is owed and not met. The result
-names the path, the occurrence's address, the class owed and the properties looked for. `convert` is unchanged:
+names the path, the occurrence's address, and the class owed and the properties looked for, or, for an occurrence owed
+only a finding (*Reported by the adapter*), the gaps looked for. `convert` is unchanged:
 findings are data there, never failures ([`library.md`](library.md)).
 
-**Owed.** An occurrence is owed when the accounting marks its path `bridge:carried` or `bridge:carriedInPart`; its
-value is not empty; and no child of its element at another path is empty and carried as one of the same properties (one
+**Owed.** An occurrence is owed when the accounting marks its path `bridge:carried` or `bridge:carriedInPart`, or its
+path's entry names a `bridge:adapterReportsGap`; its value is not empty; and no child of its element at another path is empty and carried as one of the same properties (one
 value written from several children cannot be written when one of them is empty). A repeat of its own path at another
 index is no other child, and an empty repeat un-owes nothing but itself.
 
@@ -48,7 +49,8 @@ to that record. Of the records it can belong to, it belongs to the nearest: thos
 steps with its address. On a tie, a record whose address holds the occurrence (the same address, or an ancestor of it)
 is nearer than one whose does not. Records still tied all belong to it, and a property written on any of them meets it.
 An occurrence is owed only when that record is of a class that a `bridge:inRecordClass` of one of the path's
-`bridge:carriedAs` names.
+`bridge:carriedAs` names, or when its path's entry names a `bridge:adapterReportsGap`, whatever record it belongs to,
+or none.
 
 **Met.** A `bridge:asProperty` of one of those `bridge:carriedAs` meets the occurrence when it is written on a record
 the occurrence belongs to, on its versions, on their arrivals or on a node they point at that is no record, version or
@@ -56,13 +58,22 @@ arrival of its own; a record of that class written elsewhere in the unit does no
 whose only value written in those places is empty.
 
 A finding from the same unit's conversion meets it when either its address is the occurrence's address or below it, or its address is above the
-occurrence's address and its `oa:hasBody` is the `bridge:namesGap` or `bridge:lookupNamesGap` of the path's entry. A
+occurrence's address and its `oa:hasBody` is the `bridge:namesGap`, the `bridge:lookupNamesGap` or a
+`bridge:adapterReportsGap` of the path's entry. A
 written property and a finding are alternatives. "Above" is measured on the occurrence's own address, indexes
 included, never on the path. A finding addressed at the unit's selector is above every occurrence in the unit. A
 finding elsewhere in the unit whatever its body, and a finding whose `sh:value` is the path alone, meet nothing. The
 check does not count values: one of the properties written on a record meets every occurrence of the path that belongs
 to that record. The engine cannot tell which written value came from which occurrence, since a mapping may join them,
 and a count would fail honest conversions.
+
+**Reported by the adapter.** A `bridge:adapterReportsGap` is a gap the adapter's own findings queries report at each
+occurrence of the path that no record carries, so a Bridge reports nothing from it ([`sparql.md`](sparql.md)) and
+holds the adapter to it. An occurrence of such a path that belongs to no record of a class one of the path's
+`bridge:carriedAs` names, or to no record at all, is met only by a finding from the same unit's conversion whose
+`oa:hasBody` is one of the entry's `bridge:adapterReportsGap`, addressed at the occurrence or above it; one that does
+belong to such a record is met as *Met* says. So each occurrence is reported by the adapter alone, at its value, and an
+entry cannot say its adapter reports a gap that it reports nowhere.
 
 **Excused.** An element reported as not carried at all holds nothing. An occurrence belongs to no record, and is not
 owed, where a finding of the same unit's conversion is addressed at it or at an element holding it, that finding's

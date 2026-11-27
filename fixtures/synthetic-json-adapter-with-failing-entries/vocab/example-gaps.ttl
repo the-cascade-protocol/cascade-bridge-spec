@@ -40,3 +40,13 @@ ex:a-last-update-with-no-time-zone a skos:Concept ;
   skos:inScheme ex:gaps ;
   skos:broader bridge:carriedWithLoss ;
   sh:resultSeverity sh:Warning .
+
+ex:a-last-update-of-a-record-no-mapping-reads a skos:Concept ;
+  skos:prefLabel "a last update of a record no mapping reads, which no predicate carries" ;
+  skos:inScheme ex:gaps ;
+  skos:broader bridge:noPredicate .
+
+ex:a-phone-number-no-predicate-carries a skos:Concept ;
+  skos:prefLabel "a phone number, which no predicate carries" ;
+  skos:inScheme ex:gaps ;
+  skos:broader bridge:noPredicate .

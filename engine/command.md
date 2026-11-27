@@ -34,7 +34,8 @@ element above it with the path's accounting entry made `bridge:carriedInPart` na
 gap ([`../adapter/README.md`](../adapter/README.md)). The result's description gives, for
 each of the first three, the path, then the properties looked for on the class owed, then the
 address, as `<path>: no <property> on its <class> is written, and no finding is about it, at
-"<address>"`, nothing of it cut; where there are more, it ends `; and <n> more`, and where the
+"<address>"`, nothing of it cut, and for an occurrence owed only a finding of a gap its adapter reports, as
+`<path>: no finding of <gap> is addressed at it or above it, at "<address>"`, several gaps joined by `or`; where there are more, it ends `; and <n> more`, and where the
 engine offers `--owed`, `: run `test` with `--owed` to list every one`. A record that cannot be placed
 is listed on a line of its own, in the description and under `--owed`, as `the record
 selector "<selector>" <what it selects>, so no occurrence can be held to the record it
@@ -46,7 +47,8 @@ without it is as conformant as one with it. Where it does, `--owed` lists every 
 occurrence, one per line after the entries and before the tally: `Owed`, the entry's name,
 then the path, `at`, the occurrence's address, and the properties looked for on the class
 owed, as `<path> at "<address>": no <property> on its <class> is written, and no finding is
-about it`, the property and the class by IRI, several joined by `or`. It changes nothing in
+about it`, the property and the class by IRI, several joined by `or`, or `<path> at "<address>": no finding of
+<gap> is addressed at it or above it`, the gap by IRI. It changes nothing in
 the report. The line is read by an author, not by tooling, and its words may be reworded.
 
 ## `convert`
