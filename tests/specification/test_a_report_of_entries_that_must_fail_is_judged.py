@@ -27,6 +27,7 @@ MUST_FAIL = [
     "label-finding-at-the-unit",
     "label-finding-by-value-only",
     "label-not-written",
+    "label-written-as-a-node-of-nothing",
     "label-written-on-a-pointed-record",
     "label-written-only-as-empty",
     "label-zero-not-written",

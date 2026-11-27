@@ -87,7 +87,9 @@ element holding, at any depth, no text and no attribute value other than white
 space, so that `<value><code code="I10"/></value>` is not empty, the attribute's value being content; an XML
 attribute whose value is white space. In JSON, `null` and an array with no member stand as no occurrence: nothing is
 owed for either, and neither is an empty child of its element. An object holding nothing but empty values, `{}`
-included, is empty. A number, `true` and `false` are values, never empty.
+included, is empty. A number, `true` and `false` are values, never empty. A value written that is a node is empty
+when every member it has is empty, however deep, a node among its own members adding nothing; a node with no
+members, an IRI named alone included, is a value.
 
 **Judge a report against the outcomes a manifest lists.** An entry that lists a `bridge:expectedFailedCheck` must be
 reported `earl:failed` with that check as the `bridge:failedCheck` of its result;
