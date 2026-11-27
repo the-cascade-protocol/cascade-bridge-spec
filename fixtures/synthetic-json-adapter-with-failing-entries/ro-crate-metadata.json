@@ -1,0 +1,569 @@
+{
+  "@context": [
+    "https://w3id.org/ro/crate/1.2/context",
+    {
+      "bridge": "https://ns.cascadeprotocol.org/bridge/v1-draft#",
+      "bridge:requiresProfile": "bridge:requiresProfile",
+      "bridge:cascadeVocabularyRepository": "bridge:cascadeVocabularyRepository",
+      "bridge:vocabulary": "bridge:vocabulary",
+      "bridge:vocabularyFile": "bridge:vocabularyFile",
+      "bridge:sourceMediaType": "bridge:sourceMediaType",
+      "bridge:sourceSchema": "bridge:sourceSchema",
+      "bridge:envelope": "bridge:envelope",
+      "bridge:mapping": "bridge:mapping",
+      "bridge:findingsQuery": "bridge:findingsQuery",
+      "bridge:documentTableQuery": "bridge:documentTableQuery",
+      "bridge:gapScheme": "bridge:gapScheme",
+      "bridge:table": "bridge:table",
+      "bridge:sourceAccounting": "bridge:sourceAccounting",
+      "bridge:detectQuery": "bridge:detectQuery",
+      "bridge:testManifest": "bridge:testManifest",
+      "bridge:docRootMemberName": "bridge:docRootMemberName",
+      "bridge:docRootMemberValue": "bridge:docRootMemberValue",
+      "bridge:jsonPathOfEachRecord": "bridge:jsonPathOfEachRecord",
+      "bridge:pathOfContentInRecord": "bridge:pathOfContentInRecord",
+      "bridge:pathOfContainedContentBelowContent": "bridge:pathOfContainedContentBelowContent",
+      "bridge:pathOfRecordKindBelowContent": "bridge:pathOfRecordKindBelowContent",
+      "bridge:documentSchema": "bridge:documentSchema"
+    }
+  ],
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.2"
+      },
+      "about": {
+        "@id": "./"
+      }
+    },
+    {
+      "@id": "./",
+      "@type": [
+        "Dataset",
+        "bridge:Adapter"
+      ],
+      "identifier": "synthetic-json-example-with-failing-entries",
+      "name": "Synthetic Example JSON Records, whose mapping writes only some of what its accounting carries",
+      "version": "0.1.0",
+      "description": "An invented adapter package whose test entries an engine must report as the manifest lists them, some of them failed.",
+      "datePublished": "2026-09-27",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      },
+      "conformsTo": [
+        {
+          "@id": "https://ns.cascadeprotocol.org/bridge/v1-draft/adapter-profile/"
+        }
+      ],
+      "bridge:requiresProfile": [
+        {
+          "@id": "https://ns.cascadeprotocol.org/bridge/v1-draft#sparql-1.1"
+        }
+      ],
+      "bridge:cascadeVocabularyRepository": {
+        "@id": "https://example.org/synthetic-adapter/synthetic-vocabularies"
+      },
+      "bridge:vocabulary": [
+        {
+          "@id": "https://example.org/synthetic-adapter/v1#"
+        }
+      ],
+      "bridge:vocabularyFile": [
+        "ontologies/example/v1/example.ttl",
+        "ontologies/example/v1/example.shapes.ttl"
+      ],
+      "bridge:sourceMediaType": "application/example+json",
+      "bridge:sourceSchema": {
+        "@id": "schema/example-record.schema.json"
+      },
+      "bridge:envelope": [
+        {
+          "@id": "#envelope-record"
+        }
+      ],
+      "bridge:mapping": [
+        {
+          "@id": "in/example-record.rq"
+        }
+      ],
+      "bridge:findingsQuery": [
+        {
+          "@id": "in/example-findings.rq"
+        }
+      ],
+      "bridge:documentTableQuery": {
+        "@id": "in/example-table.rq"
+      },
+      "bridge:gapScheme": {
+        "@id": "vocab/example-gaps.ttl"
+      },
+      "bridge:sourceAccounting": {
+        "@id": "vocab/example-accounting.ttl"
+      },
+      "bridge:detectQuery": {
+        "@id": "in/example-detect.rq"
+      },
+      "bridge:testManifest": {
+        "@id": "fixtures/manifest.ttl"
+      },
+      "hasPart": [
+        {
+          "@id": "in/example-record.rq"
+        },
+        {
+          "@id": "in/example-findings.rq"
+        },
+        {
+          "@id": "in/example-detect.rq"
+        },
+        {
+          "@id": "in/example-table.rq"
+        },
+        {
+          "@id": "schema/example-record.schema.json"
+        },
+        {
+          "@id": "vocab/example-gaps.ttl"
+        },
+        {
+          "@id": "vocab/example-accounting.ttl"
+        },
+        {
+          "@id": "fixtures/manifest.ttl"
+        },
+        {
+          "@id": "fixtures/facts/example-registry.ttl"
+        },
+        {
+          "@id": "fixtures/expected/every-carried-path-written.ttl"
+        },
+        {
+          "@id": "fixtures/expected/label-empty.ttl"
+        },
+        {
+          "@id": "fixtures/expected/label-not-written-and-reported.ttl"
+        },
+        {
+          "@id": "fixtures/expected/label-not-written.ttl"
+        },
+        {
+          "@id": "fixtures/expected/last-update-not-written-and-reported.ttl"
+        },
+        {
+          "@id": "fixtures/expected/last-update-not-written.ttl"
+        },
+        {
+          "@id": "fixtures/findings/every-carried-path-written.ttl"
+        },
+        {
+          "@id": "fixtures/findings/label-empty.ttl"
+        },
+        {
+          "@id": "fixtures/findings/label-not-written-and-reported.ttl"
+        },
+        {
+          "@id": "fixtures/findings/label-not-written.ttl"
+        },
+        {
+          "@id": "fixtures/findings/last-update-not-written-and-reported.ttl"
+        },
+        {
+          "@id": "fixtures/findings/last-update-not-written.ttl"
+        },
+        {
+          "@id": "fixtures/in/every-carried-path-written.json"
+        },
+        {
+          "@id": "fixtures/in/label-empty.json"
+        },
+        {
+          "@id": "fixtures/in/label-not-written-and-reported.json"
+        },
+        {
+          "@id": "fixtures/in/label-not-written.json"
+        },
+        {
+          "@id": "fixtures/in/last-update-not-written-and-reported.json"
+        },
+        {
+          "@id": "fixtures/in/last-update-not-written.json"
+        },
+        {
+          "@id": "https://example.org/synthetic-adapter/synthetic-vocabularies"
+        }
+      ]
+    },
+    {
+      "@id": "#envelope-record",
+      "@type": "bridge:Envelope",
+      "name": "record",
+      "bridge:docRootMemberName": "kind",
+      "bridge:jsonPathOfEachRecord": "$",
+      "bridge:pathOfContentInRecord": "",
+      "bridge:pathOfContainedContentBelowContent": "/contained",
+      "bridge:pathOfRecordKindBelowContent": "/kind"
+    },
+    {
+      "@id": "https://ns.cascadeprotocol.org/bridge/v1-draft/adapter-profile/",
+      "@type": [
+        "CreativeWork",
+        "Profile"
+      ],
+      "name": "Cascade Bridge Adapter profile"
+    },
+    {
+      "@id": "https://ns.cascadeprotocol.org/bridge/v1-draft#sparql-1.1",
+      "@type": "bridge:Profile",
+      "name": "sparql-1.1"
+    },
+    {
+      "@id": "https://example.org/synthetic-adapter/synthetic-vocabularies",
+      "@type": [
+        "SoftwareSourceCode",
+        "File"
+      ],
+      "name": "synthetic vocabulary repository"
+    },
+    {
+      "@id": "https://example.org/synthetic-adapter/v1#",
+      "@type": "DefinedTermSet",
+      "name": "Synthetic example vocabulary",
+      "version": "v1"
+    },
+    {
+      "@id": "in/example-record.rq",
+      "@type": "File",
+      "name": "Mapping",
+      "encodingFormat": "application/sparql-query",
+      "contentSize": "2175",
+      "sha256": "a9198f157fb68d2efa96102cd5829be018bec4a17de7073b17d08c9df38369c8",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "in/example-findings.rq",
+      "@type": "File",
+      "name": "Findings query",
+      "encodingFormat": "application/sparql-query",
+      "contentSize": "1379",
+      "sha256": "dc0386fef4f30aada059e2a10fc313b60c30137f6bab04efdd7a9767b8e4b5f0",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "in/example-detect.rq",
+      "@type": "File",
+      "name": "Detect query",
+      "encodingFormat": "application/sparql-query",
+      "contentSize": "166",
+      "sha256": "e83880ddede0028b5093da49be3a4d534c26da72792929682b1e453f455b8116",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "in/example-table.rq",
+      "@type": "File",
+      "name": "Document table query",
+      "encodingFormat": "application/sparql-query",
+      "contentSize": "269",
+      "sha256": "dbcd21955cb4be699c65915b86d0333a5ead213eb07952bcbb4e4d6e6fbcf5c9",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "schema/example-record.schema.json",
+      "@type": "File",
+      "name": "Example record JSON Schema, draft-06",
+      "encodingFormat": "application/schema+json",
+      "contentSize": "431",
+      "sha256": "56122a1c52da90af0b8395b63726fbcb51670bcb57c27a3ac34b51cdacc88f75",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "vocab/example-gaps.ttl",
+      "@type": "File",
+      "name": "Gap scheme",
+      "encodingFormat": "text/turtle",
+      "contentSize": "654",
+      "sha256": "fae40146ebc369b23e71b61c43065a66c79e74e9afffef82b49e9ce940e10212",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "vocab/example-accounting.ttl",
+      "@type": "File",
+      "name": "Source accounting",
+      "encodingFormat": "text/turtle",
+      "contentSize": "1200",
+      "sha256": "4bd3dab10d9da51a98e9cf00e55fbeec91f5820ecf1ecfc6a1b5663e67e8bef6",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/manifest.ttl",
+      "@type": "File",
+      "name": "Test manifest",
+      "encodingFormat": "text/turtle",
+      "contentSize": "4237",
+      "sha256": "6eaadd593c85d66450ee608fac35bdf61c5f322bf96565359b4e0e1a8cfdce02",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/facts/example-registry.ttl",
+      "@type": "File",
+      "name": "Facts supplied with every synthetic JSON input",
+      "encodingFormat": "text/turtle",
+      "contentSize": "1129",
+      "sha256": "269dc8892557ed1e360ec52071fb20854b722fd44aa4d9356a59381024157523",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/every-carried-path-written.ttl",
+      "@type": "File",
+      "name": "Expected graph for every-carried-path-written",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2300",
+      "sha256": "237b41a762a6f746ad1ff8c0754518e126da43379116740b87240e00020e2c39",
+      "isBasedOn": {
+        "@id": "fixtures/in/every-carried-path-written.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/label-empty.ttl",
+      "@type": "File",
+      "name": "Expected graph for label-empty",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2300",
+      "sha256": "402b4c378387aec0e6c30b15fdedcb0314bccab83801e8707ccb989e2324989e",
+      "isBasedOn": {
+        "@id": "fixtures/in/label-empty.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/label-not-written-and-reported.ttl",
+      "@type": "File",
+      "name": "Expected graph for label-not-written-and-reported",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2300",
+      "sha256": "e6f9641dd4610b3859a17aaaaef22def01753b7dcff0f5a3a2707b09d4f26450",
+      "isBasedOn": {
+        "@id": "fixtures/in/label-not-written-and-reported.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/label-not-written.ttl",
+      "@type": "File",
+      "name": "Expected graph for label-not-written",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2300",
+      "sha256": "011b5235a1f91aff33e8a48422f6a633cfea1548952d702510b2a6ac613fa1a7",
+      "isBasedOn": {
+        "@id": "fixtures/in/label-not-written.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/last-update-not-written-and-reported.ttl",
+      "@type": "File",
+      "name": "Expected graph for last-update-not-written-and-reported",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2300",
+      "sha256": "66ec7c4bd6b4162976ea9e4286403a1edbee2f238abe3106323b14c29519c3ec",
+      "isBasedOn": {
+        "@id": "fixtures/in/last-update-not-written-and-reported.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/last-update-not-written.ttl",
+      "@type": "File",
+      "name": "Expected graph for last-update-not-written",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2300",
+      "sha256": "3559db6ff54e7224876b89c1ecc7a7400f25f4146e730647d5fc7eb4ff59aa36",
+      "isBasedOn": {
+        "@id": "fixtures/in/last-update-not-written.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/every-carried-path-written.ttl",
+      "@type": "File",
+      "name": "Expected findings for every-carried-path-written",
+      "encodingFormat": "text/turtle",
+      "contentSize": "339",
+      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
+      "isBasedOn": {
+        "@id": "fixtures/in/every-carried-path-written.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/label-empty.ttl",
+      "@type": "File",
+      "name": "Expected findings for label-empty",
+      "encodingFormat": "text/turtle",
+      "contentSize": "339",
+      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
+      "isBasedOn": {
+        "@id": "fixtures/in/label-empty.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/label-not-written-and-reported.ttl",
+      "@type": "File",
+      "name": "Expected findings for label-not-written-and-reported",
+      "encodingFormat": "text/turtle",
+      "contentSize": "857",
+      "sha256": "efe7a4701163fad0ab4abca531ca736bdc0a646c869959302478f86d52265ba3",
+      "isBasedOn": {
+        "@id": "fixtures/in/label-not-written-and-reported.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/label-not-written.ttl",
+      "@type": "File",
+      "name": "Expected findings for label-not-written",
+      "encodingFormat": "text/turtle",
+      "contentSize": "339",
+      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
+      "isBasedOn": {
+        "@id": "fixtures/in/label-not-written.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/last-update-not-written-and-reported.ttl",
+      "@type": "File",
+      "name": "Expected findings for last-update-not-written-and-reported",
+      "encodingFormat": "text/turtle",
+      "contentSize": "876",
+      "sha256": "a55ba9cdea697c9f82cfd1a4bf7dbc56f1844055614ffda13b7711262afb263a",
+      "isBasedOn": {
+        "@id": "fixtures/in/last-update-not-written-and-reported.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/last-update-not-written.ttl",
+      "@type": "File",
+      "name": "Expected findings for last-update-not-written",
+      "encodingFormat": "text/turtle",
+      "contentSize": "339",
+      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
+      "isBasedOn": {
+        "@id": "fixtures/in/last-update-not-written.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/every-carried-path-written.json",
+      "@type": "File",
+      "name": "Synthetic JSON input every-carried-path-written",
+      "encodingFormat": "application/example+json",
+      "contentSize": "58",
+      "sha256": "723994c8dea7eea4b9e07b043488a75378cc2b0820a3af92351eb0c24f3cf12f",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/label-empty.json",
+      "@type": "File",
+      "name": "Synthetic JSON input label-empty",
+      "encodingFormat": "application/example+json",
+      "contentSize": "71",
+      "sha256": "770cb70680971e52cb07ddbb9a69076a6af66ce36f4ca1afd0946e3a3a8a4a90",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/label-not-written-and-reported.json",
+      "@type": "File",
+      "name": "Synthetic JSON input label-not-written-and-reported",
+      "encodingFormat": "application/example+json",
+      "contentSize": "81",
+      "sha256": "6aa88d0f895b30ecf5260bc78c382917dfc13a1fdb2fb9f01fc862a865df0770",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/label-not-written.json",
+      "@type": "File",
+      "name": "Synthetic JSON input label-not-written",
+      "encodingFormat": "application/example+json",
+      "contentSize": "105",
+      "sha256": "9e1c48dfd71ede4d2f94b6748bd442ae89e5946eda9eb86bd5732d8a659972d7",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/last-update-not-written-and-reported.json",
+      "@type": "File",
+      "name": "Synthetic JSON input last-update-not-written-and-reported",
+      "encodingFormat": "application/example+json",
+      "contentSize": "87",
+      "sha256": "fe8099c95aa4dcd0e399a3521f3cd733ef16ca3ee26383001b804fa4823c8426",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/last-update-not-written.json",
+      "@type": "File",
+      "name": "Synthetic JSON input last-update-not-written",
+      "encodingFormat": "application/example+json",
+      "contentSize": "97",
+      "sha256": "034249de5a4c863b56a22ac0e2a06058b2d76df2c83a84451cd0949e4526aaf5",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    }
+  ]
+}

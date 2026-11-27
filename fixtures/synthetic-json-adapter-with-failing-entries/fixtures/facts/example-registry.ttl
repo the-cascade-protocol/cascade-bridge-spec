@@ -1,0 +1,28 @@
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+@prefix pav:    <http://purl.org/pav/> .
+@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+@prefix cascade: <https://ns.cascadeprotocol.org/cascade#> .
+
+bridge:thisDocument
+  cascade:serverBaseUrl "HTTPS://Records.Example.ORG/api/" ;
+  pav:retrievedFrom <https://records.example.org/api/ExampleRecordSet> ;
+  pav:retrievedOn "2026-08-30T22:14:00Z"^^xsd:dateTime ;
+  prov:wasGeneratedBy _:writing ;
+  prov:wasAttributedTo _:registry ;
+  cascade:authenticatedPatient "Patient/example-patient" ;
+  cascade:authenticatedAsProxy false ;
+  cascade:sourceFormatVersion "1" .
+
+_:writing prov:qualifiedAssociation
+  [ prov:agent _:registry ; prov:hadRole cascade:AuthorRole ] ,
+  [ prov:agent _:fetcher ; prov:hadRole cascade:TransmitterRole ] .
+
+_:registry rdfs:label "Example Records Registry" .
+
+_:fetcher rdfs:label "Example Fetcher" .
+
+bridge:thisImport
+  rdfs:label "synthetic example import" ;
+  prov:startedAtTime "2026-09-01T10:00:00Z"^^xsd:dateTime .

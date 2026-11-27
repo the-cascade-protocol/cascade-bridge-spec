@@ -1,0 +1,17 @@
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+@prefix sh:     <http://www.w3.org/ns/shacl#> .
+@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+@prefix ex:     <https://example.org/synthetic-adapter/v1#> .
+
+ex:gaps a skos:ConceptScheme .
+
+ex:a-label-the-source-withheld a skos:Concept ;
+  skos:prefLabel "a label the source withheld" ;
+  skos:inScheme ex:gaps ;
+  skos:broader bridge:carriedWithLoss .
+
+ex:a-last-update-with-no-time-zone a skos:Concept ;
+  skos:prefLabel "a last update stated with no time or no time zone" ;
+  skos:inScheme ex:gaps ;
+  skos:broader bridge:carriedWithLoss ;
+  sh:resultSeverity sh:Warning .

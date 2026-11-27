@@ -86,12 +86,35 @@ def test(args, adapter):
     if args.canned == "garbled":
         args.earl.write_text("this is not Turtle {\n", encoding="utf-8")
         return 0
+    if args.canned in ("listed", "everything-passed"):
+        args.earl.write_text(EARL + as_the_manifest_lists(adapter, args.canned == "listed"), encoding="utf-8")
+        return 0
     manifest = (adapter / "fixtures" / "manifest.ttl").as_uri()
     body = EARL + "".join(
         ASSERTION.format(manifest=manifest, test=name, outcome=outcome) for name, outcome in CANNED[args.canned].items()
     )
     args.earl.write_text(body, encoding="utf-8")
     return 0
+
+
+def as_the_manifest_lists(adapter, honour_the_outcomes):
+    """An assertion for each entry: the outcome it lists and the check that fails it, or passed, whatever it lists."""
+    import rdflib
+
+    path = adapter / "fixtures" / "manifest.ttl"
+    manifest = turtle(path.read_bytes(), path.as_uri())
+    listing = next(manifest.subjects(rdflib.URIRef(MF + "entries"), None))
+    assertions = ""
+    for entry in manifest.items(manifest.value(listing, rdflib.URIRef(MF + "entries"))):
+        listed = manifest.value(entry, rdflib.URIRef(BRIDGE + "expectedOutcome"))
+        check = manifest.value(entry, rdflib.URIRef(BRIDGE + "expectedFailedCheck"))
+        outcome = str(listed).removeprefix(EARL_NAMESPACE) if honour_the_outcomes and listed else "passed"
+        by = f" ; <{BRIDGE}failedCheck> <{check}>" if honour_the_outcomes and check else ""
+        assertions += (
+            f"\n[] a earl:Assertion ; earl:test <{entry}> ;\n"
+            f"  earl:result [ a earl:TestResult ; earl:outcome earl:{outcome}{by} ] .\n"
+        )
+    return assertions
 
 
 def names_a_vocabulary_file(adapter):
@@ -126,6 +149,7 @@ OA = "http://www.w3.org/ns/oa#"
 OA_HAS_SOURCE = OA + "hasSource"
 FORMATS = {"turtle": "turtle", "ntriples": "nt"}
 MF = "http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#"
+EARL_NAMESPACE = "http://www.w3.org/ns/earl#"
 ASSERTION_OF = """
 [] a earl:Assertion ;
   earl:assertedBy <https://example.org/fake-engine> ;
@@ -410,7 +434,11 @@ def run_library(args):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--canned", choices=("passed", "failed", "partial", "none", "garbled"), default="passed")
+    parser.add_argument(
+        "--canned",
+        choices=("passed", "failed", "partial", "none", "garbled", "listed", "everything-passed"),
+        default="passed",
+    )
     parser.add_argument("--library", choices=tuple(LIBRARY), default="holds")
     commands = parser.add_subparsers(dest="command", required=True)
     for name in ("test", "convert"):

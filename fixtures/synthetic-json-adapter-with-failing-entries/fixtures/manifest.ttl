@@ -1,0 +1,101 @@
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix earl:   <http://www.w3.org/ns/earl#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+
+<> a mf:Manifest ;
+  rdfs:label "synthetic JSON adapter whose mapping writes only a record's accession and version" ;
+  bridge:adapter <../> ;
+  mf:entries (
+    <#every-carried-path-written>
+    <#label-not-written>
+    <#label-not-written-and-reported>
+    <#label-empty>
+    <#last-update-not-written-and-reported>
+    <#last-update-not-written>
+  ) .
+
+<#every-carried-path-written> a bridge:IsomorphicConversionTest ;
+  mf:name "every-carried-path-written" ;
+  bridge:expectedOutcome earl:passed ;
+  mf:action [
+    bridge:input <in/every-carried-path-written.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/every-carried-path-written.ttl> ;
+    bridge:expectedFindings <findings/every-carried-path-written.ttl>
+  ] .
+
+<#label-not-written> a bridge:IsomorphicConversionTest ;
+  mf:name "label-not-written" ;
+  rdfs:comment "A carried path holding a value the mapping does not write, and no finding about it." ;
+  bridge:expectedOutcome earl:failed ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/label-not-written.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/label-not-written.ttl> ;
+    bridge:expectedFindings <findings/label-not-written.ttl>
+  ] .
+
+<#label-not-written-and-reported> a bridge:IsomorphicConversionTest ;
+  mf:name "label-not-written-and-reported" ;
+  rdfs:comment "The path of label-not-written not written, with a finding addressed at it." ;
+  bridge:expectedOutcome earl:passed ;
+  mf:action [
+    bridge:input <in/label-not-written-and-reported.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/label-not-written-and-reported.ttl> ;
+    bridge:expectedFindings <findings/label-not-written-and-reported.ttl>
+  ] .
+
+<#label-empty> a bridge:IsomorphicConversionTest ;
+  mf:name "label-empty" ;
+  rdfs:comment "The path of label-not-written holding an empty string: nothing is owed." ;
+  bridge:expectedOutcome earl:passed ;
+  mf:action [
+    bridge:input <in/label-empty.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/label-empty.ttl> ;
+    bridge:expectedFindings <findings/label-empty.ttl>
+  ] .
+
+<#last-update-not-written-and-reported> a bridge:IsomorphicConversionTest ;
+  mf:name "last-update-not-written-and-reported" ;
+  rdfs:comment "A path carried in part, not written, with a finding whose body is the gap its accounting entry names." ;
+  bridge:expectedOutcome earl:passed ;
+  mf:action [
+    bridge:input <in/last-update-not-written-and-reported.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/last-update-not-written-and-reported.ttl> ;
+    bridge:expectedFindings <findings/last-update-not-written-and-reported.ttl>
+  ] .
+
+<#last-update-not-written> a bridge:IsomorphicConversionTest ;
+  mf:name "last-update-not-written" ;
+  rdfs:comment "A path carried in part, not written, and no finding about it: the entry's gap is for the values it does not carry, and this one is not reported." ;
+  bridge:expectedOutcome earl:failed ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/last-update-not-written.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/last-update-not-written.ttl> ;
+    bridge:expectedFindings <findings/last-update-not-written.ttl>
+  ] .
