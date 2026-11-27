@@ -90,15 +90,14 @@ owed for either, and neither is an empty child of its element. An object holding
 included, is empty. A number, `true` and `false` are values, never empty.
 
 **Judge a report against the outcomes a manifest lists.** An entry that lists a `bridge:expectedFailedCheck` must be
-reported `earl:failed` with that check as the `bridge:failedCheck` of its result, and every other entry
-`earl:passed`. A report's assertion is matched to the entry whose IRI has the fragment of the reported
-`earl:test`; a reported test whose fragment is no entry of the manifest is a fault, and so is an entry not reported.
+reported `earl:failed` with that check as the `bridge:failedCheck` of its result; every other entry is judged as
+[`faults-of-a-report.rq`](faults-of-a-report.rq) judges it. A report's assertion is matched to an entry by the entry's
+IRI; a reported test that is no entry of the manifest is a fault, and so is an entry not reported.
 [`faults-of-a-report-against-expected-outcomes.rq`](faults-of-a-report-against-expected-outcomes.rq) finds each
 fault. A Bridge is held to
 [`../fixtures/synthetic-json-adapter-with-failing-entries/`](../fixtures/synthetic-json-adapter-with-failing-entries/)
 this way: a report that gives every entry `earl:passed` is refused. The compatibility run judges the report of any
-adapter whose manifest lists one that way, and each Bridge's library makes a `test` call on that adapter, in the
-[library cases](../fixtures/library/manifest.ttl).
+adapter whose manifest lists one that way; [`bridge:LibraryTest`](../vocab/bridge.ttl) says how a library is held to it.
 
 **Report in EARL**: one `earl:Assertion` per entry, `earl:test` the entry's IRI,
 `earl:subject` the Bridge, `earl:mode earl:automatic`, and an `earl:TestResult`

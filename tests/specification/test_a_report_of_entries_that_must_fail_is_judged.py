@@ -81,7 +81,10 @@ SYNTHETIC_MANIFEST = ROOT / "fixtures" / "synthetic-adapter" / "fixtures" / "man
 SYNTHETIC = SYNTHETIC_MANIFEST.read_text(encoding="utf-8")
 OTHER_JUDGE = ROOT / "engine" / "faults-of-a-report.rq"
 OTHER_CHECK = "https://example.org/a-check"
-MIXED = SYNTHETIC + f"\n<#example-0001> <https://ns.cascadeprotocol.org/bridge/v1-draft#expectedFailedCheck> <{OTHER_CHECK}> .\n"
+MIXED = (
+    SYNTHETIC
+    + f"\n<#example-0001> <https://ns.cascadeprotocol.org/bridge/v1-draft#expectedFailedCheck> <{OTHER_CHECK}> .\n"
+)
 SYNTHETIC_ENTRIES = [
     "example-0001",
     "example-0002",
@@ -122,7 +125,10 @@ REPORTS_OF_THE_SYNTHETIC_ADAPTER = {
 }
 
 
-def faults_over(manifest, report, judge=JUDGE, base=SYNTHETIC_MANIFEST.resolve().as_uri()):
+SYNTHETIC_BASE = SYNTHETIC_MANIFEST.resolve().as_uri()
+
+
+def faults_over(manifest, report, judge=JUDGE, base=SYNTHETIC_BASE):
     """The faults `judge` finds in a report, given as outcomes by entry name or as Turtle, over a manifest read at `base`."""
     if not isinstance(report, str):
         report = written_at(base, report)
