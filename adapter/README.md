@@ -107,10 +107,15 @@ answered in one of two ways:
 A path no Cascade predicate carries whose loss your own findings query reports at each value, such as a contact point
 with the number it holds, is `bridge:noHome` naming that gap by `bridge:adapterReportsGap` instead of `bridge:namesGap`:
 a Bridge then reports nothing for it, and fails a test entry whose input holds the path where no finding of that gap is
-addressed at the value or at an element holding it, in a record of any kind, or in no record. A path that some kinds of
-record carry and others lose stays `bridge:carriedInPart`, and names by `bridge:adapterReportsGap` the gap each other
-kind loses it to; there, an occurrence no record of its `bridge:carriedAs` classes holds is met by that gap alone. Name
-as many as your queries report.
+addressed at the value, inside it, or at an element holding it whose own path's entry names that gap too, in a record
+of any kind, or in no record. So one finding at the contact point `/telecom/0` answers for its `system` and `value`
+when the entries for `/telecom`, `/telecom/system` and `/telecom/value` all name the gap, and a finding at the record
+answers for nothing. In XML an attribute is content, so `<telecom nullFlavor="UNK"/>` is not empty: under an entry on
+`telecom` naming a `bridge:adapterReportsGap`, your query owes it a finding as it owes one to
+`<telecom value="tel:+1-555-0100"/>`. A path that some kinds of record carry and others lose stays
+`bridge:carriedInPart`, and names by `bridge:adapterReportsGap` the gap each other kind loses it to; there, an
+occurrence no record of its `bridge:carriedAs` classes holds is met by that gap alone, and one such a record holds is
+met as any carried occurrence is, never by that gap above it. Name as many as your queries report.
 
 A finding whose body is a gap of kind `bridge:elementNotCarried`, addressed at the element nothing of which is carried,
 answers for everything in the element where no record the conversion wrote stands in it: nothing in it is owed, and no

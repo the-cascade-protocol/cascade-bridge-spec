@@ -293,6 +293,9 @@
           "@id": "fixtures/expected/last-update-of-a-record-no-mapping-reads-reported.ttl"
         },
         {
+          "@id": "fixtures/expected/last-update-reported-at-the-unit-as-the-adapters-gap.ttl"
+        },
+        {
           "@id": "fixtures/expected/last-update-reported-at-the-unit.ttl"
         },
         {
@@ -305,7 +308,13 @@
           "@id": "fixtures/expected/null-and-array-no-empty-child.ttl"
         },
         {
+          "@id": "fixtures/expected/phone-reported-only-at-the-record.ttl"
+        },
+        {
           "@id": "fixtures/expected/phone-the-adapter-does-not-report.ttl"
+        },
+        {
+          "@id": "fixtures/expected/phones-held-as-objects-reported-by-the-adapter.ttl"
         },
         {
           "@id": "fixtures/expected/phones-reported-by-the-adapter.ttl"
@@ -464,6 +473,9 @@
           "@id": "fixtures/findings/last-update-of-a-record-no-mapping-reads-reported.ttl"
         },
         {
+          "@id": "fixtures/findings/last-update-reported-at-the-unit-as-the-adapters-gap.ttl"
+        },
+        {
           "@id": "fixtures/findings/last-update-reported-at-the-unit.ttl"
         },
         {
@@ -476,7 +488,13 @@
           "@id": "fixtures/findings/null-and-array-no-empty-child.ttl"
         },
         {
+          "@id": "fixtures/findings/phone-reported-only-at-the-record.ttl"
+        },
+        {
           "@id": "fixtures/findings/phone-the-adapter-does-not-report.ttl"
+        },
+        {
+          "@id": "fixtures/findings/phones-held-as-objects-reported-by-the-adapter.ttl"
         },
         {
           "@id": "fixtures/findings/phones-reported-by-the-adapter.ttl"
@@ -635,6 +653,9 @@
           "@id": "fixtures/in/last-update-of-a-record-no-mapping-reads-reported.json"
         },
         {
+          "@id": "fixtures/in/last-update-reported-at-the-unit-as-the-adapters-gap.json"
+        },
+        {
           "@id": "fixtures/in/last-update-reported-at-the-unit.json"
         },
         {
@@ -647,7 +668,13 @@
           "@id": "fixtures/in/null-and-array-no-empty-child.json"
         },
         {
+          "@id": "fixtures/in/phone-reported-only-at-the-record.json"
+        },
+        {
           "@id": "fixtures/in/phone-the-adapter-does-not-report.json"
+        },
+        {
+          "@id": "fixtures/in/phones-held-as-objects-reported-by-the-adapter.json"
         },
         {
           "@id": "fixtures/in/phones-reported-by-the-adapter.json"
@@ -814,8 +841,8 @@
       "@type": "File",
       "name": "Findings query",
       "encodingFormat": "application/sparql-query",
-      "contentSize": "5450",
-      "sha256": "887c361d8c021d7b0be0ddecda01b831fb9b1fb8848e21881e84fc2cea691783",
+      "contentSize": "6369",
+      "sha256": "abb1482bb06c32f1e3222d63ece0f52e643203d3d480ba97ac558be8c1f68533",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -869,8 +896,8 @@
       "@type": "File",
       "name": "Source accounting",
       "encodingFormat": "text/turtle",
-      "contentSize": "4469",
-      "sha256": "6327a6bbeace8e126dea9176e958157da7d3de205e85496f4744e9c539a19486",
+      "contentSize": "4633",
+      "sha256": "48b2708ad1cc7d6ae0da0b782e0face86aca10fa5f2b60227a50c79ca6b6c002",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -894,8 +921,8 @@
       "@type": "File",
       "name": "Test manifest",
       "encodingFormat": "text/turtle",
-      "contentSize": "38861",
-      "sha256": "251c1b9e69c55e54f8dc4777aa4bb9c2311010ce7be6617e7e6f4b0e9c735e62",
+      "contentSize": "41667",
+      "sha256": "185c8a71d8a048d70f9861c1ea2bb6b6da0a19b1a7d5b886fe39c831c1b47280",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -1472,6 +1499,20 @@
       }
     },
     {
+      "@id": "fixtures/expected/last-update-reported-at-the-unit-as-the-adapters-gap.ttl",
+      "@type": "File",
+      "name": "Expected graph for last-update-reported-at-the-unit-as-the-adapters-gap",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2514",
+      "sha256": "327fff5630d5c7475b4250551f8f46b895a832b7e19f318aa537b4459cc48e9f",
+      "isBasedOn": {
+        "@id": "fixtures/in/last-update-reported-at-the-unit-as-the-adapters-gap.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/expected/last-update-reported-at-the-unit.ttl",
       "@type": "File",
       "name": "Expected graph for last-update-reported-at-the-unit",
@@ -1528,6 +1569,20 @@
       }
     },
     {
+      "@id": "fixtures/expected/phone-reported-only-at-the-record.ttl",
+      "@type": "File",
+      "name": "Expected graph for phone-reported-only-at-the-record",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2514",
+      "sha256": "90da096a27eebfcadda708097955a3770d5c97534f9e77425015b7aff53b0873",
+      "isBasedOn": {
+        "@id": "fixtures/in/phone-reported-only-at-the-record.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/expected/phone-the-adapter-does-not-report.ttl",
       "@type": "File",
       "name": "Expected graph for phone-the-adapter-does-not-report",
@@ -1536,6 +1591,20 @@
       "sha256": "219caeaf904831c57d41dc684d8aaa1d768174bac8ba2602b9a079412f3a40b9",
       "isBasedOn": {
         "@id": "fixtures/in/phone-the-adapter-does-not-report.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/phones-held-as-objects-reported-by-the-adapter.ttl",
+      "@type": "File",
+      "name": "Expected graph for phones-held-as-objects-reported-by-the-adapter",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2514",
+      "sha256": "50c08ed173dd2d1c3aef0f3a4a07709a02387b2f0ac466971ecd6906ec0ae834",
+      "isBasedOn": {
+        "@id": "fixtures/in/phones-held-as-objects-reported-by-the-adapter.json"
       },
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
@@ -2270,6 +2339,20 @@
       }
     },
     {
+      "@id": "fixtures/findings/last-update-reported-at-the-unit-as-the-adapters-gap.ttl",
+      "@type": "File",
+      "name": "Expected findings for last-update-reported-at-the-unit-as-the-adapters-gap",
+      "encodingFormat": "text/turtle",
+      "contentSize": "898",
+      "sha256": "3bf8328bd7661c56d1311638929074247d019cab9acba03d9daaa2e7196b8a05",
+      "isBasedOn": {
+        "@id": "fixtures/in/last-update-reported-at-the-unit-as-the-adapters-gap.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/findings/last-update-reported-at-the-unit.ttl",
       "@type": "File",
       "name": "Expected findings for last-update-reported-at-the-unit",
@@ -2326,6 +2409,20 @@
       }
     },
     {
+      "@id": "fixtures/findings/phone-reported-only-at-the-record.ttl",
+      "@type": "File",
+      "name": "Expected findings for phone-reported-only-at-the-record",
+      "encodingFormat": "text/turtle",
+      "contentSize": "876",
+      "sha256": "876b1f3197d362a37df01a9025b297283f2bc62a680e20e25e782958cc814b26",
+      "isBasedOn": {
+        "@id": "fixtures/in/phone-reported-only-at-the-record.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/findings/phone-the-adapter-does-not-report.ttl",
       "@type": "File",
       "name": "Expected findings for phone-the-adapter-does-not-report",
@@ -2334,6 +2431,20 @@
       "sha256": "aca609aeb31c92c22484dc853afbb2ac05a9e7359585d3b43276d786c4e3f958",
       "isBasedOn": {
         "@id": "fixtures/in/phone-the-adapter-does-not-report.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/phones-held-as-objects-reported-by-the-adapter.ttl",
+      "@type": "File",
+      "name": "Expected findings for phones-held-as-objects-reported-by-the-adapter",
+      "encodingFormat": "text/turtle",
+      "contentSize": "1430",
+      "sha256": "a17a9d64f4bb576f50a6cfa52ba45c673a34af6579e6d05c953b01d463629b57",
+      "isBasedOn": {
+        "@id": "fixtures/in/phones-held-as-objects-reported-by-the-adapter.json"
       },
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
@@ -2951,6 +3062,17 @@
       }
     },
     {
+      "@id": "fixtures/in/last-update-reported-at-the-unit-as-the-adapters-gap.json",
+      "@type": "File",
+      "name": "Synthetic JSON input last-update-reported-at-the-unit-as-the-adapters-gap",
+      "encodingFormat": "application/example+json",
+      "contentSize": "97",
+      "sha256": "c017710a8cc352839df9d4c6af786c05d7b5846c18c698140eb68fa502d3136f",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/in/last-update-reported-at-the-unit.json",
       "@type": "File",
       "name": "Synthetic JSON input last-update-reported-at-the-unit",
@@ -2995,12 +3117,34 @@
       }
     },
     {
+      "@id": "fixtures/in/phone-reported-only-at-the-record.json",
+      "@type": "File",
+      "name": "Synthetic JSON input phone-reported-only-at-the-record",
+      "encodingFormat": "application/example+json",
+      "contentSize": "97",
+      "sha256": "fef0bd1ba3e62cf07b420b5c8b5443df840bd3c4e60d9162ac93935afeaafdf0",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/in/phone-the-adapter-does-not-report.json",
       "@type": "File",
       "name": "Synthetic JSON input phone-the-adapter-does-not-report",
       "encodingFormat": "application/example+json",
       "contentSize": "97",
       "sha256": "675787c764b4c83d32a177080fc344dddeb31cf9e536758c5ce850cf2ce2fd2f",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/phones-held-as-objects-reported-by-the-adapter.json",
+      "@type": "File",
+      "name": "Synthetic JSON input phones-held-as-objects-reported-by-the-adapter",
+      "encodingFormat": "application/example+json",
+      "contentSize": "117",
+      "sha256": "3ac2d3bf114f6f031d6c7b8676dfdfbbf0b5c696b98765bd825366f59d31285e",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }

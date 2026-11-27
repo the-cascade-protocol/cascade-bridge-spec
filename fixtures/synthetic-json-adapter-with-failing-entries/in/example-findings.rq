@@ -163,10 +163,39 @@ WHERE {
   }
   UNION
   {
+    ?record xyz:lastUpdated ?written .
+    FILTER(?written = "2026-07-19T09:30:00Z")
+    BIND("" AS ?pointer)
+    BIND(ex:a-last-update-of-a-record-no-mapping-reads AS ?gap)
+    BIND(sh:Info AS ?severity)
+  }
+  UNION
+  {
     ?record xyz:phone ?phones .
     ?phones ?slot ?written .
-    FILTER(STRSTARTS(STR(?slot), STR(rdf:_)) && ?written != "[unreported]")
+    FILTER(STRSTARTS(STR(?slot), STR(rdf:_)) && isLiteral(?written)
+           && ?written NOT IN ("[unreported]", "[reported-at-the-record]"))
     BIND(CONCAT("/phone/", STR(xsd:integer(STRAFTER(STR(?slot), "#_")) - 1)) AS ?pointer)
+    BIND(ex:a-phone-number-no-predicate-carries AS ?gap)
+    BIND(sh:Info AS ?severity)
+  }
+  UNION
+  {
+    ?record xyz:phone ?phones .
+    ?phones ?slot ?written .
+    FILTER(?written = "[reported-at-the-record]")
+    BIND("" AS ?pointer)
+    BIND(ex:a-phone-number-no-predicate-carries AS ?gap)
+    BIND(sh:Info AS ?severity)
+  }
+  UNION
+  {
+    ?record xyz:phone ?phones .
+    ?phones ?slot ?phone .
+    ?phone xyz:number ?written .
+    FILTER(STRSTARTS(STR(?slot), STR(rdf:_)))
+    BIND(CONCAT("/phone/", STR(xsd:integer(STRAFTER(STR(?slot), "#_")) - 1),
+                IF(?written = "555-0100", "", "/number")) AS ?pointer)
     BIND(ex:a-phone-number-no-predicate-carries AS ?gap)
     BIND(sh:Info AS ?severity)
   }

@@ -58,8 +58,7 @@ arrival of its own; a record of that class written elsewhere in the unit does no
 whose only value written in those places is empty.
 
 A finding from the same unit's conversion meets it when either its address is the occurrence's address or below it, or its address is above the
-occurrence's address and its `oa:hasBody` is the `bridge:namesGap`, the `bridge:lookupNamesGap` or a
-`bridge:adapterReportsGap` of the path's entry. A
+occurrence's address and its `oa:hasBody` is the `bridge:namesGap` or `bridge:lookupNamesGap` of the path's entry. A
 written property and a finding are alternatives. "Above" is measured on the occurrence's own address, indexes
 included, never on the path. A finding addressed at the unit's selector is above every occurrence in the unit. A
 finding elsewhere in the unit whatever its body, and a finding whose `sh:value` is the path alone, meet nothing. The
@@ -69,11 +68,15 @@ and a count would fail honest conversions.
 
 **Reported by the adapter.** A `bridge:adapterReportsGap` is a gap the adapter's own findings queries report at each
 occurrence of the path that no record carries, so a Bridge reports nothing from it ([`sparql.md`](sparql.md)) and
-holds the adapter to it. An occurrence of such a path that belongs to no record of a class one of the path's
-`bridge:carriedAs` names, or to no record at all, is met only by a finding from the same unit's conversion whose
-`oa:hasBody` is one of the entry's `bridge:adapterReportsGap`, addressed at the occurrence or above it; one that does
-belong to such a record is met as *Met* says. So each occurrence is reported by the adapter alone, at its value, and an
-entry cannot say its adapter reports a gap that it reports nowhere.
+holds the adapter to it. An occurrence of such a path that nothing excuses (*Excused*), and that belongs to no record
+of a class one of the path's `bridge:carriedAs` names or to no record at all, is met only by a finding from the same
+unit's conversion whose `oa:hasBody` is one of the entry's `bridge:adapterReportsGap`, addressed at the occurrence,
+below it, or above it at an address that is itself an occurrence of a path whose entry names that gap too. One that
+does belong to such a record is met as *Met* says, and a finding of the adapter's gap above it meets nothing. So where
+the entries for `/telecom`, `/telecom/system` and `/telecom/value` each name a contact point's gap, one finding of it
+at `/telecom/0` meets the contact point and the system and value inside it; a finding at the record meets none of
+them. Each occurrence is reported by the adapter alone, where it stands, and an entry cannot say its adapter reports a
+gap that it reports nowhere.
 
 **Excused.** An element reported as not carried at all holds nothing. An occurrence belongs to no record, and is not
 owed, where a finding of the same unit's conversion is addressed at it or at an element holding it, that finding's

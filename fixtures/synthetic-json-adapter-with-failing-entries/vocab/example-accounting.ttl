@@ -51,6 +51,11 @@
   bridge:adapterReportsGap ex:a-phone-number-no-predicate-carries .
 
 [] a bridge:PathEntry ;
+  bridge:sourcePath "/phone/number" ;
+  bridge:verdict bridge:noHome ;
+  bridge:adapterReportsGap ex:a-phone-number-no-predicate-carries .
+
+[] a bridge:PathEntry ;
   bridge:sourcePath "/caption" ;
   bridge:verdict bridge:carried ;
   bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .

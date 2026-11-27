@@ -63,6 +63,9 @@
     <#phone-the-adapter-does-not-report>
     <#last-update-of-a-record-no-mapping-reads-reported>
     <#last-update-of-a-record-no-mapping-reads-reported-as-its-loss>
+    <#phones-held-as-objects-reported-by-the-adapter>
+    <#phone-reported-only-at-the-record>
+    <#last-update-reported-at-the-unit-as-the-adapters-gap>
   ) .
 
 <#every-carried-path-written> a bridge:IsomorphicConversionTest ;
@@ -832,4 +835,45 @@
   mf:result [
     bridge:expectedGraph <expected/last-update-of-a-record-no-mapping-reads-reported-as-its-loss.ttl> ;
     bridge:expectedFindings <findings/last-update-of-a-record-no-mapping-reads-reported-as-its-loss.ttl>
+  ] .
+
+<#phones-held-as-objects-reported-by-the-adapter> a bridge:IsomorphicConversionTest ;
+  mf:name "phones-held-as-objects-reported-by-the-adapter" ;
+  rdfs:comment "Two phones held as objects, of paths that are no-home and each name the gap their adapter reports, the first reported at the phone and the second at its number: the number in the first is met by the finding at the phone, an occurrence whose entry names that gap too, and the second phone by the finding inside it." ;
+  mf:action [
+    bridge:input <in/phones-held-as-objects-reported-by-the-adapter.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/phones-held-as-objects-reported-by-the-adapter.ttl> ;
+    bridge:expectedFindings <findings/phones-held-as-objects-reported-by-the-adapter.ttl>
+  ] .
+
+<#phone-reported-only-at-the-record> a bridge:IsomorphicConversionTest ;
+  mf:name "phone-reported-only-at-the-record" ;
+  rdfs:comment "The path of phones-reported-by-the-adapter holding a number whose gap the findings query reports only at the record: the record is no occurrence of an entry naming that gap, so the number is owed a finding of it." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/phone-reported-only-at-the-record.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/phone-reported-only-at-the-record.ttl> ;
+    bridge:expectedFindings <findings/phone-reported-only-at-the-record.ttl>
+  ] .
+
+<#last-update-reported-at-the-unit-as-the-adapters-gap> a bridge:IsomorphicConversionTest ;
+  mf:name "last-update-reported-at-the-unit-as-the-adapters-gap" ;
+  rdfs:comment "A last update of a record, held by that record and not written on it, with a finding at the unit's selector whose body is the gap its carried-in-part entry says the adapter reports: inside a record of the entry's class that gap meets nothing above the occurrence, so it is owed." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/last-update-reported-at-the-unit-as-the-adapters-gap.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/last-update-reported-at-the-unit-as-the-adapters-gap.ttl> ;
+    bridge:expectedFindings <findings/last-update-reported-at-the-unit-as-the-adapters-gap.ttl>
   ] .
