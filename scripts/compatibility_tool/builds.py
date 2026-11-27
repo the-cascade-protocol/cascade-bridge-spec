@@ -1,5 +1,5 @@
 """A producer's package build, picked for a repository that installs it: the newest build of the producer's default
-branch, or the build of the head of the pull request a Depends-On: line names."""
+branch, or the build of the pull request a Depends-On: line names."""
 
 import fnmatch
 import hashlib
@@ -204,8 +204,8 @@ def of_a_pull_request(api, path, entry, pattern, into):
     return Picked(
         saved(data, name, into),
         head,
-        f"pull request #{entry.named.number} at its head alone, the package artifact of its run "
-        f"{run.get('html_url') or run['id']}; a pull request's build has no release notes, so no integrity was checked",
+        f"pull request #{entry.named.number}, the package artifact of its run {run.get('html_url') or run['id']} "
+        f"at its head; a pull request's build has no release notes, so no integrity was checked",
     )
 
 

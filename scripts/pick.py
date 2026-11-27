@@ -6,8 +6,8 @@
 
 --checkout: the repository's files, placed at <folder>, picked as a counterpart is: the pull requests a Depends-On:
 line names merged into the branch they target, else the branch named like the one the run is on, else the default
-branch. --package: the one file of that name in the build of the head of the pull request of the repository a
-Depends-On: line names, from that run's package artifact, else in the newest build of its default branch, a release
+branch. --package: the one file of that name in the package artifact of the run at the head of the pull request of
+the repository a Depends-On: line names, else in the newest build of its default branch, a release
 build-<commit> or an asset of the release package-builds; saved in <folder>. Prints what it picked and how, and writes
 path, commit and how to $GITHUB_OUTPUT when it is set. Exit status is 1 when nothing was picked.
 """

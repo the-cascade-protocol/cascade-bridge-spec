@@ -228,8 +228,7 @@ class TestPickingAnotherRepositorysFilesOrPackageBuild:
             )
 
     class TestGivenAPackageOfANamedOpenPullRequest:
-        def test_is_the_package_artifact_of_its_run_at_its_head_alone(self, world):
-            """is the package artifact of its run at its head, alone"""
+        def test_is_the_package_artifact_of_its_run_at_its_head(self, world):
             head = world.pull_request(PRODUCER, 7)
             run = an_artifact(world, head, {packed(head): b"the head's build", "release-notes.md": b"notes"})
 
@@ -238,7 +237,7 @@ class TestPickingAnotherRepositorysFilesOrPackageBuild:
             assert written["commit"] == head
             assert open(written["path"], "rb").read() == b"the head's build"
             assert written["how"] == (
-                f"pull request #7 at its head alone, the package artifact of its run {run['html_url']}; "
+                f"pull request #7, the package artifact of its run {run['html_url']} at its head; "
                 "a pull request's build has no release notes, so no integrity was checked"
             )
             assert world.pull_requests.authorizations[-1] is None, "the artifact's storage is sent no token"

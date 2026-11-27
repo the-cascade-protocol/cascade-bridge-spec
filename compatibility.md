@@ -160,9 +160,9 @@ allow.
 
 A repository with no `compatibility.json` picks what it reads of another in one
 step, `.github/actions/pick`. Files are picked as a counterpart is. A package is
-the build of the head of the producer's open pull request a `Depends-On:` line
-names, at that head alone, else the newest build of the producer's default
-branch, as a runtime picks the Bridge's: a merged one named adds nothing, and one
+the build of the producer's open pull request a `Depends-On:` line names, as
+that pull request's run at its head made it, else the newest build of the
+producer's default branch, as a runtime picks the Bridge's: a merged one named adds nothing, and one
 closed without merging, or two of one producer, stops the step. The producer's
 pull request runs the contract check its consumer names, with the consumer's
 files picked by this step, and a consumer's release records each build it
