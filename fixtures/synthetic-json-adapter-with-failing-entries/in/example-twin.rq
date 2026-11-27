@@ -25,7 +25,7 @@ WHERE {
     xyz:label ?label .
   bridge:thisDocument bridge:sha256 ?document .
   bridge:thisRecord bridge:selector ?selector .
-  BIND(CONCAT(?selector, "/related") AS ?relatedSelector)
+  BIND(CONCAT(?selector, IF(STRSTARTS(?twinAccession, "below-"), "/related/twin", "/related")) AS ?relatedSelector)
   BIND(CONCAT("90c60849-c5ef-4ca6-bfb8-8662bd07d2b5|https://ns.cascadeprotocol.org/cascade#RecordFromDocumentNamingRule",
               "|", REPLACE(REPLACE(?document, "%", "%25"), "\\|", "%7C"),
               "|", REPLACE(REPLACE(CONCAT(?selector, "/related/twin"), "%", "%25"), "\\|", "%7C")) AS ?named)

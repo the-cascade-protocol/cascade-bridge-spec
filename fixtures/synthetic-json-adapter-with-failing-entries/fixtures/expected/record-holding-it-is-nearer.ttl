@@ -1,0 +1,78 @@
+@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+@prefix cascade: <https://ns.cascadeprotocol.org/cascade#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ex: <https://example.org/synthetic-adapter/v1#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<ni:///sha-256;0Uiw-snKKv9Kq9iP1zTMr0RyQNLFoKM4l6rIZPsgFQk> prov:specializationOf <urn:uuid:a9df769c-4f0a-810b-95f1-62afca9c7f70> .
+
+<ni:///sha-256;LvFaVATb0-ypXTEw3rcHhCWVW23oOeBnkgTs78H0iXE> prov:specializationOf <urn:uuid:ea52a769-000c-8aac-87f7-c9f197698f06> .
+
+<ni:///sha-256;eBu1H0NN-veGMDu2cr8VunV0Ye7fFVV73bC6kFA_sYU> prov:specializationOf <urn:uuid:653eec67-53d8-87be-b046-f00cb3ef5a63> .
+
+<urn:uuid:653eec67-53d8-87be-b046-f00cb3ef5a63> a ex:Record ;
+    ex:accession "EX000268" .
+
+<urn:uuid:a9df769c-4f0a-810b-95f1-62afca9c7f70> a ex:Record ;
+    ex:accession "EX000269" .
+
+<urn:uuid:ea52a769-000c-8aac-87f7-c9f197698f06> a ex:Record ;
+    rdfs:label "a label the twin writes" ;
+    ex:accession "below-EX000270" .
+
+<ni:///sha-256;KACtIq2zbvjCNNgQ7RHYk9SiLOlYe7G5GI_lYlpht2s> a prov:Entity ;
+    pav:retrievedFrom <https://records.example.org/api/ExampleRecordSet> ;
+    pav:retrievedOn "2026-08-30T22:14:00Z"^^xsd:dateTime ;
+    prov:wasAttributedTo _:n51ad638a612f41efbe7e935a87d8b0f3b9 ;
+    prov:wasGeneratedBy [ prov:qualifiedAssociation [ prov:agent _:n51ad638a612f41efbe7e935a87d8b0f3b9 ;
+                    prov:hadRole cascade:AuthorRole ],
+                [ prov:agent [ rdfs:label "Example Fetcher" ] ;
+                    prov:hadRole cascade:TransmitterRole ] ] ;
+    cascade:authenticatedAsProxy false ;
+    cascade:authenticatedPatient "Patient/example-patient" ;
+    cascade:serverBaseUrl "https://records.example.org/api" ;
+    cascade:sourceFormatVersion "1" .
+
+[] pav:version "1" ;
+    oa:hasSelector [ a oa:FragmentSelector ;
+            dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+            rdf:value "" ] ;
+    oa:hasSource <ni:///sha-256;KACtIq2zbvjCNNgQ7RHYk9SiLOlYe7G5GI_lYlpht2s> ;
+    prov:wasDerivedFrom <ni:///sha-256;KACtIq2zbvjCNNgQ7RHYk9SiLOlYe7G5GI_lYlpht2s> ;
+    prov:wasGeneratedBy _:n51ad638a612f41efbe7e935a87d8b0f3b7 ;
+    bridge:arrivedAs <ni:///sha-256;eBu1H0NN-veGMDu2cr8VunV0Ye7fFVV73bC6kFA_sYU> .
+
+[] oa:hasSelector [ a oa:FragmentSelector ;
+            dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+            rdf:value "/related" ] ;
+    oa:hasSource <ni:///sha-256;KACtIq2zbvjCNNgQ7RHYk9SiLOlYe7G5GI_lYlpht2s> ;
+    prov:wasDerivedFrom <ni:///sha-256;KACtIq2zbvjCNNgQ7RHYk9SiLOlYe7G5GI_lYlpht2s> ;
+    prov:wasGeneratedBy _:n51ad638a612f41efbe7e935a87d8b0f3b7 ;
+    bridge:arrivedAs <ni:///sha-256;0Uiw-snKKv9Kq9iP1zTMr0RyQNLFoKM4l6rIZPsgFQk> .
+
+[] oa:hasSelector [ a oa:FragmentSelector ;
+            dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+            rdf:value "/related/twin" ] ;
+    oa:hasSource <ni:///sha-256;KACtIq2zbvjCNNgQ7RHYk9SiLOlYe7G5GI_lYlpht2s> ;
+    prov:wasDerivedFrom <ni:///sha-256;KACtIq2zbvjCNNgQ7RHYk9SiLOlYe7G5GI_lYlpht2s> ;
+    prov:wasGeneratedBy _:n51ad638a612f41efbe7e935a87d8b0f3b7 ;
+    bridge:arrivedAs <ni:///sha-256;LvFaVATb0-ypXTEw3rcHhCWVW23oOeBnkgTs78H0iXE> .
+
+_:n51ad638a612f41efbe7e935a87d8b0f3b13 prov:agent [ ] ;
+    prov:hadPlan [ a prov:Plan ;
+            rdfs:label "synthetic-json-example-with-failing-entries" ;
+            pav:version "0.1.0" ] .
+
+_:n51ad638a612f41efbe7e935a87d8b0f3b9 rdfs:label "Example Records Registry" .
+
+_:n51ad638a612f41efbe7e935a87d8b0f3b7 a prov:Activity ;
+    rdfs:label "synthetic example import" ;
+    prov:qualifiedAssociation _:n51ad638a612f41efbe7e935a87d8b0f3b13 ;
+    prov:startedAtTime "2026-09-01T10:00:00Z"^^xsd:dateTime ;
+    prov:used <ni:///sha-256;KACtIq2zbvjCNNgQ7RHYk9SiLOlYe7G5GI_lYlpht2s> .
+

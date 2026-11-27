@@ -1,0 +1,64 @@
+@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+@prefix cascade: <https://ns.cascadeprotocol.org/cascade#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ex: <https://example.org/synthetic-adapter/v1#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<ni:///sha-256;7QgbxlZ_-NfhJ-u_EcJ2-Su6hx6WgyAakjGpSgN5wZo> prov:specializationOf <urn:uuid:f33067dc-6f66-802a-bcd1-48332800b3f9> .
+
+<ni:///sha-256;aKzEsFCYuTUKnaK287Io0kLW4yypKskWvzHWSIAjlGQ> prov:specializationOf <urn:uuid:ad7d4317-998c-8bb0-bd4e-f5086a6f1240> .
+
+<urn:uuid:ad7d4317-998c-8bb0-bd4e-f5086a6f1240> a ex:Record ;
+    ex:accession "EX000271" .
+
+<urn:uuid:f33067dc-6f66-802a-bcd1-48332800b3f9> a ex:Record ;
+    ex:accession "below-271" .
+
+<ni:///sha-256;9s9cK6ufnLRWtHbyl8S3N2R_Zs3XijF3_u6YcdeaWPE> a prov:Entity ;
+    pav:retrievedFrom <https://records.example.org/api/ExampleRecordSet> ;
+    pav:retrievedOn "2026-08-30T22:14:00Z"^^xsd:dateTime ;
+    prov:wasAttributedTo _:ne709b6e7846e4c0ba8635dfe57c8f34bb7 ;
+    prov:wasGeneratedBy [ prov:qualifiedAssociation [ prov:agent _:ne709b6e7846e4c0ba8635dfe57c8f34bb7 ;
+                    prov:hadRole cascade:AuthorRole ],
+                [ prov:agent [ rdfs:label "Example Fetcher" ] ;
+                    prov:hadRole cascade:TransmitterRole ] ] ;
+    cascade:authenticatedAsProxy false ;
+    cascade:authenticatedPatient "Patient/example-patient" ;
+    cascade:serverBaseUrl "https://records.example.org/api" ;
+    cascade:sourceFormatVersion "1" .
+
+[] oa:hasSelector [ a oa:FragmentSelector ;
+            dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+            rdf:value "/contained/0/id" ] ;
+    oa:hasSource <ni:///sha-256;9s9cK6ufnLRWtHbyl8S3N2R_Zs3XijF3_u6YcdeaWPE> ;
+    prov:wasDerivedFrom <ni:///sha-256;9s9cK6ufnLRWtHbyl8S3N2R_Zs3XijF3_u6YcdeaWPE> ;
+    prov:wasGeneratedBy _:ne709b6e7846e4c0ba8635dfe57c8f34bb5 ;
+    bridge:arrivedAs <ni:///sha-256;7QgbxlZ_-NfhJ-u_EcJ2-Su6hx6WgyAakjGpSgN5wZo> .
+
+[] pav:version "1" ;
+    oa:hasSelector [ a oa:FragmentSelector ;
+            dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+            rdf:value "" ] ;
+    oa:hasSource <ni:///sha-256;9s9cK6ufnLRWtHbyl8S3N2R_Zs3XijF3_u6YcdeaWPE> ;
+    prov:wasDerivedFrom <ni:///sha-256;9s9cK6ufnLRWtHbyl8S3N2R_Zs3XijF3_u6YcdeaWPE> ;
+    prov:wasGeneratedBy _:ne709b6e7846e4c0ba8635dfe57c8f34bb5 ;
+    bridge:arrivedAs <ni:///sha-256;aKzEsFCYuTUKnaK287Io0kLW4yypKskWvzHWSIAjlGQ> .
+
+_:ne709b6e7846e4c0ba8635dfe57c8f34bb11 prov:agent [ ] ;
+    prov:hadPlan [ a prov:Plan ;
+            rdfs:label "synthetic-json-example-with-failing-entries" ;
+            pav:version "0.1.0" ] .
+
+_:ne709b6e7846e4c0ba8635dfe57c8f34bb5 a prov:Activity ;
+    rdfs:label "synthetic example import" ;
+    prov:qualifiedAssociation _:ne709b6e7846e4c0ba8635dfe57c8f34bb11 ;
+    prov:startedAtTime "2026-09-01T10:00:00Z"^^xsd:dateTime ;
+    prov:used <ni:///sha-256;9s9cK6ufnLRWtHbyl8S3N2R_Zs3XijF3_u6YcdeaWPE> .
+
+_:ne709b6e7846e4c0ba8635dfe57c8f34bb7 rdfs:label "Example Records Registry" .
+

@@ -10,6 +10,7 @@ PREFIX ex:     <https://example.org/synthetic-adapter/v1#>
 PREFIX cascade: <https://ns.cascadeprotocol.org/cascade#>
 
 CONSTRUCT {
+  ?record rdfs:label ?recordLabel .
   ?version rdfs:label ?versionLabel .
   [] bridge:arrivedAs ?arrivedVersion ;
     rdfs:label ?arrivalLabel .
@@ -59,6 +60,8 @@ WHERE {
          "[048c]", "8"), "[159d]", "9"), "[26ae]", "a"), "[37bf]", "b") AS ?pointedVariant)
   BIND(CONCAT(SUBSTR(?pointedHash, 1, 8), "-", SUBSTR(?pointedHash, 9, 4), "-8", SUBSTR(?pointedHash, 14, 3),
               "-", ?pointedVariant, SUBSTR(?pointedHash, 18, 3), "-", SUBSTR(?pointedHash, 21, 12)) AS ?pointedUuid)
+  BIND(IRI(CONCAT("urn:uuid:", ?uuid)) AS ?record)
+  BIND(IF(?on = "empty", "", ?none) AS ?recordLabel)
   BIND(IF(?on = "version", ?label, ?none) AS ?versionLabel)
   BIND(IF(?on = "arrival", ?version, ?none) AS ?arrivedVersion)
   BIND(IF(?on = "arrival", ?label, ?none) AS ?arrivalLabel)

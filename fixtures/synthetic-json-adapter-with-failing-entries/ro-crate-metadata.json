@@ -203,6 +203,9 @@
           "@id": "fixtures/expected/empty-label-beside-last-update.ttl"
         },
         {
+          "@id": "fixtures/expected/empty-label-written-as-empty.ttl"
+        },
+        {
           "@id": "fixtures/expected/every-carried-path-written.ttl"
         },
         {
@@ -269,6 +272,12 @@
           "@id": "fixtures/expected/label-written-on-the-version.ttl"
         },
         {
+          "@id": "fixtures/expected/label-written-only-as-empty.ttl"
+        },
+        {
+          "@id": "fixtures/expected/label-zero-not-written.ttl"
+        },
+        {
           "@id": "fixtures/expected/last-update-not-written-reported.ttl"
         },
         {
@@ -284,6 +293,15 @@
           "@id": "fixtures/expected/nearer-label-written.ttl"
         },
         {
+          "@id": "fixtures/expected/null-and-array-no-empty-child.ttl"
+        },
+        {
+          "@id": "fixtures/expected/record-below-an-element-held-back.ttl"
+        },
+        {
+          "@id": "fixtures/expected/record-holding-it-is-nearer.ttl"
+        },
+        {
           "@id": "fixtures/expected/related-label-held-back-whole.ttl"
         },
         {
@@ -297,6 +315,9 @@
         },
         {
           "@id": "fixtures/expected/respelled-selector-title-written.ttl"
+        },
+        {
+          "@id": "fixtures/expected/selector-outside-the-unit.ttl"
         },
         {
           "@id": "fixtures/expected/selector-selects-no-node.ttl"
@@ -339,6 +360,9 @@
         },
         {
           "@id": "fixtures/findings/empty-label-beside-last-update.ttl"
+        },
+        {
+          "@id": "fixtures/findings/empty-label-written-as-empty.ttl"
         },
         {
           "@id": "fixtures/findings/every-carried-path-written.ttl"
@@ -404,6 +428,12 @@
           "@id": "fixtures/findings/label-written-on-the-version.ttl"
         },
         {
+          "@id": "fixtures/findings/label-written-only-as-empty.ttl"
+        },
+        {
+          "@id": "fixtures/findings/label-zero-not-written.ttl"
+        },
+        {
           "@id": "fixtures/findings/last-update-not-written-reported.ttl"
         },
         {
@@ -419,6 +449,15 @@
           "@id": "fixtures/findings/nearer-label-written.ttl"
         },
         {
+          "@id": "fixtures/findings/null-and-array-no-empty-child.ttl"
+        },
+        {
+          "@id": "fixtures/findings/record-below-an-element-held-back.ttl"
+        },
+        {
+          "@id": "fixtures/findings/record-holding-it-is-nearer.ttl"
+        },
+        {
           "@id": "fixtures/findings/related-label-held-back-whole.ttl"
         },
         {
@@ -432,6 +471,9 @@
         },
         {
           "@id": "fixtures/findings/respelled-selector-title-written.ttl"
+        },
+        {
+          "@id": "fixtures/findings/selector-outside-the-unit.ttl"
         },
         {
           "@id": "fixtures/findings/selector-selects-no-node.ttl"
@@ -474,6 +516,9 @@
         },
         {
           "@id": "fixtures/in/empty-label-beside-last-update.json"
+        },
+        {
+          "@id": "fixtures/in/empty-label-written-as-empty.json"
         },
         {
           "@id": "fixtures/in/every-carried-path-written.json"
@@ -539,6 +584,12 @@
           "@id": "fixtures/in/label-written-on-the-version.json"
         },
         {
+          "@id": "fixtures/in/label-written-only-as-empty.json"
+        },
+        {
+          "@id": "fixtures/in/label-zero-not-written.json"
+        },
+        {
           "@id": "fixtures/in/last-update-not-written-reported.json"
         },
         {
@@ -554,6 +605,15 @@
           "@id": "fixtures/in/nearer-label-written.json"
         },
         {
+          "@id": "fixtures/in/null-and-array-no-empty-child.json"
+        },
+        {
+          "@id": "fixtures/in/record-below-an-element-held-back.json"
+        },
+        {
+          "@id": "fixtures/in/record-holding-it-is-nearer.json"
+        },
+        {
           "@id": "fixtures/in/related-label-held-back-whole.json"
         },
         {
@@ -567,6 +627,9 @@
         },
         {
           "@id": "fixtures/in/respelled-selector-title-written.json"
+        },
+        {
+          "@id": "fixtures/in/selector-outside-the-unit.json"
         },
         {
           "@id": "fixtures/in/selector-selects-no-node.json"
@@ -651,8 +714,8 @@
       "@type": "File",
       "name": "Mapping of contained records",
       "encodingFormat": "application/sparql-query",
-      "contentSize": "3594",
-      "sha256": "005d857c93ec1c65e5533ad10d4f4706d85e50a6ff2d13a2d20a050662bf2384",
+      "contentSize": "3584",
+      "sha256": "56854447cedfe1ee4d9f5d0a926f4f221b4fe9bcddc047fb2b9aa3493addb390",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -662,8 +725,8 @@
       "@type": "File",
       "name": "Mapping of contained records placed by other selectors",
       "encodingFormat": "application/sparql-query",
-      "contentSize": "3745",
-      "sha256": "2e10da8febe07229a888b5531ce0d452b75e10978e34084877731a925bef341f",
+      "contentSize": "3865",
+      "sha256": "5eb1387e6cbe500e8ed42c9e4e4fdd40a0acd5a891e74683c5147362079868ab",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -684,8 +747,8 @@
       "@type": "File",
       "name": "Mapping of a record standing where another does",
       "encodingFormat": "application/sparql-query",
-      "contentSize": "1913",
-      "sha256": "cb51a689071c45f97795a17007833b8d4c2b7090bbb81a7714ae72e80ce39434",
+      "contentSize": "1971",
+      "sha256": "5cb1bef2e57db3d89e1d2d2e851d385fa2dc6bc3f2a6a45a309ab7388a3c1398",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -695,8 +758,8 @@
       "@type": "File",
       "name": "Mapping of a label written beside the record",
       "encodingFormat": "application/sparql-query",
-      "contentSize": "4144",
-      "sha256": "66e883c81ec1755b31b11479b00b0ec3cd938d891d4c1a3a950afcc6802775a2",
+      "contentSize": "4284",
+      "sha256": "0ae5ce7935381e479ae7fa53a4fc12bbeb8caeb2a19f3a8904b989f3190d0e61",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -786,8 +849,8 @@
       "@type": "File",
       "name": "Test manifest",
       "encodingFormat": "text/turtle",
-      "contentSize": "29387",
-      "sha256": "a0e55dad4020965dd0c64c2bd9c2ec90d7baf64f819ada8cd37a26b6193ebf21",
+      "contentSize": "34521",
+      "sha256": "a087fcaed0d0fe5c551378ea939967d9a5e77d285b3b7ab939982a2734237264",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -938,6 +1001,20 @@
       "sha256": "b14b3844cff6a63dfc5d239e98bd61b758aaecafa24c946d29abcd59b29fc9f3",
       "isBasedOn": {
         "@id": "fixtures/in/empty-label-beside-last-update.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/empty-label-written-as-empty.ttl",
+      "@type": "File",
+      "name": "Expected graph for empty-label-written-as-empty",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2534",
+      "sha256": "e5b2bd23e7b06445dca256e3cef5da64972e6a46c8aba1cf7d6d27a3833a13b1",
+      "isBasedOn": {
+        "@id": "fixtures/in/empty-label-written-as-empty.json"
       },
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
@@ -1252,6 +1329,34 @@
       }
     },
     {
+      "@id": "fixtures/expected/label-written-only-as-empty.ttl",
+      "@type": "File",
+      "name": "Expected graph for label-written-only-as-empty",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2534",
+      "sha256": "da8d1bd19546b8cbb2ca3def5456e451c8a531d3d5ff557016071adaf65967cd",
+      "isBasedOn": {
+        "@id": "fixtures/in/label-written-only-as-empty.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/label-zero-not-written.ttl",
+      "@type": "File",
+      "name": "Expected graph for label-zero-not-written",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2514",
+      "sha256": "0edb711778ebde2b2b11e82885fd9665ae0b0db2de57ab007245bc07800d32fd",
+      "isBasedOn": {
+        "@id": "fixtures/in/label-zero-not-written.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/expected/last-update-not-written-reported.ttl",
       "@type": "File",
       "name": "Expected graph for last-update-not-written-reported",
@@ -1322,6 +1427,48 @@
       }
     },
     {
+      "@id": "fixtures/expected/null-and-array-no-empty-child.ttl",
+      "@type": "File",
+      "name": "Expected graph for null-and-array-no-empty-child",
+      "encodingFormat": "text/turtle",
+      "contentSize": "2514",
+      "sha256": "4718e64ec703ca9b18f33c02a52745c42491ff7ea80daf4aaaa99fb88ec8044d",
+      "isBasedOn": {
+        "@id": "fixtures/in/null-and-array-no-empty-child.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/record-below-an-element-held-back.ttl",
+      "@type": "File",
+      "name": "Expected graph for record-below-an-element-held-back",
+      "encodingFormat": "text/turtle",
+      "contentSize": "3288",
+      "sha256": "b8cb16d99f3bac315d97a480a56b79916f04881b6ebfeb51ede5ed37f98d69f1",
+      "isBasedOn": {
+        "@id": "fixtures/in/record-below-an-element-held-back.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/record-holding-it-is-nearer.ttl",
+      "@type": "File",
+      "name": "Expected graph for record-holding-it-is-nearer",
+      "encodingFormat": "text/turtle",
+      "contentSize": "4028",
+      "sha256": "7a9e7f9d33b80c7470b4050da6f3041fb313a0ccc96618ffc5b2237855f74038",
+      "isBasedOn": {
+        "@id": "fixtures/in/record-holding-it-is-nearer.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/expected/related-label-held-back-whole.ttl",
       "@type": "File",
       "name": "Expected graph for related-label-held-back-whole",
@@ -1386,6 +1533,20 @@
       "sha256": "b7049a6f396d3eb79592d60bed34d2b007972ec1d42842b94f464b1b1c03365a",
       "isBasedOn": {
         "@id": "fixtures/in/respelled-selector-title-written.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/expected/selector-outside-the-unit.ttl",
+      "@type": "File",
+      "name": "Expected graph for selector-outside-the-unit",
+      "encodingFormat": "text/turtle",
+      "contentSize": "4013",
+      "sha256": "6bad55b334f3f0f222ddb8c17aa158246b0d1edb8b0bf3b5ded56eb46fb1a212",
+      "isBasedOn": {
+        "@id": "fixtures/in/selector-outside-the-unit.json"
       },
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
@@ -1582,6 +1743,20 @@
       "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
       "isBasedOn": {
         "@id": "fixtures/in/empty-label-beside-last-update.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/empty-label-written-as-empty.ttl",
+      "@type": "File",
+      "name": "Expected findings for empty-label-written-as-empty",
+      "encodingFormat": "text/turtle",
+      "contentSize": "339",
+      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
+      "isBasedOn": {
+        "@id": "fixtures/in/empty-label-written-as-empty.json"
       },
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
@@ -1882,6 +2057,34 @@
       }
     },
     {
+      "@id": "fixtures/findings/label-written-only-as-empty.ttl",
+      "@type": "File",
+      "name": "Expected findings for label-written-only-as-empty",
+      "encodingFormat": "text/turtle",
+      "contentSize": "339",
+      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
+      "isBasedOn": {
+        "@id": "fixtures/in/label-written-only-as-empty.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/label-zero-not-written.ttl",
+      "@type": "File",
+      "name": "Expected findings for label-zero-not-written",
+      "encodingFormat": "text/turtle",
+      "contentSize": "339",
+      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
+      "isBasedOn": {
+        "@id": "fixtures/in/label-zero-not-written.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/findings/last-update-not-written-reported.ttl",
       "@type": "File",
       "name": "Expected findings for last-update-not-written-reported",
@@ -1952,6 +2155,48 @@
       }
     },
     {
+      "@id": "fixtures/findings/null-and-array-no-empty-child.ttl",
+      "@type": "File",
+      "name": "Expected findings for null-and-array-no-empty-child",
+      "encodingFormat": "text/turtle",
+      "contentSize": "339",
+      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
+      "isBasedOn": {
+        "@id": "fixtures/in/null-and-array-no-empty-child.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/record-below-an-element-held-back.ttl",
+      "@type": "File",
+      "name": "Expected findings for record-below-an-element-held-back",
+      "encodingFormat": "text/turtle",
+      "contentSize": "883",
+      "sha256": "d220bc9b8cdb7f96e09bfeb40745f1baf16502a53bc1791db47519b1dd3518d9",
+      "isBasedOn": {
+        "@id": "fixtures/in/record-below-an-element-held-back.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/record-holding-it-is-nearer.ttl",
+      "@type": "File",
+      "name": "Expected findings for record-holding-it-is-nearer",
+      "encodingFormat": "text/turtle",
+      "contentSize": "339",
+      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
+      "isBasedOn": {
+        "@id": "fixtures/in/record-holding-it-is-nearer.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/findings/related-label-held-back-whole.ttl",
       "@type": "File",
       "name": "Expected findings for related-label-held-back-whole",
@@ -2016,6 +2261,20 @@
       "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
       "isBasedOn": {
         "@id": "fixtures/in/respelled-selector-title-written.json"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/findings/selector-outside-the-unit.ttl",
+      "@type": "File",
+      "name": "Expected findings for selector-outside-the-unit",
+      "encodingFormat": "text/turtle",
+      "contentSize": "339",
+      "sha256": "01f22b36b52823b22fc125f22e6325f8eb1937194d2b5a7c0e180048bb8828dc",
+      "isBasedOn": {
+        "@id": "fixtures/in/selector-outside-the-unit.json"
       },
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
@@ -2183,6 +2442,17 @@
       "encodingFormat": "application/example+json",
       "contentSize": "110",
       "sha256": "18831cd7de022fcc55805766a5fc290ca04ccc7d498ba6314a6f704182014706",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/empty-label-written-as-empty.json",
+      "@type": "File",
+      "name": "Synthetic JSON input empty-label-written-as-empty",
+      "encodingFormat": "application/example+json",
+      "contentSize": "91",
+      "sha256": "80b9265855561f0513f1989301149db9faf3328d92a67925fa57a14a72924e1b",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
@@ -2419,6 +2689,28 @@
       }
     },
     {
+      "@id": "fixtures/in/label-written-only-as-empty.json",
+      "@type": "File",
+      "name": "Synthetic JSON input label-written-only-as-empty",
+      "encodingFormat": "application/example+json",
+      "contentSize": "126",
+      "sha256": "574bdcf1538f43b93e853487445ca8e2938b52007b1120496fa3c3509b15be0b",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/label-zero-not-written.json",
+      "@type": "File",
+      "name": "Synthetic JSON input label-zero-not-written",
+      "encodingFormat": "application/example+json",
+      "contentSize": "70",
+      "sha256": "08c008debd6b4a2ab22c89a0a748820c6b227a65c2ed24842aec4bb1ef95ef1d",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/in/last-update-not-written-reported.json",
       "@type": "File",
       "name": "Synthetic JSON input last-update-not-written-reported",
@@ -2474,6 +2766,39 @@
       }
     },
     {
+      "@id": "fixtures/in/null-and-array-no-empty-child.json",
+      "@type": "File",
+      "name": "Synthetic JSON input null-and-array-no-empty-child",
+      "encodingFormat": "application/example+json",
+      "contentSize": "138",
+      "sha256": "4ca8f923f3ee03d36589bb72085e18c7d03b4c8e31d0d34ad9a6fa9ba63e14b5",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/record-below-an-element-held-back.json",
+      "@type": "File",
+      "name": "Synthetic JSON input record-below-an-element-held-back",
+      "encodingFormat": "application/example+json",
+      "contentSize": "116",
+      "sha256": "f6cf5c2bab9f9cb456b476f297c4b737647f66cdd78a3177feee9871d79a58f1",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/record-holding-it-is-nearer.json",
+      "@type": "File",
+      "name": "Synthetic JSON input record-holding-it-is-nearer",
+      "encodingFormat": "application/example+json",
+      "contentSize": "158",
+      "sha256": "2800ad22adb36ef8c234d810ed11d893d4a22ce9587bb1b9188fe5625a61b76b",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
       "@id": "fixtures/in/related-label-held-back-whole.json",
       "@type": "File",
       "name": "Synthetic JSON input related-label-held-back-whole",
@@ -2524,6 +2849,17 @@
       "encodingFormat": "application/example+json",
       "contentSize": "135",
       "sha256": "aa2e67e421c085312842625e809b765da065a095d95780d197a009de113f6de7",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      }
+    },
+    {
+      "@id": "fixtures/in/selector-outside-the-unit.json",
+      "@type": "File",
+      "name": "Synthetic JSON input selector-outside-the-unit",
+      "encodingFormat": "application/example+json",
+      "contentSize": "185",
+      "sha256": "ab16b2757d3c0e72ada988c3b041f4d5b03432f4147148b1f53757af573a0c24",
       "license": {
         "@id": "https://spdx.org/licenses/Apache-2.0"
       }
