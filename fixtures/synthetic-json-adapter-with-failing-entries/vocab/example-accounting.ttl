@@ -34,7 +34,8 @@
 
 [] a bridge:PathEntry ;
   bridge:sourcePath "/contained/label" ;
-  bridge:verdict bridge:carried ;
+  bridge:verdict bridge:carriedInPart ;
+  bridge:namesGap ex:a-contained-label-the-source-withheld ;
   bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
 
 [] a bridge:PathEntry ;
@@ -42,3 +43,32 @@
   bridge:verdict bridge:carriedInPart ;
   bridge:namesGap ex:a-last-update-with-no-time-zone ;
   bridge:carriedAs [ bridge:asProperty pav:lastUpdateOn ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/caption" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/title" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/related" ;
+  bridge:verdict bridge:consumed .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/related/accession" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty ex:accession ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/related/label" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/related/title" ;
+  bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:asProperty rdfs:label ; bridge:inRecordClass ex:Record ] .

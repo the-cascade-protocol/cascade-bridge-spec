@@ -2,6 +2,7 @@ PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX sh:      <http://www.w3.org/ns/shacl#>
 PREFIX oa:      <http://www.w3.org/ns/oa#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 PREFIX fx:      <http://sparql.xyz/facade-x/ns/>
 PREFIX xyz:     <http://sparql.xyz/facade-x/data/>
 PREFIX bridge:  <https://ns.cascadeprotocol.org/bridge/v1-draft#>
@@ -28,6 +29,26 @@ WHERE {
     ?record xyz:label ?written .
     FILTER(?written = "[redacted]")
     BIND("/label" AS ?pointer)
+    BIND(ex:a-label-the-source-withheld AS ?gap)
+    BIND(sh:Info AS ?severity)
+  }
+  UNION
+  {
+    ?record xyz:contained ?contained .
+    ?contained ?slot ?item .
+    ?item xyz:label ?written .
+    FILTER(?written = "[withheld]")
+    BIND(CONCAT("/contained/", STR(xsd:integer(STRAFTER(STR(?slot), "#_")) - 1)) AS ?pointer)
+    BIND(ex:a-contained-label-the-source-withheld AS ?gap)
+    BIND(sh:Info AS ?severity)
+  }
+  UNION
+  {
+    ?record xyz:contained ?contained .
+    ?contained ?slot ?item .
+    ?item xyz:label ?written .
+    FILTER(?written = "[redacted]")
+    BIND(CONCAT("/contained/", STR(xsd:integer(STRAFTER(STR(?slot), "#_")) - 1)) AS ?pointer)
     BIND(ex:a-label-the-source-withheld AS ?gap)
     BIND(sh:Info AS ?severity)
   }

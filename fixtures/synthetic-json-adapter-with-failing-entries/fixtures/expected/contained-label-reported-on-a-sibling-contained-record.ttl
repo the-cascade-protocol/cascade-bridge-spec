@@ -1,0 +1,79 @@
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+@prefix pav:    <http://purl.org/pav/> .
+@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+@prefix ex:     <https://example.org/synthetic-adapter/v1#> .
+@prefix cascade: <https://ns.cascadeprotocol.org/cascade#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<urn:uuid:6d173637-6cc1-8c2b-a4a0-2bd3d2ed6669>
+  a ex:Record ;
+  ex:accession "EX000212" .
+
+<ni:///sha-256;qxNWhzRxOpP86OfmfmN_w4K4AIMIS4BaqQntuo9EgKI>
+  prov:specializationOf <urn:uuid:6d173637-6cc1-8c2b-a4a0-2bd3d2ed6669> .
+
+[] bridge:arrivedAs <ni:///sha-256;qxNWhzRxOpP86OfmfmN_w4K4AIMIS4BaqQntuo9EgKI> ;
+  pav:version "1" ;
+  oa:hasSelector [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "" ] ;
+  oa:hasSource <ni:///sha-256;S6ufUpzQXgEZ9BpjBX67uRpUnbTFnl_wJ5b2GQq7WBI> ;
+  prov:wasDerivedFrom <ni:///sha-256;S6ufUpzQXgEZ9BpjBX67uRpUnbTFnl_wJ5b2GQq7WBI> ;
+  prov:wasGeneratedBy _:import .
+
+<urn:uuid:912da697-6184-8323-a578-cf12b586c7eb>
+  a ex:Record ;
+  ex:accession "held-212" .
+
+<ni:///sha-256;eVYcnWmUm1YW4MTEuUdsTLvloy-NQh5BQZX6wc7h0hA>
+  prov:specializationOf <urn:uuid:912da697-6184-8323-a578-cf12b586c7eb> .
+
+[] bridge:arrivedAs <ni:///sha-256;eVYcnWmUm1YW4MTEuUdsTLvloy-NQh5BQZX6wc7h0hA> ;
+  oa:hasSelector [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/contained/0" ] ;
+  oa:hasSource <ni:///sha-256;S6ufUpzQXgEZ9BpjBX67uRpUnbTFnl_wJ5b2GQq7WBI> ;
+  prov:wasDerivedFrom <ni:///sha-256;S6ufUpzQXgEZ9BpjBX67uRpUnbTFnl_wJ5b2GQq7WBI> ;
+  prov:wasGeneratedBy _:import .
+
+<urn:uuid:b5f0a478-6cdd-89bb-ad9c-a76a07a8a20f>
+  a ex:Record ;
+  ex:accession "held-213" .
+
+<ni:///sha-256;90Hwl82DkiXhiAZ5IvpT6WUH6uaUUCaPKX7gKstLWIg>
+  prov:specializationOf <urn:uuid:b5f0a478-6cdd-89bb-ad9c-a76a07a8a20f> .
+
+[] bridge:arrivedAs <ni:///sha-256;90Hwl82DkiXhiAZ5IvpT6WUH6uaUUCaPKX7gKstLWIg> ;
+  oa:hasSelector [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/contained/1" ] ;
+  oa:hasSource <ni:///sha-256;S6ufUpzQXgEZ9BpjBX67uRpUnbTFnl_wJ5b2GQq7WBI> ;
+  prov:wasDerivedFrom <ni:///sha-256;S6ufUpzQXgEZ9BpjBX67uRpUnbTFnl_wJ5b2GQq7WBI> ;
+  prov:wasGeneratedBy _:import .
+
+<ni:///sha-256;S6ufUpzQXgEZ9BpjBX67uRpUnbTFnl_wJ5b2GQq7WBI>
+  a prov:Entity ;
+  cascade:serverBaseUrl "https://records.example.org/api" ;
+  pav:retrievedFrom <https://records.example.org/api/ExampleRecordSet> ;
+  pav:retrievedOn "2026-08-30T22:14:00Z"^^xsd:dateTime ;
+  prov:wasGeneratedBy _:writing ;
+  prov:wasAttributedTo _:registry ;
+  cascade:authenticatedPatient "Patient/example-patient" ;
+  cascade:authenticatedAsProxy false ;
+  cascade:sourceFormatVersion "1" .
+
+_:writing prov:qualifiedAssociation
+  [ prov:agent _:registry ; prov:hadRole cascade:AuthorRole ] ,
+  [ prov:agent _:fetcher ; prov:hadRole cascade:TransmitterRole ] .
+
+_:registry rdfs:label "Example Records Registry" .
+
+_:fetcher rdfs:label "Example Fetcher" .
+
+_:import
+  a prov:Activity ;
+  prov:used <ni:///sha-256;S6ufUpzQXgEZ9BpjBX67uRpUnbTFnl_wJ5b2GQq7WBI> ;
+  rdfs:label "synthetic example import" ;
+  prov:startedAtTime "2026-09-01T10:00:00Z"^^xsd:dateTime ;
+  prov:qualifiedAssociation [
+    prov:hadPlan [ a prov:Plan ; rdfs:label "synthetic-json-example-with-failing-entries" ; pav:version "0.1.0" ] ;
+    prov:agent [ ]
+  ] .

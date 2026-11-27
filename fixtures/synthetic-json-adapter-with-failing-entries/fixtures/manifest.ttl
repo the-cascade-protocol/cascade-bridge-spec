@@ -1,5 +1,4 @@
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix earl:   <http://www.w3.org/ns/earl#> .
 @prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
 @prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
 
@@ -15,11 +14,17 @@
     <#last-update-not-written>
     <#contained-label-not-written>
     <#contained-label-of-a-record-the-adapter-does-not-map>
+    <#label-holding-only-markup>
+    <#label-empty-beside-a-caption>
+    <#contained-label-reported-on-its-element-by-the-gap-the-entry-names>
+    <#contained-label-reported-on-its-element-by-a-gap-the-entry-does-not-name>
+    <#contained-label-reported-on-a-sibling-contained-record>
+    <#label-of-the-nearer-record-not-written-while-the-farther-has-one>
+    <#label-of-the-nearer-record-written>
   ) .
 
 <#every-carried-path-written> a bridge:IsomorphicConversionTest ;
   mf:name "every-carried-path-written" ;
-  bridge:expectedOutcome earl:passed ;
   mf:action [
     bridge:input <in/every-carried-path-written.json> ;
     bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
@@ -33,7 +38,6 @@
 <#label-not-written> a bridge:IsomorphicConversionTest ;
   mf:name "label-not-written" ;
   rdfs:comment "A carried path holding a value the mapping does not write, and no finding about it." ;
-  bridge:expectedOutcome earl:failed ;
   bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
   mf:action [
     bridge:input <in/label-not-written.json> ;
@@ -48,7 +52,6 @@
 <#label-not-written-and-reported> a bridge:IsomorphicConversionTest ;
   mf:name "label-not-written-and-reported" ;
   rdfs:comment "The path of label-not-written not written, with a finding addressed at it." ;
-  bridge:expectedOutcome earl:passed ;
   mf:action [
     bridge:input <in/label-not-written-and-reported.json> ;
     bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
@@ -62,7 +65,6 @@
 <#label-empty> a bridge:IsomorphicConversionTest ;
   mf:name "label-empty" ;
   rdfs:comment "The path of label-not-written holding an empty string: nothing is owed." ;
-  bridge:expectedOutcome earl:passed ;
   mf:action [
     bridge:input <in/label-empty.json> ;
     bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
@@ -76,7 +78,6 @@
 <#last-update-not-written-and-reported> a bridge:IsomorphicConversionTest ;
   mf:name "last-update-not-written-and-reported" ;
   rdfs:comment "A path carried in part, not written, with a finding whose body is the gap its accounting entry names." ;
-  bridge:expectedOutcome earl:passed ;
   mf:action [
     bridge:input <in/last-update-not-written-and-reported.json> ;
     bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
@@ -90,7 +91,6 @@
 <#last-update-not-written> a bridge:IsomorphicConversionTest ;
   mf:name "last-update-not-written" ;
   rdfs:comment "A path carried in part, not written, and no finding about it: the entry's gap is for the values it does not carry, and this one is not reported." ;
-  bridge:expectedOutcome earl:failed ;
   bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
   mf:action [
     bridge:input <in/last-update-not-written.json> ;
@@ -105,7 +105,6 @@
 <#contained-label-not-written> a bridge:IsomorphicConversionTest ;
   mf:name "contained-label-not-written" ;
   rdfs:comment "One unit holding three source records, one a contained record the mapping writes a record from and one a contained record it does not: both hold the label, the path is owed for the first only, and the mapping does not write it." ;
-  bridge:expectedOutcome earl:failed ;
   bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
   mf:action [
     bridge:input <in/contained-label-not-written.json> ;
@@ -120,7 +119,6 @@
 <#contained-label-of-a-record-the-adapter-does-not-map> a bridge:IsomorphicConversionTest ;
   mf:name "contained-label-of-a-record-the-adapter-does-not-map" ;
   rdfs:comment "The unit of contained-label-not-written without the label of the contained record the mapping writes a record from: the label of the one it does not is owed to no record, the container's included." ;
-  bridge:expectedOutcome earl:passed ;
   mf:action [
     bridge:input <in/contained-label-of-a-record-the-adapter-does-not-map.json> ;
     bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
@@ -129,4 +127,98 @@
   mf:result [
     bridge:expectedGraph <expected/contained-label-of-a-record-the-adapter-does-not-map.ttl> ;
     bridge:expectedFindings <findings/contained-label-of-a-record-the-adapter-does-not-map.ttl>
+  ] .
+
+<#label-holding-only-markup> a bridge:IsomorphicConversionTest ;
+  mf:name "label-holding-only-markup" ;
+  rdfs:comment "The path of label-not-written holding a string of XHTML elements with no text in them: nothing is owed." ;
+  mf:action [
+    bridge:input <in/label-holding-only-markup.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/label-holding-only-markup.ttl> ;
+    bridge:expectedFindings <findings/label-holding-only-markup.ttl>
+  ] .
+
+<#label-empty-beside-a-caption> a bridge:IsomorphicConversionTest ;
+  mf:name "label-empty-beside-a-caption" ;
+  rdfs:comment "Two members of one element carried as rdfs:label, the label empty and the caption not written: the caption is not owed." ;
+  mf:action [
+    bridge:input <in/label-empty-beside-a-caption.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/label-empty-beside-a-caption.ttl> ;
+    bridge:expectedFindings <findings/label-empty-beside-a-caption.ttl>
+  ] .
+
+<#contained-label-reported-on-its-element-by-the-gap-the-entry-names> a bridge:IsomorphicConversionTest ;
+  mf:name "contained-label-reported-on-its-element-by-the-gap-the-entry-names" ;
+  rdfs:comment "The label of a contained record not written, with a finding addressed at the contained record whose body is the gap the path's entry names." ;
+  mf:action [
+    bridge:input <in/contained-label-reported-on-its-element-by-the-gap-the-entry-names.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/contained-label-reported-on-its-element-by-the-gap-the-entry-names.ttl> ;
+    bridge:expectedFindings <findings/contained-label-reported-on-its-element-by-the-gap-the-entry-names.ttl>
+  ] .
+
+<#contained-label-reported-on-its-element-by-a-gap-the-entry-does-not-name> a bridge:IsomorphicConversionTest ;
+  mf:name "contained-label-reported-on-its-element-by-a-gap-the-entry-does-not-name" ;
+  rdfs:comment "The label of a contained record not written, with a finding addressed at the contained record whose body is another gap than the path's entry names." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/contained-label-reported-on-its-element-by-a-gap-the-entry-does-not-name.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/contained-label-reported-on-its-element-by-a-gap-the-entry-does-not-name.ttl> ;
+    bridge:expectedFindings <findings/contained-label-reported-on-its-element-by-a-gap-the-entry-does-not-name.ttl>
+  ] .
+
+<#contained-label-reported-on-a-sibling-contained-record> a bridge:IsomorphicConversionTest ;
+  mf:name "contained-label-reported-on-a-sibling-contained-record" ;
+  rdfs:comment "Two contained records, neither label written: the first is reported by the gap the path's entry names, and the second is reported by nothing." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/contained-label-reported-on-a-sibling-contained-record.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/contained-label-reported-on-a-sibling-contained-record.ttl> ;
+    bridge:expectedFindings <findings/contained-label-reported-on-a-sibling-contained-record.ttl>
+  ] .
+
+<#label-of-the-nearer-record-not-written-while-the-farther-has-one> a bridge:IsomorphicConversionTest ;
+  mf:name "label-of-the-nearer-record-not-written-while-the-farther-has-one" ;
+  rdfs:comment "Two records outside every contained record, one standing inside the other's address: the label of the nearer is not written, and the farther record has a label." ;
+  bridge:expectedFailedCheck bridge:conversionWritesWhatTheAccountingCarries ;
+  mf:action [
+    bridge:input <in/label-of-the-nearer-record-not-written-while-the-farther-has-one.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/label-of-the-nearer-record-not-written-while-the-farther-has-one.ttl> ;
+    bridge:expectedFindings <findings/label-of-the-nearer-record-not-written-while-the-farther-has-one.ttl>
+  ] .
+
+<#label-of-the-nearer-record-written> a bridge:IsomorphicConversionTest ;
+  mf:name "label-of-the-nearer-record-written" ;
+  rdfs:comment "The unit of label-of-the-nearer-record-not-written-while-the-farther-has-one with the nearer record's label written." ;
+  mf:action [
+    bridge:input <in/label-of-the-nearer-record-written.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/label-of-the-nearer-record-written.ttl> ;
+    bridge:expectedFindings <findings/label-of-the-nearer-record-written.ttl>
   ] .

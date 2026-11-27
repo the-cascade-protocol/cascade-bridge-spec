@@ -1,5 +1,6 @@
 PREFIX prov:   <http://www.w3.org/ns/prov#>
 PREFIX pav:    <http://purl.org/pav/>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX fx:     <http://sparql.xyz/facade-x/ns/>
 PREFIX xyz:    <http://sparql.xyz/facade-x/data/>
 PREFIX bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#>
@@ -8,7 +9,8 @@ PREFIX cascade: <https://ns.cascadeprotocol.org/cascade#>
 
 CONSTRUCT {
   ?record a ex:Record ;
-    ex:accession ?accession .
+    ex:accession ?accession ;
+    rdfs:label ?title .
   ?version prov:specializationOf ?record .
   [] bridge:arrivedAs ?version ;
     pav:version ?number .
@@ -21,6 +23,8 @@ WHERE {
   bridge:thisRecord bridge:selector ?selector .
   OPTIONAL { bridge:thisDocument cascade:serverBaseUrl ?server }
   OPTIONAL { ?exampleRecord xyz:label ?label }
+  OPTIONAL { ?exampleRecord xyz:title ?title }
+  OPTIONAL { ?exampleRecord xyz:caption ?caption }
   OPTIONAL { ?exampleRecord xyz:lastUpdated ?lastUpdated }
   {
     SELECT ?accession (COUNT(?holder) AS ?holders)

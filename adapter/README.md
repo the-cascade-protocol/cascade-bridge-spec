@@ -91,14 +91,14 @@ own form; an entry on a path above it, or on the same place in another form, doe
 ## When a test entry fails by the accounting
 
 A test entry fails where its input holds a path the accounting marks `bridge:carried` or `bridge:carriedInPart`, and the
-conversion neither writes one of the properties the path's `bridge:carriedAs` names nor reports a finding about the path.
+conversion neither writes one of the properties the path's `bridge:carriedAs` names nor reports a finding that meets it.
 The failure names the path, its address in the input, the class and the properties
 ([`../engine/executing.md`](../engine/executing.md)). It is answered in one of two ways:
 
 - Write the property: make the mapping construct one of those properties on a record of that class.
-- Report what is not carried: have the findings query report a finding addressed at the path, and give the path's entry
-  `bridge:carriedInPart` with the `bridge:namesGap` that finding's body is. An entry that says `bridge:carried` says
-  every value arrives.
+- Report what is not carried: have the findings query report a finding at the value, whatever its body, or at an
+  element above it with the path's entry made `bridge:carriedInPart` naming the `bridge:namesGap` that finding's body
+  is. A `bridge:carried` entry with a finding at the value itself passes.
 
 ## Showing an adapter to a reader
 

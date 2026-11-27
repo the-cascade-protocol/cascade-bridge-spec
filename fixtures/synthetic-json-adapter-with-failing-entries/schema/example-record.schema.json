@@ -9,6 +9,9 @@
     "version": {"type": "integer", "minimum": 1},
     "lastUpdated": {"type": "string"},
     "label": {"type": "string"},
+    "caption": {"type": "string"},
+    "title": {"type": "string"},
+    "related": {"type": "object"},
     "contained": {"type": "array", "items": {"type": "object"}}
   }
 }

@@ -1,0 +1,38 @@
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX oa:     <http://www.w3.org/ns/oa#>
+PREFIX prov:   <http://www.w3.org/ns/prov#>
+PREFIX fx:     <http://sparql.xyz/facade-x/ns/>
+PREFIX xyz:    <http://sparql.xyz/facade-x/data/>
+PREFIX bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#>
+PREFIX ex:     <https://example.org/synthetic-adapter/v1#>
+
+CONSTRUCT {
+  ?related a ex:Record ;
+    ex:accession ?accession ;
+    rdfs:label ?title .
+  ?relatedVersion prov:specializationOf ?related .
+  [] bridge:arrivedAs ?relatedVersion ;
+    oa:hasSelector [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+                     rdf:value ?relatedSelector ] .
+}
+WHERE {
+  ?exampleRecord a fx:root ;
+    xyz:related ?item .
+  ?item xyz:accession ?accession .
+  OPTIONAL { ?item xyz:title ?title }
+  bridge:thisDocument bridge:sha256 ?document .
+  bridge:thisRecord bridge:selector ?selector .
+  BIND(CONCAT(?selector, "/related") AS ?relatedSelector)
+  BIND(CONCAT("90c60849-c5ef-4ca6-bfb8-8662bd07d2b5|https://ns.cascadeprotocol.org/cascade#RecordFromDocumentNamingRule",
+              "|", REPLACE(REPLACE(?document, "%", "%25"), "\\|", "%7C"),
+              "|", REPLACE(REPLACE(?relatedSelector, "%", "%25"), "\\|", "%7C")) AS ?named)
+  BIND(SHA256(?named) AS ?hash)
+  BIND(REPLACE(REPLACE(REPLACE(REPLACE(SUBSTR(?hash, 17, 1),
+         "[048c]", "8"), "[159d]", "9"), "[26ae]", "a"), "[37bf]", "b") AS ?variant)
+  BIND(CONCAT(SUBSTR(?hash, 1, 8), "-", SUBSTR(?hash, 9, 4), "-8", SUBSTR(?hash, 14, 3),
+              "-", ?variant, SUBSTR(?hash, 18, 3), "-", SUBSTR(?hash, 21, 12)) AS ?uuid)
+  BIND(IRI(CONCAT("urn:uuid:", ?uuid)) AS ?related)
+  BIND(IRI(CONCAT("https://example.org/synthetic-adapter/version/", ?uuid)) AS ?relatedVersion)
+}

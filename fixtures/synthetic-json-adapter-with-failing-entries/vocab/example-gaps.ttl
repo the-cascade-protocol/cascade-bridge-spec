@@ -10,6 +10,11 @@ ex:a-label-the-source-withheld a skos:Concept ;
   skos:inScheme ex:gaps ;
   skos:broader bridge:carriedWithLoss .
 
+ex:a-contained-label-the-source-withheld a skos:Concept ;
+  skos:prefLabel "a label of a contained record the source withheld" ;
+  skos:inScheme ex:gaps ;
+  skos:broader bridge:carriedWithLoss .
+
 ex:a-last-update-with-no-time-zone a skos:Concept ;
   skos:prefLabel "a last update stated with no time or no time zone" ;
   skos:inScheme ex:gaps ;

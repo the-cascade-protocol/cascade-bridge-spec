@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 import pytest
-from rdflib import Graph
+from rdflib import Graph, URIRef
 
 ROOT = Path(__file__).resolve().parents[2]
 ADAPTER = ROOT / "fixtures" / "synthetic-json-adapter-with-failing-entries"
@@ -12,13 +12,25 @@ ENGINE = ROOT / "fixtures" / "fake-engine" / "engine.py"
 JUDGE = ROOT / "engine" / "faults-of-a-report-against-expected-outcomes.rq"
 MANIFEST = ADAPTER / "fixtures" / "manifest.ttl"
 
+CHECK = URIRef("https://ns.cascadeprotocol.org/bridge/v1-draft#expectedFailedCheck")
 THE_CHECK = "https://ns.cascadeprotocol.org/bridge/v1-draft#conversionWritesWhatTheAccountingCarries"
-MUST_FAIL = ["contained-label-not-written", "label-not-written", "last-update-not-written"]
+MUST_FAIL = [
+    "contained-label-not-written",
+    "contained-label-reported-on-a-sibling-contained-record",
+    "contained-label-reported-on-its-element-by-a-gap-the-entry-does-not-name",
+    "label-not-written",
+    "label-of-the-nearer-record-not-written-while-the-farther-has-one",
+    "last-update-not-written",
+]
 MUST_PASS = [
     "contained-label-of-a-record-the-adapter-does-not-map",
+    "contained-label-reported-on-its-element-by-the-gap-the-entry-names",
     "every-carried-path-written",
     "label-empty",
+    "label-empty-beside-a-caption",
+    "label-holding-only-markup",
     "label-not-written-and-reported",
+    "label-of-the-nearer-record-written",
     "last-update-not-written-and-reported",
 ]
 
@@ -39,9 +51,13 @@ def written(outcomes):
     return report
 
 
-def faults_of(report):
+def faults_of(report, manifest=None):
     graph = Graph().parse(data=report, format="turtle")
-    graph.parse(MANIFEST, format="turtle", publicID=MANIFEST.resolve().as_uri())
+    graph.parse(
+        data=MANIFEST.read_text(encoding="utf-8") if manifest is None else manifest,
+        format="turtle",
+        publicID=MANIFEST.resolve().as_uri(),
+    )
     return [str(row.fault) for row in graph.query(JUDGE.read_text(encoding="utf-8"))]
 
 
@@ -67,6 +83,11 @@ class TestJudgingAReportOfEntriesThatMustFail:
     """
 
     class TestGivenEachEntryReportedAsTheManifestListsIt:
+        def test_lists_a_check_for_the_entries_that_must_fail_and_none_for_the_rest(self):
+            manifest = Graph().parse(MANIFEST, format="turtle", publicID=MANIFEST.resolve().as_uri())
+            listed = {str(entry).rpartition("#")[2] for entry in manifest.subjects(CHECK, None)}
+            assert listed == set(MUST_FAIL)
+
         def test_holds(self, tmp_path):
             assert faults_of(reported_by_the_fake_engine("listed", tmp_path)) == []
 
@@ -92,6 +113,23 @@ class TestJudgingAReportOfEntriesThatMustFail:
         def test_is_refused(self):
             report = written(as_listed() | {"label-empty": ("failed", THE_CHECK)})
             assert faults_of(report) == ["label-empty is reported failed, not passed"]
+
+    class TestGivenAManifestWhoseEntriesAreNamedAnyWay:
+        def test_matches_each_report_to_the_fragment_of_its_entry_never_to_its_name(self):
+            renamed = MANIFEST.read_text(encoding="utf-8").replace(
+                'mf:name "label-empty"', 'mf:name "The label is empty"'
+            )
+            assert faults_of(written(as_listed()), renamed) == []
+
+    class TestGivenAReportOfATestThatIsNoEntryOfTheManifest:
+        def test_is_refused(self):
+            report = written(as_listed()) + (
+                f"[] a earl:Assertion ; earl:test <{MANIFEST.resolve().as_uri()}#not-an-entry> ;"
+                " earl:result [ a earl:TestResult ; earl:outcome earl:passed ] .\n"
+            )
+            assert faults_of(report) == [
+                f"{MANIFEST.resolve().as_uri()}#not-an-entry is reported, and is no entry of the manifest"
+            ]
 
     class TestGivenAnEntryNotReported:
         def test_is_refused(self):

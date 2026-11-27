@@ -31,8 +31,8 @@ An entry fails when its conversion does not write what the accounting carries
 ([`executing.md`](executing.md)). The run prints, for each such path, the path, where it
 stood in the input, the class it is carried on and the properties it looked for. The
 adapter's author answers by having the mapping write one of them, or by having it report a
-finding about the path and giving the path's accounting entry `bridge:carriedInPart`
-([`../adapter/README.md`](../adapter/README.md)).
+finding at the value, or at an element above it with the path's accounting entry made `bridge:carriedInPart` naming that
+gap ([`../adapter/README.md`](../adapter/README.md)).
 
 ## `convert`
 

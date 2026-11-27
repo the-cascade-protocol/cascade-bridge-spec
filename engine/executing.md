@@ -21,19 +21,27 @@ names the path, the occurrence's address, the class owed and the properties look
 findings are data there, never failures ([`library.md`](library.md)).
 
 - *Owed*: the accounting marks the path `bridge:carried` or `bridge:carriedInPart`; the occurrence's value is not
-  empty (an empty or whitespace-only string, an element with no content); and the occurrence belongs to a record of
+  empty; no other member of the occurrence's element is empty and carried as one of the same properties (one value
+  written from several members cannot be written when one of them is empty); and the occurrence belongs to a record of
   a class that a `bridge:inRecordClass` of one of the path's `bridge:carriedAs` names. An occurrence that belongs
   to no record, such as one inside a nested record the conversion wrote nothing from, is not owed.
-- *Met*: a `bridge:asProperty` of one of those `bridge:carriedAs` is written on such a record, on its versions, on
-  their arrivals or on a node they point at that is no record, version or arrival of its own (a record of that class
-  written elsewhere in the unit does not meet it); or a finding is about the path: its `sh:value` is the path, its
-  `oa:hasBody` is the `bridge:namesGap` or `bridge:lookupNamesGap` of the path's entry, its address with its indexes
-  left out is the path or below it, or it is of a gap the adapter declares and addressed at an element above the path.
+- *Empty*: nothing but white space is left once markup is taken out of the value. An empty or white-space-only
+  string; a string holding only XML or XHTML elements with no text in them (`<p> </p>`,
+  `<div xmlns="..."><br/></div>`); an XML element holding, at any depth, no text and no attribute value other than
+  white space.
+- *Met*: a `bridge:asProperty` of one of those `bridge:carriedAs` is written on a record the occurrence belongs to,
+  on its versions, on their arrivals or on a node they point at that is no record, version or arrival of its own (a
+  record of that class written elsewhere in the unit does not meet it); or a finding from the same unit's conversion
+  meets it: either its address is the occurrence's address or below it, or its address is above the occurrence's
+  address and its `oa:hasBody` is the `bridge:namesGap` or `bridge:lookupNamesGap` of the path's entry. These are
+  alternatives. "Above" is measured on the occurrence's own address, indexes included, never on the path. A finding
+  with no address, a finding elsewhere in the unit whatever its body, and a finding whose `sh:value` is the path
+  alone meet nothing.
 
 An occurrence's *address* is where it stands in the document: the unit's selector, then the occurrence's place in the
-unit, in the form of the adapter's selectors. A record the conversion wrote *stands* at the `rdf:value` of the
+unit, in the form of the adapter's selectors; each member of a JSON array is an occurrence, and the array itself is not. A record the conversion wrote *stands* at the `rdf:value` of the
 `oa:hasSelector` of each of its arrivals, the unit's selector where the mapping wrote none. An adapter declares
-nothing more. **The record an occurrence belongs to** is told so:
+nothing more. **The record an occurrence belongs to** is found so:
 
 1. A nested record holds everything in it. Where the envelope the unit was read in declares
    `bridge:pathOfContainedContentBelowContent`, each member at that path below the unit's content
@@ -41,14 +49,17 @@ nothing more. **The record an occurrence belongs to** is told so:
    below it, can belong only to records that stand inside it; one outside every nested record, only to records that
    stand outside every nested record.
 2. It belongs to the nearest: of the records it can belong to, those whose address shares the most leading steps with
-   its address. On a tie, a record whose address holds the occurrence (the same address, or an ancestor of it) is
-   nearer than one whose does not. Records still tied all hold it.
+   its address, steps compared by name and position. On a tie, a record whose address holds the occurrence (the same
+   address, or an ancestor of it) is nearer than one whose does not. Records still tied all hold it. A datum of an
+   enclosing element that the adapter carries on no record is reported by a finding at it, which meets the
+   occurrence whichever record it is held to.
 
-**Judge a report against the outcomes a manifest lists.** An entry may list a `bridge:expectedOutcome` and, where
-that is `earl:failed`, the `bridge:expectedFailedCheck` that fails it. Each entry must be reported with the outcome
-it lists, `earl:passed` where it lists none, and a failed one with its check as the `bridge:failedCheck` of its
-result; [`faults-of-a-report-against-expected-outcomes.rq`](faults-of-a-report-against-expected-outcomes.rq) finds
-each fault. A Bridge is held to
+**Judge a report against the outcomes a manifest lists.** An entry that lists a `bridge:expectedFailedCheck` must be
+reported `earl:failed` with that check as the `bridge:failedCheck` of its result, and every other entry
+`earl:passed`. A report's assertion is matched to the entry whose IRI has the fragment of the reported
+`earl:test`; a reported test whose fragment is no entry of the manifest is a fault, and so is an entry not reported.
+[`faults-of-a-report-against-expected-outcomes.rq`](faults-of-a-report-against-expected-outcomes.rq) finds each
+fault. A Bridge is held to
 [`../fixtures/synthetic-json-adapter-with-failing-entries/`](../fixtures/synthetic-json-adapter-with-failing-entries/)
 this way: a report that gives every entry `earl:passed` is refused.
 

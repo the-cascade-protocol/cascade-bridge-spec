@@ -98,7 +98,7 @@ def test(args, adapter):
 
 
 def as_the_manifest_lists(adapter, honour_the_outcomes):
-    """An assertion for each entry: the outcome it lists and the check that fails it, or passed, whatever it lists."""
+    """An assertion for each entry: failed by the check it lists, or passed, whatever it lists."""
     import rdflib
 
     path = adapter / "fixtures" / "manifest.ttl"
@@ -106,9 +106,8 @@ def as_the_manifest_lists(adapter, honour_the_outcomes):
     listing = next(manifest.subjects(rdflib.URIRef(MF + "entries"), None))
     assertions = ""
     for entry in manifest.items(manifest.value(listing, rdflib.URIRef(MF + "entries"))):
-        listed = manifest.value(entry, rdflib.URIRef(BRIDGE + "expectedOutcome"))
         check = manifest.value(entry, rdflib.URIRef(BRIDGE + "expectedFailedCheck"))
-        outcome = str(listed).removeprefix(EARL_NAMESPACE) if honour_the_outcomes and listed else "passed"
+        outcome = "failed" if honour_the_outcomes and check else "passed"
         by = f" ; <{BRIDGE}failedCheck> <{check}>" if honour_the_outcomes and check else ""
         assertions += (
             f"\n[] a earl:Assertion ; earl:test <{entry}> ;\n"
@@ -149,7 +148,6 @@ OA = "http://www.w3.org/ns/oa#"
 OA_HAS_SOURCE = OA + "hasSource"
 FORMATS = {"turtle": "turtle", "ntriples": "nt"}
 MF = "http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#"
-EARL_NAMESPACE = "http://www.w3.org/ns/earl#"
 ASSERTION_OF = """
 [] a earl:Assertion ;
   earl:assertedBy <https://example.org/fake-engine> ;
