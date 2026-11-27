@@ -430,7 +430,7 @@ class TestJudgingAnEARLReport:
             report = reported_by_a_stand_in_engine(tmp_path, "listed")
             verdict = judge_report(report, ADAPTER_WHOSE_ENTRIES_MUST_FAIL)
             assert verdict.holds
-            assert verdict.tally == {"failed": 29, "passed": 28}
+            assert verdict.tally == {"failed": 31, "passed": 29}
 
         def test_refuses_an_entry_that_must_pass_reported_failed(self, tmp_path):
             report = reported_by_a_stand_in_engine(tmp_path, "listed")
