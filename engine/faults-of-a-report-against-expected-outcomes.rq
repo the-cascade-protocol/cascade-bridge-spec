@@ -3,7 +3,7 @@ PREFIX mf: <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#>
 
-SELECT ?entry ?fault
+SELECT ?entry ?fault ?reportedTest ?listedEntry
 WHERE {
   {
     FILTER NOT EXISTS { ?anyResult earl:outcome ?anyOutcome }
@@ -12,100 +12,122 @@ WHERE {
   UNION
   {
     {
-      SELECT (SAMPLE(?rowEntry) AS ?entry) (IF(MAX(?reported) = 1, "", MAX(?rowFault)) AS ?fault)
-      WHERE {
-        {
+      {
+        SELECT ?role (SAMPLE(?test) AS ?reportedTest) (SAMPLE(?listed) AS ?listedEntry) (SAMPLE(?result) AS ?judged)
+          (SAMPLE(?outcome) AS ?reportedAs) (COUNT(?result) AS ?results)
+        WHERE {
           {
-            SELECT ?test (MAX(?key) AS ?bestKey) WHERE {
-              {
-                ?anyAssertion earl:test ?test ;
-                  earl:result/earl:outcome ?anyOutcome .
-                BIND ("" AS ?key)
-              }
-              UNION
-              {
-                ?anyAssertion earl:test ?test ;
-                  earl:result/earl:outcome ?anyOutcome .
+            ?assertion earl:test ?test ;
+              earl:result ?result .
+            ?result earl:outcome ?outcome .
+            BIND ("result" AS ?role)
+          }
+          UNION
+          {
+            ?result earl:outcome ?outcome .
+            FILTER NOT EXISTS { ?assertion earl:result ?result ; earl:test ?test }
+            BIND ("result" AS ?role)
+          }
+          UNION
+          {
+            {
+              SELECT ?base ?adapter WHERE {
                 {
-                  BIND (9999 AS ?slashes)
+                  SELECT ?adapter ?depth WHERE {
+                    ?listing bridge:adapter ?adapter ;
+                      mf:entries/rdf:rest*/rdf:first ?anyEntry .
+                    BIND (STRAFTER(STR(?anyEntry), STR(?adapter)) AS ?path)
+                    FILTER (?path != "")
+                    BIND (STRLEN(?path) - STRLEN(REPLACE(?path, "/", "")) AS ?depth)
+                  }
+                  GROUP BY ?adapter ?depth
                 }
                 UNION
                 {
-                  SELECT DISTINCT ?adapter ?slashes WHERE {
-                    ?listing bridge:adapter ?adapter ;
-                      mf:entries/rdf:rest*/rdf:first ?listedEntry .
-                    BIND (STRAFTER(STR(?listedEntry), STR(?adapter)) AS ?within)
-                    FILTER (?within != "")
-                    BIND (STRLEN(?within) - STRLEN(REPLACE(?within, "/", "")) AS ?slashes)
-                  }
+                  ?listing mf:entries ?anyEntries .
+                  FILTER NOT EXISTS { ?listing bridge:adapter ?anyAdapter }
+                  BIND (-1 AS ?depth)
                 }
-                BIND (IF(?slashes = 9999, ?test,
-                  IRI(CONCAT(STR(?adapter), REPLACE(STR(?test), CONCAT("^.*/(([^/]*/){", STR(?slashes), "}[^/]*)$"), "$1"))))
-                  AS ?candidate)
-                FILTER EXISTS { ?entries mf:entries/rdf:rest*/rdf:first ?candidate }
-                BIND (CONCAT(SUBSTR("0000", STRLEN(STR(?slashes)) + 1), STR(?slashes), "|", STR(?candidate)) AS ?key)
+                ?anyAssertion earl:test ?test ;
+                  earl:result/earl:outcome ?anyOutcome .
+                BIND (IF(?depth < 0, STR(?test),
+                  REPLACE(STR(?test), CONCAT("^.*/(([^/]*/){", STR(?depth), "}[^/]*)$"), "$1")) AS ?path)
+                FILTER (?depth < 0 || ?path != STR(?test))
+                BIND (IF(?depth < 0, ?test, IRI(CONCAT(STR(?adapter), ?path))) AS ?candidate)
+                FILTER EXISTS { ?node rdf:first ?candidate }
+                BIND (SUBSTR(STR(?test), 1, STRLEN(STR(?test)) - STRLEN(?path)) AS ?base)
               }
+              GROUP BY ?base ?adapter
+              ORDER BY DESC(COUNT(DISTINCT ?test)) ?base ?adapter
+              LIMIT 1
             }
-            GROUP BY ?test
+            ?assertion earl:test ?test ;
+              earl:result ?result .
+            ?result earl:outcome ?outcome .
+            FILTER (STRSTARTS(STR(?test), ?base))
+            BIND (IF(?base = "", ?test, IRI(CONCAT(STR(?adapter), STRAFTER(STR(?test), ?base)))) AS ?listed)
+            FILTER EXISTS { ?node rdf:first ?listed }
+            VALUES ?role { "result" "entry" }
           }
-          ?assertion earl:test ?test ;
-            earl:result ?result .
-          ?result earl:outcome ?outcome .
-          BIND (IF(?bestKey = "", ?unmatched, IRI(STRAFTER(?bestKey, "|"))) AS ?listed)
-          VALUES ?role { "result" "entry" }
-          FILTER (?role = "result" || BOUND(?listed))
+          UNION
+          {
+            ?listing mf:entries/rdf:rest*/rdf:first ?listed .
+            BIND ("entry" AS ?role)
+          }
         }
-        UNION
-        {
-          ?result earl:outcome ?outcome .
-          FILTER NOT EXISTS { ?assertion earl:result ?result ; earl:test ?test }
-          BIND ("result" AS ?role)
-        }
-        UNION
-        {
-          ?listing mf:entries/rdf:rest*/rdf:first ?listed .
-          BIND ("entry" AS ?role)
-        }
-        OPTIONAL {
-          ?mustFail bridge:expectedFailedCheck ?check .
-          FILTER (sameTerm(?mustFail, ?listed))
-        }
-        BIND (COALESCE(
-            IF(CONTAINS(STR(?listed), "#"), STRAFTER(STR(?listed), "#"), STR(?listed)),
-            IF(CONTAINS(STR(?test), "#"), STRAFTER(STR(?test), "#"), STR(?test)),
-            "a result naming no test") AS ?name)
-        BIND (STRAFTER(STR(?outcome), STR(earl:)) AS ?word)
-        BIND (IF(isLITERAL(?outcome), CONCAT("\"", STR(?outcome), "\""),
-          IF(isBLANK(?outcome), "a blank node",
-            IF(STRSTARTS(STR(?outcome), STR(earl:)), ?word, CONCAT("<", STR(?outcome), ">")))) AS ?given)
-        BIND (IF(?role = "entry", IF(BOUND(?result), 1, 0), 0) AS ?reported)
-        BIND (?outcome IN (earl:passed, earl:failed, earl:cantTell, earl:inapplicable, earl:untested) AS ?ofEarl)
-        BIND (BOUND(?listed) && EXISTS { ?listed a bridge:InputOnlyTest } && ?outcome IN (earl:passed, earl:untested)
-          AS ?inputOnlyNotCantTell)
-        BIND (IF(?role = "entry",
-            CONCAT(?name, " has no outcome"),
-          IF(!?ofEarl,
-            CONCAT(?name, " is reported ", ?given, ", and ", ?given, " is not one of EARL's five outcomes"),
-          IF(BOUND(?check),
-            IF(sameTerm(?outcome, earl:failed),
-              IF(EXISTS { ?result bridge:failedCheck ?check }, "",
-                CONCAT(?name, " is reported failed, but not by ",
-                  IF(CONTAINS(STR(?check), "#"), STRAFTER(STR(?check), "#"), STR(?check)))),
-              CONCAT(?name, " is reported ", ?word, ", not failed")),
-          IF(?outcome IN (earl:failed, earl:inapplicable),
-            CONCAT(?name, " is reported ", ?word, ": a report that holds gives only passed, cantTell or untested"),
-          IF(?inputOnlyNotCantTell,
-            CONCAT("input-only ", ?name, " is reported ", ?word, ", not cantTell"),
-            ""))))) AS ?rowFault)
-        BIND (IF(?role = "entry" || (?ofEarl && (BOUND(?check) || ?inputOnlyNotCantTell)), ?listed, ?test) AS ?rowEntry)
-        BIND (IF(?role = "entry", ?listed, ?unmatched) AS ?groupEntry)
-        BIND (IF(?role = "result", ?result, ?unmatched) AS ?groupResult)
-        BIND (IF(?role = "result", ?outcome, ?unmatched) AS ?groupOutcome)
+        GROUP BY ?role (IF(?role = "entry", ?listed, ?result) AS ?about) (IF(?role = "entry", ?role, ?outcome) AS ?what)
       }
-      GROUP BY ?role ?groupEntry ?groupResult ?groupOutcome
+      FILTER (IF(?role = "entry", ?results = 0,
+        BOUND(?everyOutcome)
+        || !(?reportedAs IN (earl:passed, earl:cantTell, earl:untested))
+        || (BOUND(?listedEntry) && EXISTS { ?listedEntry bridge:expectedFailedCheck ?anyCheck })
+        || (BOUND(?listedEntry) && ?reportedAs IN (earl:passed, earl:untested)
+          && EXISTS { ?listedEntry a bridge:InputOnlyTest })))
     }
-    FILTER (?fault != "")
-    FILTER EXISTS { ?anyResult earl:outcome ?anyOutcome }
+    OPTIONAL {
+      ?mustFail bridge:expectedFailedCheck ?check .
+      FILTER (sameTerm(?mustFail, ?listedEntry))
+    }
+    OPTIONAL {
+      ?anyManifest bridge:adapter ?entriesAdapter .
+      FILTER (STRSTARTS(STR(?listedEntry), STR(?entriesAdapter)))
+    }
+    BIND (COALESCE(
+        IF(CONTAINS(STR(?listedEntry), "#")
+            && EXISTS { ?document mf:entries ?anyList FILTER (STR(?document) = STRBEFORE(STR(?listedEntry), "#")) },
+          STRAFTER(STR(?listedEntry), "#"),
+          COALESCE(STRAFTER(STR(?listedEntry), STR(?entriesAdapter)), STR(?listedEntry))),
+        IF(CONTAINS(STR(?reportedTest), "#"), STRAFTER(STR(?reportedTest), "#"), STR(?reportedTest)),
+        "a result naming no test") AS ?shown)
+    BIND (IF(isLITERAL(?reportedAs), CONCAT("\"", STR(?reportedAs), "\""),
+      IF(isBLANK(?reportedAs), "a blank node",
+        IF(STRSTARTS(STR(?reportedAs), STR(earl:)), STRAFTER(STR(?reportedAs), STR(earl:)),
+          CONCAT("<", STR(?reportedAs), ">")))) AS ?given)
+    BIND (IF(?role = "entry",
+        CONCAT(?shown, " has no outcome"),
+      IF(!(?reportedAs IN (earl:passed, earl:failed, earl:cantTell, earl:inapplicable, earl:untested)),
+        CONCAT(?shown, " is reported ", ?given, ", and ", ?given, " is not one of EARL's five outcomes"),
+      IF(BOUND(?check),
+        IF(sameTerm(?reportedAs, earl:failed),
+          IF(EXISTS { ?judged bridge:failedCheck ?check }, "",
+            CONCAT(?shown, " is reported failed, but not by ",
+              IF(CONTAINS(STR(?check), "#"), STRAFTER(STR(?check), "#"), STR(?check)))),
+          CONCAT(?shown, " is reported ", ?given, ", not failed")),
+      IF(?reportedAs IN (earl:failed, earl:inapplicable),
+        CONCAT(?shown, " is reported ", ?given, ": a report that holds gives only passed, cantTell or untested"),
+      IF(BOUND(?listedEntry) && ?reportedAs IN (earl:passed, earl:untested)
+          && EXISTS { ?listedEntry a bridge:InputOnlyTest },
+        CONCAT("input-only ", ?shown, " is reported ", ?given, ", not cantTell"),
+        ""))))) AS ?fault)
+    BIND (IF(?role = "entry"
+        || (?reportedAs IN (earl:passed, earl:failed, earl:cantTell, earl:inapplicable, earl:untested)
+          && (BOUND(?check) || (BOUND(?listedEntry) && ?reportedAs IN (earl:passed, earl:untested)
+            && EXISTS { ?listedEntry a bridge:InputOnlyTest }))),
+        ?listedEntry, ?reportedTest) AS ?entry)
+    FILTER (?fault != "" || (BOUND(?everyOutcome) && ?role = "result"))
+    {
+      FILTER EXISTS { ?anyResult earl:outcome ?anyOutcome }
+    }
   }
 }
 ORDER BY ?entry ?fault

@@ -17,7 +17,6 @@ from compatibility_tool.record import Role
 
 CTRF = "report.ctrf.json"
 MARKDOWN = "report.md"
-BRIDGE = "https://ns.cascadeprotocol.org/bridge/v1-draft#"
 TOOL = "cascade-bridge-spec compatibility"
 STATUS_OF = {"passed": "passed", "cantTell": "other", "untested": "skipped"}
 MARKS = {"passed": "✅", "failed": "❌", "skipped": "➖", "other": "❔"}
@@ -36,15 +35,14 @@ def one_line(text):
 
 
 class Manifest:
-    """An adapter's test manifest read once for a run: its entries, and where each of its outcomes is found."""
+    """An adapter's test manifest read once for a run: its entries, and the line each begins on. Which entry a
+    reported test is, the judge says."""
 
     def __init__(self, adapter):
         self.adapter = adapter.resolve()
         self.unreadable = None
         self.entries = []
         self.label = self.adapter.name
-        self.slashes = set()
-        self.base = None
         self.path = None
         self.lines = {}
         try:
@@ -57,8 +55,6 @@ class Manifest:
         listed = graph.value(manifest, rdflib.URIRef(MF + "entries"))
         label = graph.value(manifest, rdflib.RDFS.label)
         self.label = str(label) if label is not None else self.label
-        base = graph.value(manifest, rdflib.URIRef(BRIDGE + "adapter"))
-        self.base = str(base) if base is not None else None
         for entry in graph.items(listed) if listed else []:
             name = graph.value(entry, rdflib.URIRef(MF + "name"))
             comment = graph.value(entry, rdflib.RDFS.comment)
@@ -70,26 +66,10 @@ class Manifest:
                     "types": [str(kind) for kind in graph.objects(entry, rdflib.RDF.type)],
                 }
             )
-            if self.base:
-                self.slashes.add(self.within(str(entry)).count("/"))
         for number, text in enumerate(self.path.read_text(encoding="utf-8").splitlines(), 1):
             found = FRAGMENT.match(text)
             if found:
                 self.lines.setdefault(found.group(1), number)
-
-    def within(self, iri):
-        """What follows the adapter's address in an IRI, as the faults query reads it."""
-        return iri.split(self.base, 1)[1] if self.base and self.base in iri else ""
-
-    def candidates(self, iri):
-        """The entries an IRI may name: the same IRI, and where another base holds the report's, the same path in the adapter."""
-        named = {iri}
-        parts = iri.split("/")
-        for slashes in self.slashes:
-            within = "/".join(parts[-(slashes + 1) :])
-            if len(parts) >= slashes + 2 and within:
-                named.add(self.base + within)
-        return named
 
     @property
     def file(self):
@@ -214,16 +194,18 @@ class Cases:
         by_iri = {entry["iri"]: entry for entry in manifest.entries}
         faults = {iri: [] for iri in by_iri}
         own = []
-        for named, fault in verdict.named:
-            matched = [iri for iri in (manifest.candidates(named) if named else ()) if iri in by_iri]
-            for iri in matched:
-                faults[iri].append(fault)
-            if not matched:
+        entry_of = {}
+        for _, fault, test, listed in verdict.judged:
+            if test is not None and listed in by_iri:
+                entry_of[test] = listed
+            if fault and listed in by_iri:
+                faults[listed].append(fault)
+            elif fault:
                 own.append(case(fault, "failed", fault))
         outcomes = {iri: [] for iri in by_iri}
         for test, word in verdict.reported:
-            for iri in (iri for iri in (manifest.candidates(test) if test else ()) if iri in by_iri):
-                outcomes[iri].append(word)
+            if test in entry_of:
+                outcomes[entry_of[test]].append(word)
         nothing_reported = not verdict.reported
         cases = []
         for iri, entry in by_iri.items():

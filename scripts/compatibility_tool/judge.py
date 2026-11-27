@@ -1,5 +1,6 @@
 import os
 from dataclasses import dataclass, field
+from functools import cache
 from pathlib import Path
 
 from compatibility_tool import packages
@@ -32,6 +33,7 @@ class Verdict:
     faults: list[str] = field(default_factory=list)
     named: list[tuple[str | None, str]] = field(default_factory=list)
     reported: list[tuple[str | None, str]] = field(default_factory=list)
+    judged: list[tuple[str | None, str, str | None, str | None]] = field(default_factory=list)
 
     @property
     def holds(self):
@@ -119,20 +121,33 @@ def outcomes_reported(graph):
     return [(test, name) for (_, name), test in found.items()]
 
 
-def fault_rows(graph):
-    """Each fault of a report with the test it names, or None where it names none."""
+@cache
+def parsed(query):
+    """A query parsed once a run rather than once a report."""
+    return packages.installed("rdflib.plugins.sparql").plugins.sparql.prepareQuery(query.read_text(encoding="utf-8"))
+
+
+def judged_rows(graph, every_outcome=False):
+    """The judge's rows: each fault with the entry or test it names, the test reported and the entry that test is,
+    where there are; with `every_outcome`, also each result it finds no fault in, its fault "", for the case report."""
+    bindings = {"everyOutcome": packages.installed("rdflib").Literal(True)} if every_outcome else {}
+    rows = (row.asdict() for row in graph.query(parsed(FAULTS_OF_A_REPORT), initBindings=bindings))
     return [
-        (None if row.entry is None else str(row.entry), str(row.fault))
-        for row in graph.query(FAULTS_OF_A_REPORT.read_text(encoding="utf-8"))
+        (text(row, "entry"), str(row["fault"]), text(row, "reportedTest"), text(row, "listedEntry")) for row in rows
     ]
 
 
+def text(row, name):
+    return str(row[name]) if name in row else None
+
+
 def faults_of(graph):
-    return [fault for _, fault in fault_rows(graph)]
+    return [fault for _, fault, _, _ in judged_rows(graph)]
 
 
 def with_faults(verdict, graph):
-    verdict.named = fault_rows(graph)
+    verdict.judged = judged_rows(graph, every_outcome=True)
+    verdict.named = [(entry, fault) for entry, fault, _, _ in verdict.judged if fault]
     verdict.faults = [fault for _, fault in verdict.named]
     return verdict
 
