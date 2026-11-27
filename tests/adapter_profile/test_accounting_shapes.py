@@ -46,6 +46,7 @@ def entry(
     lookup_names_gap=None,
     carried_as=None,
     concern=None,
+    adapter_reports_gap=None,
 ):
     written = ["a bridge:PathEntry"] if typed else []
     written += [
@@ -54,6 +55,7 @@ def entry(
             ("bridge:sourcePath", path),
             ("bridge:verdict", verdict),
             ("bridge:namesGap", names_gap),
+            ("bridge:adapterReportsGap", adapter_reports_gap),
             ("bridge:sameFactAs", same_fact_as),
             ("bridge:because", because),
             ("bridge:lookupIn", lookup_in),
@@ -103,6 +105,14 @@ ONE_PROPERTY = (
 ONE_RECORD_CLASS = (
     "A bridge:carriedAs names exactly one bridge:inRecordClass, the Cascade class of the record the value is "
     "written on, by IRI."
+)
+NO_HOME_NAMES_A_GAP = (
+    "An entry whose verdict is bridge:noHome names the bridge:namesGap the missing predicate opens, which a Bridge "
+    "reports, or else each bridge:adapterReportsGap its adapter's findings queries report."
+)
+ONLY_A_PATH_SOME_RECORD_LOSES = (
+    "An entry naming a bridge:adapterReportsGap is bridge:noHome or bridge:carriedInPart: only a path that some "
+    "record does not carry has a gap to report."
 )
 ONE_SOURCE_RECORD_TYPE = (
     "A bridge:carriedAs names at most one bridge:inSourceRecordType, a string: the source's own name for the "
@@ -192,12 +202,30 @@ REJECTED = {
         minimal(CONSUMED, because=A_REASON),
     ),
     "a no home entry that names no gap": (
-        "An entry whose verdict is bridge:noHome names exactly one bridge:namesGap, the gap the missing predicate opens.",
+        NO_HOME_NAMES_A_GAP,
         minimal(NO_HOME, names_gap=None),
     ),
     "a no home entry that names two gaps": (
-        "An entry whose verdict is bridge:noHome names exactly one bridge:namesGap, the gap the missing predicate opens.",
+        "An entry whose verdict is bridge:noHome names at most one bridge:namesGap, the gap the missing predicate "
+        "opens.",
         minimal(NO_HOME, names_gap=f"{A_GAP}, {ANOTHER_GAP}"),
+    ),
+    "a no home entry that names a gap and a gap the adapter reports": (
+        "An entry whose verdict is bridge:noHome and that names a bridge:adapterReportsGap names no bridge:namesGap: "
+        "a Bridge reports a bridge:namesGap wherever the path occurs, and the adapter reports this path's gap itself.",
+        minimal(NO_HOME, adapter_reports_gap=ANOTHER_GAP),
+    ),
+    "a carried entry that names a gap the adapter reports": (
+        ONLY_A_PATH_SOME_RECORD_LOSES,
+        minimal(CARRIED, adapter_reports_gap=A_GAP),
+    ),
+    "an ignored entry that names a gap the adapter reports": (
+        ONLY_A_PATH_SOME_RECORD_LOSES,
+        minimal(IGNORED, adapter_reports_gap=A_GAP),
+    ),
+    "a gap the adapter reports named as a string rather than by iri": (
+        "A bridge:adapterReportsGap is a gap of the adapter's bridge:gapScheme, by IRI.",
+        minimal(NO_HOME, names_gap=None, adapter_reports_gap='"no-term-for-a-free-text-note"'),
     ),
     "a no home entry that names the path carrying the same fact": (
         "An entry whose verdict is bridge:noHome names no bridge:sameFactAs.",
@@ -301,6 +329,15 @@ class TestTheFormOfAnAccountingEntry:
         ):
             assert not said_about(carried_as(AS_THE_ACCESSION, ON_A_RECORD, IN_AN_EXAMPLE_RECORD, verdict=verdict))
             assert not said_about(carried_as(AS_THE_ACCESSION, ON_A_RECORD, verdict=verdict))
+
+    class TestGivenAnEntryNamingTheGapsItsAdapterReports:
+        @pytest.mark.parametrize("reported", [A_GAP, f"{A_GAP}, {ANOTHER_GAP}"], ids=["one gap", "two gaps"])
+        def test_conforms_as_a_no_home_entry_naming_no_gap_a_bridge_reports(self, reported):
+            assert not said_about(minimal(NO_HOME, names_gap=None, adapter_reports_gap=reported))
+
+        @pytest.mark.parametrize("reported", [ANOTHER_GAP, f"{ANOTHER_GAP}, {A_GAP}"], ids=["one gap", "two gaps"])
+        def test_conforms_as_a_carried_in_part_entry_beside_the_gap_of_its_loss(self, reported):
+            assert not said_about(minimal(CARRIED_IN_PART, adapter_reports_gap=reported))
 
     class TestGivenHalfALookup:
         @pytest.mark.parametrize("verdict", A_MINIMAL_ENTRY_OF_EACH_VERDICT)
