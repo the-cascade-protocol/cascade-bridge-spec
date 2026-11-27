@@ -249,6 +249,26 @@ class TestJudgingAReportOfEntriesThatMustFail:
             manifest = "@prefix mf: <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .\n<> mf:entries () .\n"
             assert faults_over(manifest, "") == ["its report records no outcome"]
 
+    class TestGivenAReportWhoseEntryIrisAreUnderAnotherBaseThanTheManifest:
+        MANIFEST_READ_AT = "https://example.org/adapter/fixtures/manifest.ttl"
+        REPORTED_AT = "file:///elsewhere/adapter/fixtures/manifest.ttl"
+
+        def test_matches_each_entry_by_its_path_under_the_adapter(self):
+            report = written_at(self.REPORTED_AT, as_listed())
+            assert faults_over(MANIFEST.read_text(encoding="utf-8"), report, base=self.MANIFEST_READ_AT) == []
+
+        def test_refuses_an_entry_that_must_fail_reported_passed(self):
+            report = written_at(self.REPORTED_AT, as_listed() | {"label-not-written": ("passed", None)})
+            assert faults_over(MANIFEST.read_text(encoding="utf-8"), report, base=self.MANIFEST_READ_AT) == [
+                "label-not-written is reported passed, not failed"
+            ]
+
+        def test_refuses_a_reported_test_that_is_no_entry(self):
+            report = written_at(self.REPORTED_AT, as_listed() | {"not-an-entry": ("passed", None)})
+            assert faults_over(MANIFEST.read_text(encoding="utf-8"), report, base=self.MANIFEST_READ_AT) == [
+                f"{self.REPORTED_AT}#not-an-entry is reported, and is no entry of the manifest"
+            ]
+
     class TestGivenManifestEntriesWithNoFragment:
         def test_matches_each_to_its_report_by_its_iri(self):
             base = "https://example.org/cases/"

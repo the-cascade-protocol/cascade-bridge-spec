@@ -14,7 +14,14 @@ WHERE {
     ?result earl:outcome ?outcome .
     FILTER (?outcome IN (earl:failed, earl:inapplicable))
     OPTIONAL { ?assertion earl:result ?result ; earl:test ?entry }
-    FILTER (!BOUND(?entry) || NOT EXISTS { ?entry bridge:expectedFailedCheck ?check })
+    FILTER (!BOUND(?entry) || NOT EXISTS {
+      ?listing mf:entries/rdf:rest*/rdf:first ?mustFail .
+      ?mustFail bridge:expectedFailedCheck ?mustFailCheck .
+      OPTIONAL { ?listing bridge:adapter ?listingAdapter }
+      FILTER (sameTerm(?entry, ?mustFail) || (BOUND(?listingAdapter)
+        && STRAFTER(STR(?mustFail), STR(?listingAdapter)) != ""
+        && STRENDS(STR(?entry), CONCAT("/", STRAFTER(STR(?mustFail), STR(?listingAdapter))))))
+    })
     BIND (COALESCE(IF(CONTAINS(STR(?entry), "#"), STRAFTER(STR(?entry), "#"), STR(?entry)), "a result naming no test") AS ?name)
     BIND (CONCAT(?name, " is reported ", STRAFTER(STR(?outcome), STR(earl:)),
       ": a report that holds gives only passed, cantTell or untested") AS ?fault)
@@ -24,7 +31,14 @@ WHERE {
     ?result earl:outcome ?outcome .
     FILTER (?outcome NOT IN (earl:passed, earl:failed, earl:cantTell, earl:inapplicable, earl:untested))
     OPTIONAL { ?assertion earl:result ?result ; earl:test ?entry }
-    FILTER (!BOUND(?entry) || NOT EXISTS { ?entry bridge:expectedFailedCheck ?check })
+    FILTER (!BOUND(?entry) || NOT EXISTS {
+      ?listing mf:entries/rdf:rest*/rdf:first ?mustFail .
+      ?mustFail bridge:expectedFailedCheck ?mustFailCheck .
+      OPTIONAL { ?listing bridge:adapter ?listingAdapter }
+      FILTER (sameTerm(?entry, ?mustFail) || (BOUND(?listingAdapter)
+        && STRAFTER(STR(?mustFail), STR(?listingAdapter)) != ""
+        && STRENDS(STR(?entry), CONCAT("/", STRAFTER(STR(?mustFail), STR(?listingAdapter))))))
+    })
     BIND (COALESCE(IF(CONTAINS(STR(?entry), "#"), STRAFTER(STR(?entry), "#"), STR(?entry)), "a result naming no test") AS ?name)
     BIND (IF(isLITERAL(?outcome), CONCAT("\"", STR(?outcome), "\""),
       IF(isBLANK(?outcome), "a blank node",
@@ -127,10 +141,14 @@ WHERE {
   {
     ?manifest mf:entries/rdf:rest*/rdf:first ?entry .
     ?entry bridge:expectedFailedCheck ?check .
+    OPTIONAL { ?manifest bridge:adapter ?adapter }
     OPTIONAL {
-      ?assertion earl:test ?entry ;
+      ?assertion earl:test ?test ;
         earl:result ?result .
       ?result earl:outcome ?outcome .
+      FILTER (sameTerm(?test, ?entry) || (BOUND(?adapter)
+        && STRAFTER(STR(?entry), STR(?adapter)) != ""
+        && STRENDS(STR(?test), CONCAT("/", STRAFTER(STR(?entry), STR(?adapter))))))
     }
     FILTER EXISTS { ?anyResult earl:outcome ?anyOutcome }
     BIND (IF(CONTAINS(STR(?entry), "#"), STRAFTER(STR(?entry), "#"), STR(?entry)) AS ?name)
@@ -151,8 +169,14 @@ WHERE {
   {
     ?assertion earl:test ?entry ;
       earl:result/earl:outcome ?outcome .
-    FILTER NOT EXISTS { ?manifest mf:entries/rdf:rest*/rdf:first ?entry }
-    FILTER EXISTS { ?anyManifest mf:entries/rdf:rest*/rdf:first/bridge:expectedFailedCheck ?anyCheck }
+    FILTER EXISTS { ?anyListing mf:entries/rdf:rest*/rdf:first/bridge:expectedFailedCheck ?anyCheck }
+    FILTER NOT EXISTS {
+      ?listing mf:entries/rdf:rest*/rdf:first ?listed .
+      OPTIONAL { ?listing bridge:adapter ?listingAdapter }
+      FILTER (sameTerm(?entry, ?listed) || (BOUND(?listingAdapter)
+        && STRAFTER(STR(?listed), STR(?listingAdapter)) != ""
+        && STRENDS(STR(?entry), CONCAT("/", STRAFTER(STR(?listed), STR(?listingAdapter))))))
+    }
     BIND (CONCAT(STR(?entry), " is reported, and is no entry of the manifest") AS ?fault)
   }
 }
