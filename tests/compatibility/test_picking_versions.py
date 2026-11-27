@@ -2,13 +2,9 @@
 
 import json
 
-import pytest
-
 from compatibility_tool import github
-from compatibility_tool.console import Stop
 from compatibility_tool.github import Event
 from compatibility_world import MATCHING, depends_on, git
-from place_vocabulary import named_head
 
 
 class TestPickingTheVersionOfEachRepositoryARunUses:
@@ -251,38 +247,3 @@ class TestPickingTheVersionOfEachRepositoryARunUses:
 
             assert found == Event("the-cascade-protocol/engine", 3, "stable/x")
             assert listing.asked == []
-
-    class TestGivenASliceThatReadsTheVocabularyBesideTheRepositoryUnderTest:
-        @staticmethod
-        def the_vocabulary_picked(body, head=None):
-            event = Event("the-cascade-protocol/cascade-bridge-spec", 5, "main")
-            head = head or {"repo": {"clone_url": "https://github.com/someone/fork.git"}, "sha": "abc"}
-
-            class Api:
-                def pull_request(self, named):
-                    if named.number == 5:
-                        return {"body": body}
-                    return {"head": head}
-
-            return named_head(Api(), event)
-
-        def test_is_the_head_of_the_vocabulary_pull_request_the_description_names(self):
-            body = depends_on("cascade-vocabulary", 9) + depends_on("cascade-runtime-js", 3)
-
-            assert self.the_vocabulary_picked(body) == ("https://github.com/someone/fork.git", "abc")
-
-        def test_is_the_default_branch_when_the_description_names_none(self):
-            assert self.the_vocabulary_picked(depends_on("cascade-runtime-js", 3)) is None
-
-        def test_is_the_default_branch_on_a_push(self):
-            assert named_head(None, Event("the-cascade-protocol/cascade-bridge-spec", None, "main")) is None
-
-        def test_stops_when_the_vocabulary_pull_request_has_no_head_repository(self):
-            with pytest.raises(Stop, match="has no head repository"):
-                self.the_vocabulary_picked(depends_on("cascade-vocabulary", 9), head={"repo": None})
-
-        def test_stops_naming_both_when_the_description_names_two_vocabulary_pull_requests(self):
-            body = depends_on("cascade-vocabulary", 9) + depends_on("cascade-vocabulary", 10)
-
-            with pytest.raises(Stop, match=r"cascade-vocabulary/pull/9.*cascade-vocabulary/pull/10"):
-                self.the_vocabulary_picked(body)

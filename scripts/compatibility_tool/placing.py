@@ -99,8 +99,7 @@ def in_ci(url, reached, event, into, role):
         path=into,
         from_named_pull_requests=bool(choice.merging),
         merged_heads=tuple(
-            MergedHead(head, entry.named.label, entry.base, entry.from_this_repository)
-            for head, entry in zip(heads, choice.merging, strict=True)
+            MergedHead(head, entry.named.label, entry.base) for head, entry in zip(heads, choice.merging, strict=True)
         ),
     )
 

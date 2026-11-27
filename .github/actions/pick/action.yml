@@ -1,0 +1,75 @@
+name: Cascade pick
+description: >-
+  Pick the version of another repository a job reads, in a repository with no
+  compatibility.json: its files checked out, or a package build downloaded,
+  each as compatibility.md says a consumer picks it. The step's log says what
+  it picked and how.
+
+inputs:
+  repository:
+    description: The producer, as owner/repository.
+    required: true
+  checkout:
+    description: >-
+      The folder its files are placed in, relative to the workspace or
+      absolute, and not there yet or empty. Give this or package.
+    required: false
+    default: ''
+  package:
+    description: >-
+      The name of the one file of its build to download, a pattern such as
+      cascade-runtime-*.tgz. Give this or checkout.
+    required: false
+    default: ''
+  python-version:
+    description: The Python the picker runs on. The job's own Python on PATH is left as it was.
+    required: false
+    default: '3.12'
+  token:
+    description: The token every read of GitHub's API is made with.
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  path:
+    description: The absolute path of the folder checked out, or of the file downloaded.
+    value: ${{ steps.pick.outputs.path }}
+  commit:
+    description: The commit picked; with pull requests merged in, the merge.
+    value: ${{ steps.pick.outputs.commit }}
+  how:
+    description: How it was picked, in a sentence, and whether an integrity was checked.
+    value: ${{ steps.pick.outputs.how }}
+
+runs:
+  using: composite
+  steps:
+    - id: python
+      uses: actions/setup-python@v7
+      with:
+        python-version: ${{ inputs.python-version }}
+        update-environment: false
+
+    - name: pick
+      id: pick
+      shell: bash
+      env:
+        PYTHON: ${{ steps.python.outputs.python-path }}
+        REPOSITORY: ${{ inputs.repository }}
+        CHECKOUT: ${{ inputs.checkout }}
+        PACKAGE: ${{ inputs.package }}
+        ACTION_PATH: ${{ github.action_path }}
+        CASCADE_GITHUB_TOKEN: ${{ inputs.token }}
+        GITHUB_TOKEN: ''
+        GH_TOKEN: ''
+      run: |
+        set -euo pipefail
+        if [ -n "${CHECKOUT}" ] && [ -z "${PACKAGE}" ]; then
+          what=(--checkout "${CHECKOUT}")
+        elif [ -n "${PACKAGE}" ] && [ -z "${CHECKOUT}" ]; then
+          what=(--package "${PACKAGE}")
+        else
+          echo "::error::give checkout or package, not both and not neither"
+          exit 1
+        fi
+        "${PYTHON}" -u "${ACTION_PATH}/../../../scripts/pick.py" "${REPOSITORY}" "${what[@]}" --into "${RUNNER_TEMP}/cascade-picked"

@@ -51,6 +51,15 @@ def unused_where(named, event, merged_into):
     return None if any(named.is_in(path) for path in merged_into) else NOTHING_CHECKED_OUT
 
 
+def from_a_fork(named, pull):
+    fork = ((pull.get("head") or {}).get("repo") or {}).get("full_name") or "a fork"
+    owner = named.path.split("/")[0]
+    return Stop(
+        f"{named.label} is from {fork}: a fork's head is code {owner} did not push, so it is never followed, merged "
+        f"in or installed; push its branch to {named.path} and name that pull request"
+    )
+
+
 def chained(api, event, reached):
     """Each pull request here named by the one under test, or by one so named, is merged into its checkout; one
     reached only through another repository's is not, so a pull request there does not bundle two here."""
@@ -69,22 +78,18 @@ def chained(api, event, reached):
                     f"{named.label} is closed without merging: cut the Depends-On: line naming it in {holder.label}"
                 )
             if entry.open and not entry.from_this_repository:
-                fork = ((entry.pull.get("head") or {}).get("repo") or {}).get("full_name") or "a fork"
-                raise Stop(
-                    f"{named.label} is from {fork}: a fork's pull request is not merged into the checkout under "
-                    f"test, whose jobs may hold a write token; fold its changes into a pull request from "
-                    f"{event.repository}"
-                )
+                raise from_a_fork(named, entry.pull)
             entry.unused = None
             if entry.open:
                 walking.append((named, entry.pull))
 
 
-def follow(api, event, counterparts, specification):
+def follow(api, event, counterparts, specification, merges_here=True):
     """Every pull request reached by Depends-On:, in the order reached.
 
-    One the run merges into nothing is followed for its own lines and listed,
-    and nothing about it fails the check.
+    One the run merges into nothing is followed for its own lines and listed. An open one from a fork, wherever it is
+    reached, stops the run. Without merges_here nothing is merged into the repository under test, so its own pull
+    requests are not read.
     """
     if event.under_test is None:
         return []
@@ -97,7 +102,7 @@ def follow(api, event, counterparts, specification):
     while walking:
         pull, path = walking.pop(0)
         for named in named_in(pull.get("body")):
-            if named in path:
+            if named in path or (not merges_here and named.is_in(event.repository)):
                 continue
             unused = unused_where(named, event, merged_into)
             if named not in reached:
@@ -109,9 +114,12 @@ def follow(api, event, counterparts, specification):
                     raise Stop(f"{named.label} is closed without merging, so nothing names a version of {named.path}")
                 reached[named] = Reached(named, found, unused)
             entry = reached[named]
+            if entry.open and not entry.from_this_repository:
+                raise from_a_fork(named, entry.pull)
             if entry.open:
                 walking.append((entry.pull, [*path, named]))
-    chained(api, event, reached)
+    if merges_here:
+        chained(api, event, reached)
     return list(reached.values())
 
 

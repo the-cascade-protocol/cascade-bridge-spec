@@ -24,7 +24,7 @@ from compatibility_tool.document import FILE, hosts
 TAG = "build-{commit}"
 PACKAGED = "package/"
 ARCHIVES = (".tgz", ".tar.gz")
-SUBRESOURCE_INTEGRITY = re.compile(r"^(sha256|sha384|sha512)-([A-Za-z0-9+/=]+)$")
+SUBRESOURCE_INTEGRITY = re.compile(r"\b(sha256|sha384|sha512)-([A-Za-z0-9+/]+={0,2})")
 HEX_SHA256 = re.compile(r"^[0-9a-fA-F]{64}$")
 DOWNLOAD_TIMEOUT_SECONDS = 60
 POLL_SECONDS = 15
@@ -111,10 +111,6 @@ def unfinished_runs(api, path, commit, timeout):
     ]
 
 
-def from_a_fork(row, commit):
-    return any(merged.commit == commit and not merged.from_this_repository for merged in row.merged_heads)
-
-
 def release_being_made(api, row, path, tag, commit):
     """The release, once it appears while a run of the engine at the commit is unfinished; None where it does not.
     After the last sleep the release is looked for once more, so one published in the final seconds is used."""
@@ -160,7 +156,7 @@ def release_at(api, row, path, commit, wait=True):
     try:
         return api.get(f"{path}/releases/tags/{tag}")
     except urllib.error.HTTPError as error:
-        if error.code == 404 and wait and not from_a_fork(row, commit):
+        if error.code == 404 and wait:
             return release_being_made(api, row, path, tag, commit)
         note(f"{row.name} has no release {tag} to read ({error}), so each host is built by its setup")
     except (OSError, http.client.HTTPException, ValueError, Stop) as error:
@@ -186,17 +182,19 @@ def release_of(row):
 
 
 def digests(notes):
+    """Each integrity the notes give, wherever in a line, and each SHA-256 in hex given as a line's value. A value
+    whose length is not its algorithm's, as hex read as base64 is, is no integrity."""
     for line in (notes or "").splitlines():
-        _, _, value = line.partition(":")
-        value = value.strip()
-        integrity = SUBRESOURCE_INTEGRITY.match(value)
-        if integrity:
+        for algorithm, encoded in SUBRESOURCE_INTEGRITY.findall(line):
             try:
-                yield integrity[1], base64.b64decode(integrity[2], validate=True)
+                digest = base64.b64decode(encoded, validate=True)
             except binascii.Error:
                 continue
-        elif HEX_SHA256.match(value):
-            yield "sha256", bytes.fromhex(value)
+            if len(digest) == hashlib.new(algorithm).digest_size:
+                yield algorithm, digest
+        _, _, value = line.partition(":")
+        if HEX_SHA256.match(value.strip()):
+            yield "sha256", bytes.fromhex(value.strip())
 
 
 def vouched_for(data, notes):

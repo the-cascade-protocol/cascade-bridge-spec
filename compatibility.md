@@ -1,9 +1,9 @@
 # Compatibility between engines, adapters and runtimes
 
-**Nothing pins the specification, an engine, an adapter, a runtime or a
-vocabulary to a commit of another.** Each is tested against the others' default
-branch, a change across them lands as pull requests paired by `Depends-On:`
-lines, and a release records the commit of each repository it was tested with.
+**Nothing pins one repository to a commit or a build of another.** Each is
+tested against the others' default branch, a change across them lands as pull
+requests paired by `Depends-On:` lines, and a release records the commit of each
+repository, and the build of each package, it was tested with.
 
 An engine commits a `compatibility.json` at its root, and an adapter may, naming
 the adapters (in an engine) or engines (in an adapter) it must pass with, and an
@@ -38,9 +38,9 @@ merges into it pull requests that change nothing but its `compatibility.json`,
 or fast-forwards it to the head of a named pull request that has that release,
 the asset is placed in place of the host's setup, once its bytes match a digest
 the release's notes give (a `sha256-`, `sha384-` or `sha512-` integrity, or a
-SHA-256 in hex). A missing release is waited for, up to 6 minutes, while a run
-of the engine that a push or a pull request started at that commit is unfinished, unless the commit is the head of a
-fork's pull request. Otherwise the setup runs.
+SHA-256 in hex; an integrity whose length is not its algorithm's is none). A missing release is waited for, up to 6
+minutes, while a run of the engine that a push or a pull request started at that commit is unfinished. Otherwise the
+setup runs.
 
 An adapter's file has only `mustPassWith`, naming engines and runtimes. A runtime it
 names is picked as a counterpart is, run as a vocabulary under test's runtimes are, with the adapter under test
@@ -110,6 +110,13 @@ Picked when the run starts, as Zuul checks out a job's required projects
   request under test targets, or the one a push, manual or scheduled run is on;
 - otherwise the default branch.
 
+An open pull request from a fork, whose head is not in the repository it is
+opened against, stops the run wherever a `Depends-On:` line reaches it, named
+directly or through another pull request's description: its head is code that
+repository did not push, so it is never followed, merged in or installed. To
+test a fork's change, a maintainer pushes its branch to the repository and names
+that pull request.
+
 A run with no pull request event, started by hand on a branch other than the
 default one, has a pull request under test too: the first open pull request
 whose head is that branch of the repository it runs in (a fork's has no branch
@@ -131,8 +138,7 @@ tests a change with those ahead of it. A pull request of that repository reached
 only through another repository's is not merged in and is listed as not used,
 so a vocabulary pull request two runtime pull requests both follow does not
 bundle them: to test pull requests of one repository together, name each other
-directly. One closed without merging, one from a fork (the checkout runs with
-the job's token), one targeting another branch, or one that does not merge
+directly. One closed without merging, one targeting another branch, or one that does not merge
 cleanly into what is merged before it, fails the check; for a closed one, the
 check names the pull request whose line to cut.
 
@@ -155,6 +161,46 @@ member's checks have. Pull requests naming each other are how a breaking change
 across an engine and an adapter lands, as Zuul's
 [circular dependencies](https://zuul-ci.org/docs/zuul/latest/config/queue.html)
 allow.
+
+## A repository that installs another's package or reads its files
+
+A repository with no `compatibility.json` picks what it reads of another in one
+step, `.github/actions/pick`. Files are picked as a counterpart is. A package is
+the build of the producer's open pull request a `Depends-On:` line names, as
+that pull request's run at its head made it, else the newest build of the
+producer's default branch, as a runtime picks the Bridge's: a merged one named adds nothing, and one
+closed without merging, one from a fork, or two of one producer, stops the step. The consumer's own pull requests
+name nothing for it, as the step merges nothing into the consumer's checkout. The producer's
+pull request runs the contract check its consumer names, with the consumer's
+files picked by this step, and a consumer's release records each build it
+installed.
+
+A build of a commit of a default branch is the release `build-<commit>`, or an
+asset of the release `package-builds` whose name carries `-commit-<commit>`: the
+newest of the last 100 first-parent commits with a build holding the file, the
+step saying how many commits behind the branch's head it is and why. Its bytes
+are checked against GitHub's digest of the asset, and against an integrity the
+release's notes give, which it is refused for matching none of; with neither the
+step warns. A pull request's build is the `package` artifact of the newest run
+of a pull request from a branch of the producer at its head, checked against
+GitHub's digest of the artifact, and waited for up to 20 minutes while a run of
+the workflow that packs is unfinished at that head.
+
+```yaml
+- id: vocabulary
+  uses: the-cascade-protocol/cascade-bridge-spec/.github/actions/pick@main
+  with:
+    repository: the-cascade-protocol/cascade-vocabulary
+    checkout: cascade-vocabulary
+```
+
+A caller depends on the action's path, its inputs `repository`, and `checkout`
+or `package`, `token` and `python-version`, and its outputs `path`, `commit` and
+`how`. The Python it runs on is set up off the job's PATH, so a later step's
+Python is the job's own. The
+action runs the picker at the ref the caller names, as `rerun-when-edited` is
+decided: a change to it is tried from a caller naming `pick@<branch>`, not from
+a `Depends-On:` line.
 
 ## Where this departs from Zuul
 
@@ -239,7 +285,8 @@ These are chosen, and could be otherwise:
 ## The tooling
 
 [`scripts/compatibility.py`](scripts/compatibility.py); its docstring is the
-usage. A repository's CI calls only `.github/actions/start@main`. A pull
+usage. A repository's CI calls it only through `.github/actions/start@main`,
+and [`scripts/pick.py`](scripts/pick.py) through `.github/actions/pick@main`. A pull
 request here that changes the tooling is tried first from a no-op engine or
 adapter pull request naming it on a `Depends-On:` line. A caller depends on no
 more than the entry point's path, its arguments, the results directory and the
@@ -273,14 +320,6 @@ runtime's or a vocabulary's run, and a run that stops before the engines, writes
 neither, and removes any an earlier run left. In CI the `report.md` is appended
 to the run's summary page after the table, and `table.md` gains one line that
 says where.
-
-This repository's own slices of pytest read cascade-vocabulary as the sibling of
-the workspace, which `actions/checkout` cannot place (it refuses a `path` outside
-the workspace) and the start action does not (it is for a repository holding a
-`compatibility.json`). `scripts/place_vocabulary.py` clones it there with git: the
-head of the pull request a `Depends-On:` line of the pull request under test
-names, else the default branch. As for a counterpart, only a line of the pull
-request under test itself is read, and the head is not merged into anything.
 
 ## The workflow an adapter and an engine both run
 
