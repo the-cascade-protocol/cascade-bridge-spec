@@ -9,7 +9,8 @@ ROOT = Path(__file__).resolve().parents[2]
 ADAPTER = ROOT / "fixtures" / "synthetic-json-adapter-with-failing-entries"
 VOCABULARIES = ROOT / "fixtures" / "synthetic-vocabularies"
 ENGINE = ROOT / "fixtures" / "fake-engine" / "engine.py"
-JUDGE = ROOT / "engine" / "faults-of-a-report-against-expected-outcomes.rq"
+JUDGE = ROOT / "engine" / "faults-of-a-report.rq"
+JUDGE_BY_THE_NAME_OF_EXPECTED_OUTCOMES = ROOT / "engine" / "faults-of-a-report-against-expected-outcomes.rq"
 MANIFEST = ADAPTER / "fixtures" / "manifest.ttl"
 
 CHECK = URIRef("https://ns.cascadeprotocol.org/bridge/v1-draft#expectedFailedCheck")
@@ -79,7 +80,6 @@ def faults_of(report, manifest=None):
 
 SYNTHETIC_MANIFEST = ROOT / "fixtures" / "synthetic-adapter" / "fixtures" / "manifest.ttl"
 SYNTHETIC = SYNTHETIC_MANIFEST.read_text(encoding="utf-8")
-OTHER_JUDGE = ROOT / "engine" / "faults-of-a-report.rq"
 OTHER_CHECK = "https://example.org/a-check"
 MIXED = (
     SYNTHETIC
@@ -110,31 +110,18 @@ def mixed_report():
     return correct_report_of_the_synthetic_adapter() | {"example-0001": ("failed", OTHER_CHECK)}
 
 
-REPORTS_OF_THE_SYNTHETIC_ADAPTER = {
-    "correct": correct_report_of_the_synthetic_adapter(),
-    "input-only passed": correct_report_of_the_synthetic_adapter() | {"example-0002": ("passed", None)},
-    "input-only untested": correct_report_of_the_synthetic_adapter() | {"example-0002": ("untested", None)},
-    "input-only failed": correct_report_of_the_synthetic_adapter() | {"example-0002": ("failed", None)},
-    "dataset completion passed": correct_report_of_the_synthetic_adapter()
-    | {"example-release-2026-01": ("passed", None)},
-    "must-pass failed": correct_report_of_the_synthetic_adapter() | {"example-0003": ("failed", None)},
-    "must-pass inapplicable": correct_report_of_the_synthetic_adapter() | {"example-0003": ("inapplicable", None)},
-    "must-pass cantTell": correct_report_of_the_synthetic_adapter() | {"example-0003": ("cantTell", None)},
-    "must-pass untested": correct_report_of_the_synthetic_adapter() | {"example-0003": ("untested", None)},
-    "entry not reported": {k: v for k, v in correct_report_of_the_synthetic_adapter().items() if k != "example-0004"},
-}
-
-
 SYNTHETIC_BASE = SYNTHETIC_MANIFEST.resolve().as_uri()
 
 
-def faults_over(manifest, report, judge=JUDGE, base=SYNTHETIC_BASE):
-    """The faults `judge` finds in a report, given as outcomes by entry name or as Turtle, over a manifest read at `base`."""
+def faults_over(manifest, report, base=SYNTHETIC_BASE, others=()):
+    """The faults the judge finds in a report, given as outcomes by entry name or as Turtle, over a manifest read at
+    `base` and each other (manifest, base) of `others`."""
     if not isinstance(report, str):
         report = written_at(base, report)
     graph = Graph().parse(data=report, format="turtle")
-    graph.parse(data=manifest, format="turtle", publicID=base)
-    return [str(row.fault) for row in graph.query(judge.read_text(encoding="utf-8"))]
+    for text, at in [(manifest, base), *others]:
+        graph.parse(data=text, format="turtle", publicID=at)
+    return [str(row.fault) for row in graph.query(JUDGE.read_text(encoding="utf-8"))]
 
 
 def written_at(base, outcomes):
@@ -143,6 +130,34 @@ def written_at(base, outcomes):
         by = "" if check is None else f" ; <https://ns.cascadeprotocol.org/bridge/v1-draft#failedCheck> <{check}>"
         report += (
             f"[] a earl:Assertion ; earl:test <{base}#{name}> ;"
+            f" earl:result [ a earl:TestResult ; earl:outcome earl:{outcome}{by} ] .\n"
+        )
+    return report
+
+
+ADAPTER_IRI = "https://example.org/adapter/"
+ELSEWHERE = "file:///elsewhere/adapter/"
+
+
+def manifest_of(paths, must_fail=(), adapter=ADAPTER_IRI):
+    """A manifest at the root of the adapter at `adapter`, listing the files at `paths` under it, and its own IRI."""
+    text = (
+        "@prefix mf: <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .\n"
+        "@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .\n"
+        f"<> bridge:adapter <./> ; mf:entries ( {' '.join(f'<{path}>' for path in paths)} ) .\n"
+    )
+    for path in must_fail:
+        text += f"<{path}> bridge:expectedFailedCheck <{OTHER_CHECK}> .\n"
+    return text, adapter + "manifest.ttl"
+
+
+def report_of(outcomes, at=ELSEWHERE):
+    """A report naming each path under `at` with its outcome, and the check that failed it where there is one."""
+    report = "@prefix earl: <http://www.w3.org/ns/earl#> .\n"
+    for path, (outcome, check) in outcomes.items():
+        by = "" if check is None else f" ; <https://ns.cascadeprotocol.org/bridge/v1-draft#failedCheck> <{check}>"
+        report += (
+            f"[] a earl:Assertion ; earl:test <{at}{path}> ;"
             f" earl:result [ a earl:TestResult ; earl:outcome earl:{outcome}{by} ] .\n"
         )
     return report
@@ -162,7 +177,7 @@ def reported_by_the_fake_engine(canned, tmp_path):
 
 
 class TestJudgingAReportOfEntriesThatMustFail:
-    """Judging a report of entries that must fail · engine/faults-of-a-report-against-expected-outcomes.rq
+    """Judging a report of entries that must fail · engine/faults-of-a-report.rq
 
     A manifest may list, for an entry, the outcome a Bridge must report it with and, for a failed one, the check that
     fails it. An engine that converts and compares nothing reports every entry passed: that report holds for every
@@ -210,23 +225,13 @@ class TestJudgingAReportOfEntriesThatMustFail:
             )
             assert faults_of(written(as_listed()), renamed) == []
 
-    class TestGivenAReportOfATestThatIsNoEntryOfTheManifest:
-        def test_is_refused(self):
-            report = written(as_listed()) + (
-                f"[] a earl:Assertion ; earl:test <{MANIFEST.resolve().as_uri()}#not-an-entry> ;"
-                " earl:result [ a earl:TestResult ; earl:outcome earl:passed ] .\n"
-            )
-            assert faults_of(report) == [
-                f"{MANIFEST.resolve().as_uri()}#not-an-entry is reported, and is no entry of the manifest"
-            ]
-
     class TestGivenAnEntryNotReported:
         def test_is_refused(self):
             report = written({name: outcome for name, outcome in as_listed().items() if name != "label-empty"})
             assert faults_of(report) == ["label-empty has no outcome"]
 
     class TestGivenAManifestListingEntriesOfOtherKindsBesideOneThatMustFail:
-        def test_holds_for_the_report_the_other_query_holds_beside_it(self):
+        def test_holds_for_the_report_that_holds_without_it(self):
             assert faults_over(MIXED, mixed_report()) == []
 
         def test_refuses_an_input_only_entry_reported_passed(self):
@@ -237,17 +242,11 @@ class TestJudgingAReportOfEntriesThatMustFail:
             report = mixed_report() | {"example-0003": ("cantTell", None)}
             assert faults_over(MIXED, report) == []
 
-    class TestGivenAManifestListingNoEntryThatMustFail:
-        """Each report is judged as engine/faults-of-a-report.rq judges it."""
-
-        @pytest.mark.parametrize("name", sorted(REPORTS_OF_THE_SYNTHETIC_ADAPTER))
-        def test_gives_the_faults_of_the_other_query(self, name):
-            report = REPORTS_OF_THE_SYNTHETIC_ADAPTER[name]
-            assert faults_over(SYNTHETIC, report) == faults_over(SYNTHETIC, report, OTHER_JUDGE)
-
-        def test_gives_the_fault_of_the_other_query_for_a_report_with_no_outcome_beside_no_entry(self):
-            manifest = "@prefix mf: <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .\n<> mf:entries () .\n"
-            assert faults_over(manifest, "") == ["its report records no outcome"]
+    class TestGivenTheQueryABridgeReadsByTheNameOfExpectedOutcomes:
+        def test_is_the_judge(self):
+            assert JUDGE_BY_THE_NAME_OF_EXPECTED_OUTCOMES.read_text(encoding="utf-8") == JUDGE.read_text(
+                encoding="utf-8"
+            )
 
     class TestGivenAReportWhoseEntryIrisAreUnderAnotherBaseThanTheManifest:
         MANIFEST_READ_AT = "https://example.org/adapter/fixtures/manifest.ttl"
@@ -263,25 +262,68 @@ class TestJudgingAReportOfEntriesThatMustFail:
                 "label-not-written is reported passed, not failed"
             ]
 
-        def test_refuses_a_reported_test_that_is_no_entry(self):
-            report = written_at(self.REPORTED_AT, as_listed() | {"not-an-entry": ("passed", None)})
-            assert faults_over(MANIFEST.read_text(encoding="utf-8"), report, base=self.MANIFEST_READ_AT) == [
-                f"{self.REPORTED_AT}#not-an-entry is reported, and is no entry of the manifest"
+    class TestGivenEntriesOneOfWhosePathsUnderTheAdapterEndsTheOther:
+        MANIFEST, READ_AT = manifest_of(["a/x", "b/a/x"], must_fail=["a/x"])
+
+        def test_holds_for_each_reported_as_listed(self):
+            report = report_of({"a/x": ("failed", OTHER_CHECK), "b/a/x": ("passed", None)})
+            assert faults_over(self.MANIFEST, report, self.READ_AT) == []
+
+        def test_refuses_the_longer_reported_failed_naming_it_as_the_manifest_does(self):
+            report = report_of({"a/x": ("failed", OTHER_CHECK), "b/a/x": ("failed", None)})
+            assert faults_over(self.MANIFEST, report, self.READ_AT) == [
+                f"{ADAPTER_IRI}b/a/x is reported failed: a report that holds gives only passed, cantTell or untested"
+            ]
+
+    class TestGivenAnEntryThatMustFailNotReportedBesideOneWhosePathEndsInIt:
+        MANIFEST, READ_AT = manifest_of(["x", "d/x"], must_fail=["x"])
+
+        def test_refuses_the_other_reported_failed_by_its_check(self):
+            report = report_of({"d/x": ("failed", OTHER_CHECK)})
+            assert faults_over(self.MANIFEST, report, self.READ_AT) == [
+                f"{ADAPTER_IRI}d/x is reported failed: a report that holds gives only passed, cantTell or untested",
+                f"{ADAPTER_IRI}x has no outcome",
+            ]
+
+        def test_refuses_the_other_reported_passed(self):
+            report = report_of({"d/x": ("passed", None)})
+            assert faults_over(self.MANIFEST, report, self.READ_AT) == [f"{ADAPTER_IRI}x has no outcome"]
+
+    class TestGivenAnEntryOfAnotherAdapterAtTheSamePath:
+        OTHER_ADAPTER = "https://example.org/adapter2/"
+        MANIFEST, READ_AT = manifest_of(["a/x"], must_fail=["a/x"])
+
+        def other(self):
+            return [manifest_of(["a/x"], adapter=self.OTHER_ADAPTER)]
+
+        def test_holds_for_each_reported_as_its_own_manifest_lists_it(self):
+            report = report_of({"a/x": ("failed", OTHER_CHECK)}, at=ADAPTER_IRI) + report_of(
+                {"a/x": ("passed", None)}, at=self.OTHER_ADAPTER
+            )
+            assert faults_over(self.MANIFEST, report, self.READ_AT, self.other()) == []
+
+        def test_refuses_the_other_adapters_entry_reported_failed_by_the_check_in_place_of_this_one(self):
+            report = report_of({"a/x": ("failed", OTHER_CHECK)}, at=self.OTHER_ADAPTER)
+            assert faults_over(self.MANIFEST, report, self.READ_AT, self.other()) == [
+                f"{ADAPTER_IRI}a/x has no outcome",
+                f"{self.OTHER_ADAPTER}a/x is reported failed: a report that holds gives only passed, cantTell or untested",
             ]
 
     class TestGivenManifestEntriesWithNoFragment:
+        BASE = "https://example.org/cases/"
+        MANIFEST = (
+            "@prefix mf: <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .\n"
+            "@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .\n"
+            "<> mf:entries ( <one.ttl> <two.ttl> ) .\n"
+            f"<two.ttl> bridge:expectedFailedCheck <{OTHER_CHECK}> .\n"
+        )
+
         def test_matches_each_to_its_report_by_its_iri(self):
-            base = "https://example.org/cases/"
-            manifest = (
-                "@prefix mf: <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .\n"
-                "@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .\n"
-                "<> mf:entries ( <one.ttl> <two.ttl> ) .\n"
-                f"<two.ttl> bridge:expectedFailedCheck <{OTHER_CHECK}> .\n"
-            )
-            report = (
-                "@prefix earl: <http://www.w3.org/ns/earl#> .\n"
-                f"[] earl:test <{base}one.ttl> ; earl:result [ earl:outcome earl:passed ] .\n"
-                f"[] earl:test <{base}two.ttl> ; earl:result [ earl:outcome earl:failed ;"
-                f" <https://ns.cascadeprotocol.org/bridge/v1-draft#failedCheck> <{OTHER_CHECK}> ] .\n"
-            )
-            assert faults_over(manifest, report, base=base + "manifest.ttl") == []
+            report = report_of({"one.ttl": ("passed", None), "two.ttl": ("failed", OTHER_CHECK)}, at=self.BASE)
+            assert faults_over(self.MANIFEST, report, base=self.BASE + "manifest.ttl") == []
+
+        def test_names_a_check_with_no_fragment_by_its_iri(self):
+            report = report_of({"one.ttl": ("passed", None), "two.ttl": ("failed", None)}, at=self.BASE)
+            assert faults_over(self.MANIFEST, report, base=self.BASE + "manifest.ttl") == [
+                f"{self.BASE}two.ttl is reported failed, but not by {OTHER_CHECK}"
+            ]
