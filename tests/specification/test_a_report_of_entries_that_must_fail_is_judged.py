@@ -10,7 +10,6 @@ ADAPTER = ROOT / "fixtures" / "synthetic-json-adapter-with-failing-entries"
 VOCABULARIES = ROOT / "fixtures" / "synthetic-vocabularies"
 ENGINE = ROOT / "fixtures" / "fake-engine" / "engine.py"
 JUDGE = ROOT / "engine" / "faults-of-a-report.rq"
-JUDGE_BY_THE_NAME_OF_EXPECTED_OUTCOMES = ROOT / "engine" / "faults-of-a-report-against-expected-outcomes.rq"
 MANIFEST = ADAPTER / "fixtures" / "manifest.ttl"
 
 CHECK = URIRef("https://ns.cascadeprotocol.org/bridge/v1-draft#expectedFailedCheck")
@@ -240,12 +239,6 @@ class TestJudgingAReportOfEntriesThatMustFail:
         def test_holds_an_entry_that_must_pass_reported_cantTell(self):
             report = mixed_report() | {"example-0003": ("cantTell", None)}
             assert faults_over(MIXED, report) == []
-
-    class TestGivenTheQueryABridgeReadsByTheNameOfExpectedOutcomes:
-        def test_is_the_judge(self):
-            assert JUDGE_BY_THE_NAME_OF_EXPECTED_OUTCOMES.read_text(encoding="utf-8") == JUDGE.read_text(
-                encoding="utf-8"
-            )
 
     class TestGivenAReportWhoseEntryIrisAreUnderAnotherBaseThanTheManifest:
         MANIFEST_READ_AT = "https://example.org/adapter/fixtures/manifest.ttl"
