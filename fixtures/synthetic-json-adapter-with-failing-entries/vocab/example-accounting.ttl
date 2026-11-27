@@ -42,7 +42,18 @@
   bridge:sourcePath "/lastUpdated" ;
   bridge:verdict bridge:carriedInPart ;
   bridge:namesGap ex:a-last-update-with-no-time-zone ;
+  bridge:adapterReportsGap ex:a-last-update-of-a-record-no-mapping-reads ;
   bridge:carriedAs [ bridge:asProperty pav:lastUpdateOn ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/phone" ;
+  bridge:verdict bridge:noHome ;
+  bridge:adapterReportsGap ex:a-phone-number-no-predicate-carries .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/phone/number" ;
+  bridge:verdict bridge:noHome ;
+  bridge:adapterReportsGap ex:a-phone-number-no-predicate-carries .
 
 [] a bridge:PathEntry ;
   bridge:sourcePath "/caption" ;

@@ -43,12 +43,13 @@ A_NAMESPACED_ATTRIBUTE_OF_THE_RECORD = (
 )
 
 
-def entry(path, verdict=CARRIED, names_gap=None, same_fact_as=None, because=None):
+def entry(path, verdict=CARRIED, names_gap=None, same_fact_as=None, because=None, adapter_reports_gap=None):
     written = ["[] a bridge:PathEntry", f'bridge:sourcePath "{path}"', f"bridge:verdict {verdict}"]
     written += [
         f"{predicate} {value}"
         for predicate, value in (
             ("bridge:namesGap", names_gap),
+            ("bridge:adapterReportsGap", adapter_reports_gap),
             ("bridge:sameFactAs", None if same_fact_as is None else f'"{same_fact_as}"'),
             ("bridge:because", because),
         )
@@ -248,6 +249,49 @@ class TestAccountingForEveryPathOfASource:
             assert "bridge:elementNotCarried" in said
             assert "the-whole-label-is-held-back" in said
             assert "true of a whole element, which no entry's bridge:namesGap can name" in said
+
+    class TestGivenAGapAnEntrySaysItsAdapterReports:
+        def test_reports_one_that_is_no_gap_of_the_adapters_own_gap_scheme(self, package):
+            """reports one that is no gap of the adapter's own gap scheme"""
+            accounted(
+                package,
+                entry(NO_QUERY_MENTIONS, verdict=NO_HOME, adapter_reports_gap="ex:a-gap-the-scheme-does-not-hold"),
+            )
+            said = said_about(package)
+            assert "bridge:adapterReportsGap" in said
+            assert "a-gap-the-scheme-does-not-hold" in said
+
+        def test_reports_one_of_a_kind_true_of_what_a_record_holds_rather_than_of_the_path(self, package):
+            """reports one of a kind true of what a record holds, rather than of the path"""
+            accounted(
+                package,
+                entry(
+                    THE_MAPPING_MENTIONS,
+                    verdict=CARRIED_IN_PART,
+                    names_gap=A_GAP_CARRIED_WITH_LOSS,
+                    adapter_reports_gap=A_GAP_OF_A_VALUE_NOT_MAPPED,
+                ),
+            )
+            said = said_about(package)
+            assert A_GAP_OF_A_VALUE_NOT_MAPPED.removeprefix("ex:") in said
+            assert "bridge:noPredicate or bridge:sourceLacksRequired" in said
+
+        def test_reports_nothing_for_gaps_of_a_path_no_predicate_carries_or_a_source_lacking_what_a_shape_requires(
+            self, package
+        ):
+            """reports nothing for gaps of a path no predicate carries, or of a source lacking what a shape requires"""
+            reported = f"{A_GAP_WITH_NO_PREDICATE}, {A_GAP_OF_A_SOURCE_LACKING_WHAT_A_SHAPE_REQUIRES}"
+            accounted(
+                package,
+                entry(NO_QUERY_MENTIONS, verdict=NO_HOME, adapter_reports_gap=reported),
+                entry(
+                    THE_MAPPING_MENTIONS,
+                    verdict=CARRIED_IN_PART,
+                    names_gap=A_GAP_CARRIED_WITH_LOSS,
+                    adapter_reports_gap=A_GAP_WITH_NO_PREDICATE,
+                ),
+            )
+            assert not said_about(package)
 
     class TestGivenAnEntrysVerdictAndWhatTheMappingsMention:
         """given an entry's verdict and what the mappings mention"""

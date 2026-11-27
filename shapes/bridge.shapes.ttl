@@ -934,9 +934,8 @@
   ] ;
   sh:property [
     sh:path bridge:namesGap ;
-    sh:minCount 1 ;
     sh:maxCount 1 ;
-    sh:message "An entry whose verdict is bridge:noHome names exactly one bridge:namesGap, the gap the missing predicate opens."
+    sh:message "An entry whose verdict is bridge:noHome names at most one bridge:namesGap, the gap the missing predicate opens."
   ] ;
   sh:property [
     sh:path bridge:sameFactAs ;
@@ -947,6 +946,64 @@
     sh:path bridge:because ;
     sh:maxCount 0 ;
     sh:message "An entry whose verdict is bridge:noHome gives no bridge:because."
+  ] .
+
+<#NoHomeEntryABridgeReports> a sh:NodeShape ;
+  sh:target [
+    a sh:SPARQLTarget ;
+    sh:prefixes <> ;
+    sh:select """
+      SELECT ?this WHERE {
+        ?this a bridge:PathEntry ; bridge:verdict bridge:noHome .
+        FILTER NOT EXISTS { ?this bridge:adapterReportsGap ?gap }
+      }
+    """
+  ] ;
+  sh:property [
+    sh:path bridge:namesGap ;
+    sh:minCount 1 ;
+    sh:message "An entry whose verdict is bridge:noHome names the bridge:namesGap the missing predicate opens, which a Bridge reports, or else each bridge:adapterReportsGap its adapter's findings queries report."
+  ] .
+
+<#NoHomeEntryItsAdapterReports> a sh:NodeShape ;
+  sh:target [
+    a sh:SPARQLTarget ;
+    sh:prefixes <> ;
+    sh:select """
+      SELECT ?this WHERE {
+        ?this a bridge:PathEntry ; bridge:verdict bridge:noHome ; bridge:adapterReportsGap ?gap .
+      }
+    """
+  ] ;
+  sh:property [
+    sh:path bridge:namesGap ;
+    sh:maxCount 0 ;
+    sh:message "An entry whose verdict is bridge:noHome and that names a bridge:adapterReportsGap names no bridge:namesGap: a Bridge reports a bridge:namesGap wherever the path occurs, and the adapter reports this path's gap itself."
+  ] .
+
+<#EntryNamingAGapItsAdapterReports> a sh:NodeShape ;
+  sh:targetSubjectsOf bridge:adapterReportsGap ;
+  sh:property [
+    sh:path bridge:adapterReportsGap ;
+    sh:nodeKind sh:IRI ;
+    sh:message "A bridge:adapterReportsGap is a gap of the adapter's bridge:gapScheme, by IRI."
+  ] .
+
+<#EntryWhoseVerdictOpensNoGap> a sh:NodeShape ;
+  sh:target [
+    a sh:SPARQLTarget ;
+    sh:prefixes <> ;
+    sh:select """
+      SELECT ?this WHERE {
+        ?this a bridge:PathEntry ; bridge:verdict ?verdict .
+        FILTER (?verdict NOT IN (bridge:noHome, bridge:carriedInPart))
+      }
+    """
+  ] ;
+  sh:property [
+    sh:path bridge:adapterReportsGap ;
+    sh:maxCount 0 ;
+    sh:message "An entry naming a bridge:adapterReportsGap is bridge:noHome or bridge:carriedInPart: only a path that some record does not carry has a gap to report."
   ] .
 
 <#IgnoredEntry> a sh:NodeShape ;

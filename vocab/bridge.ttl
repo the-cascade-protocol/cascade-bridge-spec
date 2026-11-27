@@ -228,6 +228,12 @@ bridge:lookupNamesGap a owl:ObjectProperty ;
   rdfs:domain bridge:PathEntry ;
   rdfs:isDefinedBy <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
 
+bridge:adapterReportsGap a owl:ObjectProperty ;
+  rdfs:label "adapter reports gap"@en ;
+  rdfs:comment "A gap of the adapter's bridge:gapScheme that its own findings queries report at each occurrence of the entry's path no record carries: a Bridge reports nothing from it, and fails a test entry whose input holds the path where no finding of it is."@en ;
+  rdfs:domain bridge:PathEntry ;
+  rdfs:isDefinedBy <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+
 bridge:sameFactAs a owl:DatatypeProperty ;
   rdfs:label "same fact as"@en ;
   rdfs:comment "The bridge:sourcePath that carries the fact instead."@en ;

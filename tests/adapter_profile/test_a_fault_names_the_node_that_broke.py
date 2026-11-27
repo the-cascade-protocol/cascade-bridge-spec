@@ -6,7 +6,7 @@ PREFIXES = """@prefix bridge:  <https://ns.cascadeprotocol.org/bridge/v1-draft#>
 """
 
 ONE_SOURCE_PATH = "An entry carries exactly one bridge:sourcePath, the path it accounts for, a string."
-A_NO_HOME_ENTRY_NAMES_ONE_GAP = "An entry whose verdict is bridge:noHome names exactly one bridge:namesGap"
+A_NO_HOME_ENTRY_NAMES_ONE_GAP = "An entry whose verdict is bridge:noHome names the bridge:namesGap"
 
 THE_LABEL_ENTRY = "https://example.org/synthetic-adapter/v1#the-label-entry"
 THE_NOTE_ENTRY = "https://example.org/synthetic-adapter/v1#the-note-entry"
