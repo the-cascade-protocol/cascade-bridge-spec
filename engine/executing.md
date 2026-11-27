@@ -96,7 +96,9 @@ reported `earl:failed` with that check as the `bridge:failedCheck` of its result
 [`faults-of-a-report-against-expected-outcomes.rq`](faults-of-a-report-against-expected-outcomes.rq) finds each
 fault. A Bridge is held to
 [`../fixtures/synthetic-json-adapter-with-failing-entries/`](../fixtures/synthetic-json-adapter-with-failing-entries/)
-this way: a report that gives every entry `earl:passed` is refused.
+this way: a report that gives every entry `earl:passed` is refused. The compatibility run judges the report of any
+adapter whose manifest lists one that way, and each Bridge's library makes a `test` call on that adapter, in the
+[library cases](../fixtures/library/manifest.ttl).
 
 **Report in EARL**: one `earl:Assertion` per entry, `earl:test` the entry's IRI,
 `earl:subject` the Bridge, `earl:mode earl:automatic`, and an `earl:TestResult`

@@ -10,7 +10,9 @@ from compatibility_tool.record import Role
 
 EARL = "http://www.w3.org/ns/earl#"
 MF = "http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#"
+BRIDGE = "https://ns.cascadeprotocol.org/bridge/v1-draft#"
 FAULTS_OF_A_REPORT = SPEC_ROOT / "engine" / "faults-of-a-report.rq"
+FAULTS_OF_A_REPORT_AGAINST_EXPECTED_OUTCOMES = SPEC_ROOT / "engine" / "faults-of-a-report-against-expected-outcomes.rq"
 
 
 def graph_of(path, **arguments):
@@ -86,8 +88,16 @@ def judge_report(path, adapter):
     except Exception as error:
         return with_faults(Verdict(tally=tally, reported=reported, unreadable_manifest=first_line(str(error))), graph)
     return with_faults(
-        Verdict(tally=tally, reported=reported, tests=count_of_tests(manifest_path, manifest)), graph + manifest
+        Verdict(tally=tally, reported=reported, tests=count_of_tests(manifest_path, manifest)),
+        graph + manifest,
+        lists_expected_outcomes(manifest),
     )
+
+
+def lists_expected_outcomes(manifest):
+    """A test manifest naming, for an entry, the check that must fail it: its report is judged against those outcomes."""
+    URIRef = packages.installed("rdflib").URIRef
+    return (None, URIRef(BRIDGE + "expectedFailedCheck"), None) in manifest
 
 
 def tally_of(reported):
@@ -119,20 +129,21 @@ def outcomes_reported(graph):
     return [(test, name) for (_, name), test in found.items()]
 
 
-def fault_rows(graph):
+def fault_rows(graph, against_expected_outcomes=False):
     """Each fault of a report with the test it names, or None where it names none."""
+    query = FAULTS_OF_A_REPORT_AGAINST_EXPECTED_OUTCOMES if against_expected_outcomes else FAULTS_OF_A_REPORT
     return [
         (None if row.entry is None else str(row.entry), str(row.fault))
-        for row in graph.query(FAULTS_OF_A_REPORT.read_text(encoding="utf-8"))
+        for row in graph.query(query.read_text(encoding="utf-8"))
     ]
 
 
-def faults_of(graph):
-    return [fault for _, fault in fault_rows(graph)]
+def faults_of(graph, against_expected_outcomes=False):
+    return [fault for _, fault in fault_rows(graph, against_expected_outcomes)]
 
 
-def with_faults(verdict, graph):
-    verdict.named = fault_rows(graph)
+def with_faults(verdict, graph, against_expected_outcomes=False):
+    verdict.named = fault_rows(graph, against_expected_outcomes)
     verdict.faults = [fault for _, fault in verdict.named]
     return verdict
 

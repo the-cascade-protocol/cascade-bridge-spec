@@ -3,7 +3,7 @@ PREFIX mf: <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#>
 
-SELECT DISTINCT ?name ?fault
+SELECT DISTINCT ?name ?entry ?fault
 WHERE {
   {
     ?manifest mf:entries/rdf:rest*/rdf:first ?entry .
@@ -29,9 +29,10 @@ WHERE {
     ?assertion earl:test ?reported .
     BIND (STRAFTER(STR(?reported), "#") AS ?name)
     FILTER NOT EXISTS {
-      ?manifest mf:entries/rdf:rest*/rdf:first ?entry .
-      FILTER (STRAFTER(STR(?entry), "#") = ?name)
+      ?manifest mf:entries/rdf:rest*/rdf:first ?listed .
+      FILTER (STRAFTER(STR(?listed), "#") = ?name)
     }
+    BIND (?reported AS ?entry)
     BIND (CONCAT(STR(?reported), " is reported, and is no entry of the manifest") AS ?fault)
   }
   FILTER (?fault != "")
