@@ -27,6 +27,7 @@ EVERY_TEST = (
     "example-0008-names-two-records",
     "example-release-2026-01",
 )
+TWO_MANIFESTS_FAULT = "more than one node holds mf:entries, so the graph holds more than one test manifest: a report is judged against one"
 HUNDREDS_OF_ENTRIES = [f"case-{number:04}" for number in range(500)]
 
 
@@ -41,9 +42,10 @@ def earl(tmp_path, outcomes):
     return path
 
 
-def faults_the_query_finds(report, manifest):
+def faults_the_query_finds(report, *manifests):
     graph = Graph().parse(report, format="turtle")
-    graph.parse(manifest, format="turtle", publicID=manifest)
+    for manifest in manifests:
+        graph.parse(manifest, format="turtle", publicID=manifest)
     return [str(row.fault) for row in graph.query(FAULTS_OF_A_REPORT.read_text(encoding="utf-8"))]
 
 
@@ -467,6 +469,55 @@ class TestJudgingAnEARLReport:
             )
             rows = faults_the_query_finds(report, manifest.as_uri())
             assert rows == [f"{one} has no outcome", f"input-only {two} is reported passed, not cantTell"]
+
+    class TestGivenAGraphHoldingTwoManifests:
+        """given a graph holding two manifests"""
+
+        @pytest.mark.parametrize(
+            "outcomes",
+            [
+                pytest.param(
+                    dict.fromkeys(EVERY_TEST, "passed") | {"example-0002": "cantTell"}, id="a report that holds"
+                ),
+                pytest.param({"example-0001": "failed"}, id="a report with a fault of its own"),
+                pytest.param({}, id="a report recording no outcome"),
+            ],
+        )
+        def test_is_that_one_fault(self, tmp_path, outcomes):
+            report = earl(tmp_path, outcomes)
+            other = manifest_of(tmp_path / "other", ["one", "two"])
+            assert faults_the_query_finds(report, MANIFEST, other) == [TWO_MANIFESTS_FAULT]
+
+        def test_is_that_one_fault_where_neither_names_an_adapter(self, tmp_path):
+            manifests = []
+            for name in ("first", "second"):
+                manifest = tmp_path / f"{name}.ttl"
+                manifest.write_text(
+                    "@prefix mf: <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .\n"
+                    f"<> mf:entries ( <cases/{name}.ttl> ) .\n",
+                    encoding="utf-8",
+                )
+                manifests.append(manifest.as_uri())
+            report = earl(tmp_path, {"example-0001": "passed"})
+            assert faults_the_query_finds(report, *manifests) == [TWO_MANIFESTS_FAULT]
+
+        def test_is_what_the_judge_prints(self, tmp_path):
+            report = earl(tmp_path, dict.fromkeys(EVERY_TEST, "passed") | {"example-0002": "cantTell"})
+            with report.open("a", encoding="utf-8") as written:
+                written.write(
+                    "@prefix mf: <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .\n"
+                    "@prefix bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#> .\n"
+                    "<file:///elsewhere/adapter/fixtures/manifest.ttl> bridge:adapter <file:///elsewhere/adapter/> ;\n"
+                    "  mf:entries ( <file:///elsewhere/adapter/fixtures/manifest.ttl#one> ) .\n"
+                )
+            verdict = judge_report(report, SYNTHETIC_ADAPTER)
+            assert not verdict.holds
+            assert verdict.faults == [TWO_MANIFESTS_FAULT]
+            assert verdict.describe() == f"1 cantTell, 9 passed; {TWO_MANIFESTS_FAULT}"
+
+        def test_is_no_fault_when_it_is_the_one_manifest_read_twice(self, tmp_path):
+            report = earl(tmp_path, dict.fromkeys(EVERY_TEST, "passed") | {"example-0002": "cantTell"})
+            assert faults_the_query_finds(report, MANIFEST, MANIFEST) == []
 
     class TestGivenAnInputOnlyEntryReportedOutsideEARLsFive:
         """given an input-only entry reported outside EARL's five"""
