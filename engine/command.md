@@ -142,3 +142,54 @@ into `<results directory>/<case name>/`:
 
 **The exit code means nothing to the tooling; the results do.** A call with no
 result does not hold.
+
+## `survey`
+
+```
+survey <adapter directory> <folder> [--envelope <iri>] [--tsv <file>] [--kind <kind>] [--under <path>]
+```
+
+An engine may offer `survey`; the tooling never calls it, as it never appends
+`--owed`. It is for an adapter's author, to read which fields of a folder of real
+documents the adapter's accounting has never decided about, which wait on a term
+the vocabulary lacks, and which it leaves out on purpose, most common first.
+
+It converts nothing: it lifts each file directly in `<folder>`, a subfolder being
+skipped, and reads each path of each record against the adapter's source
+accounting. It runs no mapping, query, schema or shapes and needs no vocabulary,
+so a document that breaks the source schema is read like any other.
+`--envelope` is resolved as `convert`'s is and applies to every file. A file it
+cannot read, or finds no record in, is listed with its reason and the run goes
+on.
+
+It prints these lists, each by record kind, each row ranked by the documents that
+hold it, then by how many times it stands in all of them:
+
+- **Never decided**: the paths no entry stands for, which are exactly the paths
+  that would draw `cascade:SourcePathNotAccounted` on converting the same
+  documents.
+- **No term yet**: the paths whose entry is `bridge:noHome`, or
+  `bridge:carriedInPart` naming a gap, with that gap.
+- **Left out on purpose**: the paths whose entry is `bridge:ignored`, with its
+  `bridge:because`.
+
+The verdicts are those of `bridge:verdicts` in [`../vocab/bridge.ttl`](../vocab/bridge.ttl).
+A row is a place within a record kind, as the adapter's envelopes say what a
+place is ([`../adapter/README.md`](../adapter/README.md#saying-where-a-place-stands-in-each-form-of-a-path)),
+not a path: its counts are summed over the forms it was written in, and it lists
+them. A record kind is read at the envelope's `bridge:pathOfRecordKindBelowContent`;
+a contained resource has its own where it names one, and an adapter whose
+envelopes declare none is one group.
+
+`--kind` keeps one record kind, and `--under` a place and the places below it,
+step by step. `--tsv` writes every path seen, whatever its verdict, to `<file>`,
+one line each, in the same order, tab separated after a header line, with the
+columns `kind`, `path`, `verdict`, `gap`, `reason`, `documents`, `occurrences` and
+`forms`; `path` is the place, `verdict` the local name of its entry's
+`bridge:verdict`, or `neverDecided`. A tab or a line end inside a cell is written
+as a space. Its words are for a person; its columns are what a script may read.
+
+**The exit code is zero once the adapter was read, whatever was found**, and
+non-zero where the adapter or the folder cannot be read, `--envelope` names an
+envelope the adapter does not declare, `--tsv` cannot be written or the arguments
+are wrong. Standard output carries nothing then.
