@@ -22,7 +22,8 @@ only a finding (*Reported by the adapter*), the gaps looked for. `convert` is un
 findings are data there, never failures ([`library.md`](library.md)).
 
 **Owed.** An occurrence is owed when the accounting marks its path `bridge:carried` or `bridge:carriedInPart`, or its
-path's entry names a `bridge:adapterReportsGap`; its value is not empty; and no child of its element at another path is empty and carried as one of the same properties (one
+path's entry (the entry that stands for the path as the record writes it, [by its form](../adapter/README.md#saying-where-a-place-stands-in-each-form-of-a-path))
+names a `bridge:adapterReportsGap`; its value is not empty; and no child of its element at another path is empty and carried as one of the same properties (one
 value written from several children cannot be written when one of them is empty). A repeat of its own path at another
 index is no other child, and an empty repeat un-owes nothing but itself.
 

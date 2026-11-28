@@ -1,0 +1,67 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix oa:      <http://www.w3.org/ns/oa#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix bridge:  <https://ns.cascadeprotocol.org/bridge/v1-draft#> .
+@prefix ex:      <https://example.org/synthetic-adapter/v1#> .
+@prefix cascade: <https://ns.cascadeprotocol.org/cascade#> .
+
+[] a oa:Annotation ;
+  oa:hasTarget [
+    oa:hasSource <../in/json-0010.json> ;
+    oa:hasSelector [
+      a oa:FragmentSelector ;
+      dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+      rdf:value "/entries/0" ;
+      oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/resource/novelty" ]
+    ]
+  ] ;
+  oa:hasBody cascade:SourcePathNotAccounted ;
+  oa:motivatedBy oa:classifying ;
+  sh:value "/resource/novelty" ;
+  sh:resultSeverity sh:Info .
+
+[] a oa:Annotation ;
+  oa:hasTarget [
+    oa:hasSource <../in/json-0010.json> ;
+    oa:hasSelector [
+      a oa:FragmentSelector ;
+      dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+      rdf:value "/entries/0" ;
+      oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/resource/contained/0/novelty" ]
+    ]
+  ] ;
+  oa:hasBody cascade:SourcePathNotAccounted ;
+  oa:motivatedBy oa:classifying ;
+  sh:value "/resource/contained/novelty" ;
+  sh:resultSeverity sh:Info .
+
+[] a oa:Annotation ;
+  oa:hasTarget [
+    oa:hasSource <../in/json-0010.json> ;
+    oa:hasSelector [
+      a oa:FragmentSelector ;
+      dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+      rdf:value "/entries/0" ;
+      oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/resource/contained/0/note" ]
+    ]
+  ] ;
+  oa:hasBody ex:no-term-for-a-note-on-a-held-record ;
+  oa:motivatedBy oa:classifying ;
+  sh:value "/resource/contained/note" ;
+  sh:resultSeverity sh:Info .
+
+[] a oa:Annotation ;
+  oa:hasTarget [
+    oa:hasSource <../in/json-0010.json> ;
+    oa:hasSelector [
+      a oa:FragmentSelector ;
+      dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ;
+      rdf:value "/entries/0" ;
+      oa:refinedBy [ a oa:FragmentSelector ; dcterms:conformsTo <https://www.rfc-editor.org/rfc/rfc6901> ; rdf:value "/resource/status/1" ]
+    ]
+  ] ;
+  oa:hasBody ex:a-status-outside-the-set-the-vocabulary-fixes ;
+  oa:motivatedBy oa:classifying ;
+  sh:value "Retired" ;
+  sh:resultSeverity sh:Info .

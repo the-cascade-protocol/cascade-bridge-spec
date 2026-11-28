@@ -21,3 +21,4 @@ ignore = ["E501"]
 
 [tool.ruff.lint.per-file-ignores]
 "adapter/profile/must/*.py" = ["E402"]
+"scripts/adapter_explorer.py" = ["E402"]

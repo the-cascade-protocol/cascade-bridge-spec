@@ -251,6 +251,22 @@ CARRIED_TOGETHER_INPUT = {
     "contained": [{"resourceType": "Unit", "shared": {"first": "c"}}],
 }
 
+ACCOUNTING_OF_PLACES = """
+[] a bridge:PathEntry ; bridge:sourcePath "/subject/reference" ; bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:inSourceRecordType "Observation" ; bridge:inRecordClass ex:Observation ;
+                     bridge:asProperty ex:subject ] .
+[] a bridge:PathEntry ; bridge:sourcePath "/contained/subject/reference" ; bridge:verdict bridge:ignored ;
+  bridge:because "A contained record's subject is its container's." .
+"""
+
+ACCOUNTING_OF_PLACES_WRITTEN_OUT = (
+    ACCOUNTING_OF_PLACES
+    + """[] a bridge:PathEntry ; bridge:sourcePath "/item/subject/reference" ; bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:inSourceRecordType "Observation" ; bridge:inRecordClass ex:Observation ;
+                     bridge:asProperty ex:subject ] .
+"""
+)
+
 XML_CRATE = {
     "@context": CRATE["@context"],
     "@graph": [
@@ -632,6 +648,24 @@ def explorer_with_two_places_carried_from_one_case(tmp_path_factory):
     return explore(tmp_path_factory, (adapter, vocabulary, commit))
 
 
+def explorer_of_an_accounting(tmp_path_factory, accounting):
+    adapter = tmp_path_factory.mktemp("adapter")
+    commit = an_adapter(adapter, accounting=accounting)
+    vocabulary = tmp_path_factory.mktemp("vocabulary")
+    write(vocabulary / "ontologies" / "example.ttl", PREFIXES + VOCABULARY)
+    return explore(tmp_path_factory, (adapter, vocabulary, commit))
+
+
+@pytest.fixture(scope="module")
+def explorer_with_an_accounting_of_places(tmp_path_factory):
+    return explorer_of_an_accounting(tmp_path_factory, ACCOUNTING_OF_PLACES)
+
+
+@pytest.fixture(scope="module")
+def explorer_with_an_accounting_of_places_written_out(tmp_path_factory):
+    return explorer_of_an_accounting(tmp_path_factory, ACCOUNTING_OF_PLACES_WRITTEN_OUT)
+
+
 @pytest.fixture(scope="module")
 def xml_explorer(tmp_path_factory):
     adapter = tmp_path_factory.mktemp("adapter")
@@ -677,6 +711,7 @@ class TestAnAdaptersExplorer:
             (code,) = explorer.node("/category/coding/code")["mappings"]
             assert sorted(form["path"] for form in code["forms"]) == [
                 "/category/coding/code",
+                "/contained/category/coding/code",
                 "/item/category/coding/code",
             ]
 
@@ -789,13 +824,17 @@ class TestAnAdaptersExplorer:
             nodes = list(explorer.nodes(explorer.data["tree"]))
             entries = [form for node in nodes for m in node["mappings"] for form in m["forms"]]
             counts = (len(entries), len(nodes), len(INPUTS))
-            assert counts[0] == 12 and counts[2] == 4
+            assert counts[0] == 30 and counts[2] == 4
             figures = explorer.page.split("It accounts for ")[1].split("</p>")[0]
             assert figures.startswith(
                 f"{adapter_explorer.rough(counts[0])} source paths, at {adapter_explorer.rough(counts[1])} places, "
                 f"and {adapter_explorer.rough(counts[2])}\ntest cases"
             ), figures
-            assert not [count for count in counts if re.search(rf"\b{count}\b", figures)], figures
+            assert not [
+                count
+                for count in counts
+                if re.search(rf"\b{count}\b", figures.replace(adapter_explorer.rough(count), ""))
+            ], figures
             by_verdict = {
                 item["verdict"]: len(
                     [
@@ -808,7 +847,7 @@ class TestAnAdaptersExplorer:
                 )
                 for item in explorer.data["verdicts"]
             }
-            assert by_verdict["carried"] == 6 and by_verdict["consumed"] == 3 and by_verdict["carriedInPart"] == 0
+            assert by_verdict["carried"] == 12 and by_verdict["consumed"] == 9 and by_verdict["carriedInPart"] == 0
             overview = explorer.by_id("overview")
             shown = {
                 row[0]: row[-1]
@@ -819,7 +858,11 @@ class TestAnAdaptersExplorer:
                 item["words"]: adapter_explorer.rough(by_verdict[item["verdict"]]) for item in explorer.data["verdicts"]
             }
             exact = {count for count in (*counts, *by_verdict.values()) if count > 1}
-            assert not [count for count in exact if re.search(rf"\b{count}\b", overview.text())], overview.text()
+            assert not [
+                count
+                for count in exact
+                if re.search(rf"\b{count}\b", overview.text().replace(adapter_explorer.rough(count), ""))
+            ], overview.text()
             assert f'href="{REPORT}"' in explorer.page
             assert f'href="{REPOSITORY}/blob/{explorer.commit}/vocab/accounting.ttl"' in explorer.page
 
@@ -1135,7 +1178,11 @@ class TestAnAdaptersExplorer:
         def test_lists_the_plain_form_of_a_place_before_its_contained_form(self, explorer):
             """lists the plain form of a place before its contained form"""
             subject = explorer.mapping("/subject/reference")
-            assert [form["path"] for form in subject["forms"]] == ["/subject/reference", "/contained/subject/reference"]
+            assert [form["path"] for form in subject["forms"]] == [
+                "/item/subject/reference",
+                "/subject/reference",
+                "/contained/subject/reference",
+            ]
 
         def test_names_the_plain_form_in_the_same_fact_as(self, explorer):
             """names the plain form in "The same fact as"
@@ -1296,6 +1343,29 @@ class TestAnAdaptersExplorer:
             assert {name: values for name, values in fallbacks.items() if len(values) > 1} == {}
             assert not re.search(r"var\(--(?!bar\b)[\w-]+\)", explorer.style())
             assert not re.search(r"(^|\n)\s*:root\s*\{", explorer.style())
+
+    class TestGivenAnAccountingWrittenForPlaces:
+        def test_shows_an_entry_for_a_place_in_each_form_unless_an_entry_stands_for_that_form(
+            self, explorer_with_an_accounting_of_places
+        ):
+            """shows an entry for a place in each form, unless an entry stands for that form"""
+            verdicts = {
+                mapping["verdict"]: sorted(form["path"] for form in mapping["forms"])
+                for mapping in explorer_with_an_accounting_of_places.node("/subject/reference")["mappings"]
+            }
+            assert verdicts == {
+                "carried": ["/item/subject/reference", "/subject/reference"],
+                "ignored": ["/contained/subject/reference"],
+            }
+
+        def test_shows_it_as_it_shows_an_accounting_that_writes_the_entry_for_each_form(
+            self, explorer_with_an_accounting_of_places, explorer_with_an_accounting_of_places_written_out
+        ):
+            """shows it as it shows an accounting that writes the entry for each form"""
+            assert (
+                explorer_with_an_accounting_of_places.data["tree"]
+                == explorer_with_an_accounting_of_places_written_out.data["tree"]
+            )
 
     class TestGivenTwoPlacesThatShareAGap:
         def test_marks_only_what_a_finding_points_at_on_the_places_own_path(

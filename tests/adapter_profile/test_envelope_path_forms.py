@@ -1,8 +1,8 @@
 import pytest
 from rdflib import Literal
 
+import _path_forms as path_forms
 import declared_terms
-import path_forms
 from _terms import BRIDGE
 from adapter_profile_world import envelope_named, shape_file_messages
 
@@ -26,7 +26,7 @@ def declared_wrapped(crate):
 
 
 class TestWhereAnEnvelopesContentStandsInAPath:
-    """Where an envelope's content stands in a path · adapter/profile/must/envelope.ttl, scripts/path_forms.py
+    """Where an envelope's content stands in a path · adapter/profile/must/envelope.ttl, adapter/profile/_path_forms.py
 
     A format can write one place in a record that is its content, in a record that wraps it, and in each of those inside
     a record it contains. An envelope says where the content stands in its records, where the content of records nested
@@ -80,6 +80,20 @@ class TestWhereAnEnvelopesContentStandsInAPath:
             declare(json_crate, "record", content="/entry")
             declare(json_crate, "set", content="/entry")
             assert "No two envelopes" in shape_file_messages(json_crate, "envelope.ttl")
+
+        def test_reports_two_envelopes_whose_content_and_contained_prefixes_are_one_path(self, json_crate):
+            declare(json_crate, "record", content="", contained="/contained")
+            declare(json_crate, "set", content="/r/contained")
+            declare(json_crate, "listing", content="/r", contained="/contained")
+            said = shape_file_messages(json_crate, "envelope.ttl")
+            assert "No two envelopes" in said
+            assert all(word in said for word in ("/r/contained", "set", "listing"))
+
+        def test_reports_nothing_for_envelopes_whose_prefixes_differ_though_one_lies_inside_another(self, json_crate):
+            declare(json_crate, "record", content="", contained="/contained")
+            declare(json_crate, "set", content="/r", contained="/contained")
+            declare(json_crate, "listing", content="/r/contained/x")
+            assert not shape_file_messages(json_crate, "envelope.ttl")
 
         def test_names_the_empty_reference_token_in_what_it_reports_of_a_path(self, json_crate):
             declare(json_crate, "set", contained="/a//b")
@@ -153,8 +167,69 @@ class TestWhereAnEnvelopesContentStandsInAPath:
             form, place = path_forms.place_of(forms, "/entry/contained/id")
             assert (form.prefix, place) == ("/entry/contained", "/id")
 
+    class TestGivenAPrefixThatLiesInsideAnotherForm:
+        FORMS = [
+            path_forms.Form(None, prefix, contained, None, content)
+            for prefix, contained, content in (
+                ("/r/contained/x", False, "/r/contained/x"),
+                ("/r/contained", True, "/r"),
+                ("/r", False, "/r"),
+                ("/contained", True, ""),
+                ("", False, ""),
+            )
+        ]
+
+        def test_copies_a_path_of_the_contained_form_only_where_the_copy_reads_as_the_form_it_is_copied_to(self):
+            assert not list(path_forms.copies(self.FORMS, {"/contained/x/y"}))
+
     class TestGivenAnAdapterThatDeclaresNothing:
         def test_reads_no_form_and_each_path_as_its_own_place(self, crate):
             forms = path_forms.read(crate.graph, crate.root)
             assert forms == []
             assert path_forms.place_of(forms, "/a/b")[1] == "/a/b"
+
+        def test_copies_no_path_to_another_form(self, crate):
+            assert not list(path_forms.copies(path_forms.read(crate.graph, crate.root), {"/a/b", "/c"}))
+
+    class TestGivenAPlaceWrittenForOneForm:
+        FORMS = [
+            path_forms.Form(None, prefix, contained, None, content)
+            for prefix, contained, content in (
+                ("/entry/contained", True, "/entry"),
+                ("/entry", False, "/entry"),
+                ("/contained", True, ""),
+                ("", False, ""),
+            )
+        ]
+
+        def test_copies_it_into_each_form_that_has_a_prefix(self):
+            assert dict(path_forms.copies(self.FORMS, {"/id"})) == {
+                "/entry/id": "/id",
+                "/entry/contained/id": "/id",
+                "/contained/id": "/id",
+            }
+
+        def test_copies_nothing_over_a_path_that_stands_where_the_copy_would(self):
+            copied = dict(path_forms.copies(self.FORMS, {"/id", "/entry/id", "/entry/contained/id"}))
+            assert copied == {"/contained/id": "/id"}
+
+        def test_copies_a_place_into_a_contained_form_under_a_content_prefix_only_where_the_contained_form_has_none(
+            self,
+        ):
+            copied = dict(path_forms.copies(self.FORMS, {"/id", "/contained/id"}))
+            assert copied == {"/entry/id": "/id", "/entry/contained/id": "/contained/id"}
+
+        def test_copies_a_path_of_the_contained_form_with_no_content_prefix_under_each_content_prefix(self):
+            assert dict(path_forms.copies(self.FORMS, {"/contained/id"})) == {"/entry/contained/id": "/contained/id"}
+
+        def test_copies_no_path_written_with_a_content_prefix_into_another_form(self):
+            assert not list(path_forms.copies(self.FORMS, {"/entry/id", "/entry/contained/id"}))
+
+        def test_copies_a_path_that_begins_like_a_form_only_where_the_copy_reads_as_that_form(self):
+            forms = [
+                path_forms.Form(None, "/entry/contained", True, None, "/entry"),
+                path_forms.Form(None, "/entry", False, None, "/entry"),
+            ]
+            assert dict(path_forms.copies(forms, {"/contained/id"})) == {
+                "/entry/contained/contained/id": "/contained/id"
+            }

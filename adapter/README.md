@@ -72,9 +72,30 @@ told these are one place. An envelope says it with optional properties, each a p
 A `bridge:sourcePath` that begins with a form's prefix and a `/` is that prefix, the form, and the place after it; the
 longest prefix is the form. An envelope's content form has its `bridge:pathOfContentInRecord` as its prefix, and its contained
 form that and its `bridge:pathOfContainedContentBelowContent`. An envelope that declares none of the three has no form, and an
-adapter with no form reads each path as its own place. No two envelopes of an adapter declare the same prefix, and a prefix
+adapter with no form reads each path as its own place. No two forms of an adapter are the same path, whether each is a content prefix
+or a content prefix followed by the contained prefix, and whichever envelopes declare them; one form's prefix may lie inside another's. A prefix
 must not equal a real member name of the source in another form: a `resource` member of a record read in the resource
 envelope would make `/resource/code` read as the Bundle form.
+
+A form is a content prefix, empty or not, and the contained prefix after it or not. Exactly one entry stands for a path where
+any does, the nearest of three, and the farther two have no part in it; a path is accounted for where some entry stands for it:
+
+1. the entry at the path itself;
+2. for a path in a contained form under a content prefix, the entry at the same place in the contained form of no content
+   prefix, such as `/contained/id` for `/resource/contained/id`;
+3. the entry for the place, one whose `bridge:sourcePath` begins with no form's prefix and a `/`.
+
+So an entry for a place stands in every form that has a prefix, an entry in the contained form of no content prefix stands
+in that contained form under each content prefix, and an entry written with a content prefix stands for its own path alone.
+What stands for a path stands whole: its verdict, `bridge:namesGap`, `bridge:adapterReportsGap`, `bridge:lookupIn` and
+`bridge:lookupNamesGap`, `bridge:carriedAs`, `bridge:because`, `bridge:concern` and `bridge:sameFactAs`, as written.
+A form is reached only where the path it would be written at reads as that form: with the forms `/resource` and
+`/resource/contained` and none at `/contained`, an entry for `/contained/id` is a place, and stands for
+`/resource/contained/contained/id` and not for `/resource/contained/id`, which is the place `/id` of the form
+`/resource/contained`. An accounting that writes an entry for every form of every place says what it said. A finding names a path
+as the document writes it, never as its place. A `bridge:sameFactAs` names a place, read in the form of the path its entry stands at: for
+an entry as written, its own path's form, and for a copy, the form of the path the copy stands at. One naming the path of an
+entry as written is read as written. It is refused where no entry stands for what it names in either reading.
 
 ## Testing a path the accounting names nowhere
 
@@ -84,8 +105,10 @@ the case in the manifest with `bridge:testsUnaccountedSourcePath`, written as th
     <#a-record-holding-a-path-nothing-names> a bridge:IsomorphicConversionTest ;
       bridge:testsUnaccountedSourcePath "/ExampleRecord/Novelty" ;
 
-Any other such path wants an entry in the accounting whose `bridge:sourcePath` is that path as the record writes it, in its
-own form; an entry on a path above it, or on the same place in another form, does not account for it
+Any other such path wants an entry that stands for it, so that it is accounted for: one whose `bridge:sourcePath` is that path as
+the record writes it; or, for a path in a contained form under a content prefix, the same place in the contained form of no
+content prefix (`/contained/novelty` for `/resource/contained/novelty`); or its place, where the adapter declares the form it is
+written in ([above](#saying-where-a-place-stands-in-each-form-of-a-path)). An entry on a path above it does not stand for it
 ([`profile/must/unaccounted_paths.py`](profile/must/unaccounted_paths.py)).
 
 ## When a test entry fails by the accounting

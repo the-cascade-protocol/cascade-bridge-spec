@@ -1,0 +1,13 @@
+{
+  "kind": "record",
+  "accession": "EX000111",
+  "version": 1,
+  "label": "a record written in the record envelope's two forms",
+  "note": "a note on the record",
+  "source": "a registry",
+  "status": ["current", "Retired"],
+  "novelty": "a member the accounting names nowhere",
+  "contained": [
+    {"note": "a note on a record held inside it", "source": "a held registry", "status": ["Retired"], "novelty": "a member the accounting names nowhere"}
+  ]
+}

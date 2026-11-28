@@ -9,7 +9,8 @@
     <https://example.org/adapters/synthetic-json-adapter/ro-crate-metadata.json#envelope-set> ,
     <https://example.org/adapters/synthetic-json-adapter/ro-crate-metadata.json#envelope-record> ,
     <https://example.org/adapters/synthetic-json-adapter/ro-crate-metadata.json#envelope-listing> ,
-    <https://example.org/adapters/synthetic-json-adapter/ro-crate-metadata.json#envelope-archive> ;
+    <https://example.org/adapters/synthetic-json-adapter/ro-crate-metadata.json#envelope-archive> ,
+    <https://example.org/adapters/synthetic-json-adapter/ro-crate-metadata.json#envelope-bundle> ;
   bridge:cascadeVocabularyRepository <https://example.org/synthetic-adapter/synthetic-vocabularies> ;
   bridge:vocabularyFile
     "ontologies/example/v1/example.ttl" ,
@@ -25,6 +26,7 @@
     "schema/example-record.schema.json" ,
     "schema/example-set.schema.json" ,
     "schema/example-listing.schema.json" ,
+    "schema/example-bundle.schema.json" ,
     "vocab/example-gaps.ttl" ,
     "vocab/example-statuses.ttl" ,
     "vocab/example-accounting.ttl" ;
@@ -39,6 +41,7 @@
     "schema/example-record.schema.json" ,
     "schema/example-set.schema.json" ,
     "schema/example-listing.schema.json" ,
+    "schema/example-bundle.schema.json" ,
     "vocab/example-gaps.ttl" ,
     "vocab/example-statuses.ttl" ,
     "vocab/example-accounting.ttl" ,
@@ -52,6 +55,8 @@
     "fixtures/in/json-0007.json" ,
     "fixtures/in/json-0008.json" ,
     "fixtures/in/json-0009.json" ,
+    "fixtures/in/json-0010.json" ,
+    "fixtures/in/json-0011.json" ,
     "fixtures/expected/json-0001.ttl" ,
     "fixtures/expected/json-0002.ttl" ,
     "fixtures/expected/json-0003.ttl" ,
@@ -61,6 +66,8 @@
     "fixtures/expected/json-0007.ttl" ,
     "fixtures/expected/json-0008.ttl" ,
     "fixtures/expected/json-0009.ttl" ,
+    "fixtures/expected/json-0010.ttl" ,
+    "fixtures/expected/json-0011.ttl" ,
     "fixtures/findings/json-0001.ttl" ,
     "fixtures/findings/json-0002.ttl" ,
     "fixtures/findings/json-0003.ttl" ,
@@ -69,4 +76,6 @@
     "fixtures/findings/json-0006.ttl" ,
     "fixtures/findings/json-0007.ttl" ,
     "fixtures/findings/json-0008.ttl" ,
-    "fixtures/findings/json-0009.ttl" .
+    "fixtures/findings/json-0009.ttl" ,
+    "fixtures/findings/json-0010.ttl" ,
+    "fixtures/findings/json-0011.ttl" .
