@@ -158,3 +158,32 @@ class TestWhereAnEnvelopesContentStandsInAPath:
             forms = path_forms.read(crate.graph, crate.root)
             assert forms == []
             assert path_forms.place_of(forms, "/a/b")[1] == "/a/b"
+
+        def test_copies_no_path_to_another_form(self, crate):
+            assert not list(path_forms.copies(path_forms.read(crate.graph, crate.root), {"/a/b", "/c"}))
+
+    class TestGivenAPlaceWrittenForOneForm:
+        FORMS = [
+            path_forms.Form(None, prefix, contained, None)
+            for prefix, contained in (("/entry/contained", True), ("/entry", False), ("/contained", True), ("", False))
+        ]
+
+        def test_copies_it_into_each_form_that_has_a_prefix(self):
+            assert dict(path_forms.copies(self.FORMS, {"/id"})) == {
+                "/entry/id": "/id",
+                "/entry/contained/id": "/id",
+                "/contained/id": "/id",
+            }
+
+        def test_copies_nothing_over_a_path_that_stands_where_the_copy_would(self):
+            copied = dict(path_forms.copies(self.FORMS, {"/id", "/contained/id", "/entry/id"}))
+            assert copied == {"/entry/contained/id": "/id"}
+
+        def test_copies_no_path_written_in_a_form_into_another(self):
+            assert not list(path_forms.copies(self.FORMS, {"/entry/id", "/contained/id", "/entry/contained/id"}))
+
+        def test_copies_a_path_that_begins_like_a_form_only_where_the_copy_reads_as_that_form(self):
+            forms = [path_forms.Form(None, prefix, True, None) for prefix in ("/entry/contained", "/entry")]
+            assert dict(path_forms.copies(forms, {"/contained/id"})) == {
+                "/entry/contained/contained/id": "/contained/id"
+            }

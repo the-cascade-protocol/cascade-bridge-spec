@@ -251,6 +251,22 @@ CARRIED_TOGETHER_INPUT = {
     "contained": [{"resourceType": "Unit", "shared": {"first": "c"}}],
 }
 
+ACCOUNTING_OF_PLACES = """
+[] a bridge:PathEntry ; bridge:sourcePath "/subject/reference" ; bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:inSourceRecordType "Observation" ; bridge:inRecordClass ex:Observation ;
+                     bridge:asProperty ex:subject ] .
+[] a bridge:PathEntry ; bridge:sourcePath "/contained/subject/reference" ; bridge:verdict bridge:ignored ;
+  bridge:because "A contained record's subject is its container's." .
+"""
+
+ACCOUNTING_OF_PLACES_WRITTEN_OUT = (
+    ACCOUNTING_OF_PLACES
+    + """[] a bridge:PathEntry ; bridge:sourcePath "/item/subject/reference" ; bridge:verdict bridge:carried ;
+  bridge:carriedAs [ bridge:inSourceRecordType "Observation" ; bridge:inRecordClass ex:Observation ;
+                     bridge:asProperty ex:subject ] .
+"""
+)
+
 XML_CRATE = {
     "@context": CRATE["@context"],
     "@graph": [
@@ -630,6 +646,24 @@ def explorer_with_two_places_carried_from_one_case(tmp_path_factory):
     vocabulary = tmp_path_factory.mktemp("vocabulary")
     write(vocabulary / "ontologies" / "example.ttl", PREFIXES + VOCABULARY)
     return explore(tmp_path_factory, (adapter, vocabulary, commit))
+
+
+def explorer_of_an_accounting(tmp_path_factory, accounting):
+    adapter = tmp_path_factory.mktemp("adapter")
+    commit = an_adapter(adapter, accounting=accounting)
+    vocabulary = tmp_path_factory.mktemp("vocabulary")
+    write(vocabulary / "ontologies" / "example.ttl", PREFIXES + VOCABULARY)
+    return explore(tmp_path_factory, (adapter, vocabulary, commit))
+
+
+@pytest.fixture(scope="module")
+def explorer_with_an_accounting_of_places(tmp_path_factory):
+    return explorer_of_an_accounting(tmp_path_factory, ACCOUNTING_OF_PLACES)
+
+
+@pytest.fixture(scope="module")
+def explorer_with_an_accounting_of_places_written_out(tmp_path_factory):
+    return explorer_of_an_accounting(tmp_path_factory, ACCOUNTING_OF_PLACES_WRITTEN_OUT)
 
 
 @pytest.fixture(scope="module")
@@ -1296,6 +1330,29 @@ class TestAnAdaptersExplorer:
             assert {name: values for name, values in fallbacks.items() if len(values) > 1} == {}
             assert not re.search(r"var\(--(?!bar\b)[\w-]+\)", explorer.style())
             assert not re.search(r"(^|\n)\s*:root\s*\{", explorer.style())
+
+    class TestGivenAnAccountingWrittenForPlaces:
+        def test_shows_an_entry_for_a_place_in_each_form_unless_an_entry_stands_for_that_form(
+            self, explorer_with_an_accounting_of_places
+        ):
+            """shows an entry for a place in each form, unless an entry stands for that form"""
+            verdicts = {
+                mapping["verdict"]: sorted(form["path"] for form in mapping["forms"])
+                for mapping in explorer_with_an_accounting_of_places.node("/subject/reference")["mappings"]
+            }
+            assert verdicts == {
+                "carried": ["/item/subject/reference", "/subject/reference"],
+                "ignored": ["/contained/subject/reference"],
+            }
+
+        def test_shows_it_as_it_shows_an_accounting_that_writes_the_entry_for_each_form(
+            self, explorer_with_an_accounting_of_places, explorer_with_an_accounting_of_places_written_out
+        ):
+            """shows it as it shows an accounting that writes the entry for each form"""
+            assert (
+                explorer_with_an_accounting_of_places.data["tree"]
+                == explorer_with_an_accounting_of_places_written_out.data["tree"]
+            )
 
     class TestGivenTwoPlacesThatShareAGap:
         def test_marks_only_what_a_finding_points_at_on_the_places_own_path(

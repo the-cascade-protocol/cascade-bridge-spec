@@ -173,12 +173,12 @@ REJECTED = {
     ),
     "a redundant with entry that names no path carrying the same fact": (
         "An entry whose verdict is bridge:redundantWith names exactly one bridge:sameFactAs, "
-        "the bridge:sourcePath that carries the fact instead.",
+        "the place that carries the fact instead.",
         minimal(REDUNDANT_WITH, same_fact_as=None),
     ),
     "a redundant with entry that names two paths carrying the same fact": (
         "An entry whose verdict is bridge:redundantWith names exactly one bridge:sameFactAs, "
-        "the bridge:sourcePath that carries the fact instead.",
+        "the place that carries the fact instead.",
         minimal(REDUNDANT_WITH, same_fact_as=f"{THE_PATH_THAT_CARRIES_THE_FACT}, {ANOTHER_PATH_THAT_CARRIES_IT}"),
     ),
     "a redundant with entry that names a gap": (
