@@ -1,12 +1,12 @@
-"""forms = path_forms.read(graph, adapter)         # the crate's graph and its bridge:Adapter node
-form, place = path_forms.place_of(forms, path)  # a bridge:sourcePath
+"""forms = _path_forms.read(graph, adapter)         # the crate's graph and its bridge:Adapter node
+form, place = _path_forms.place_of(forms, path)  # a bridge:sourcePath
 """
 
 from dataclasses import dataclass
 
 from rdflib import URIRef
 
-BRIDGE = "https://ns.cascadeprotocol.org/bridge/v1-draft#"
+from _terms import BRIDGE
 
 
 @dataclass(frozen=True)
@@ -20,9 +20,9 @@ class Form:
 def read(graph, adapter):
     """The forms the adapter's envelopes declare, the longest prefix first."""
     forms = []
-    for envelope in graph.objects(adapter, URIRef(BRIDGE + "envelope")):
+    for envelope in graph.objects(adapter, BRIDGE.envelope):
         content, contained, kind = (
-            graph.value(envelope, URIRef(BRIDGE + term))
+            graph.value(envelope, BRIDGE[term])
             for term in ("pathOfContentInRecord", "pathOfContainedContentBelowContent", "pathOfRecordKindBelowContent")
         )
         if content is contained is kind is None:

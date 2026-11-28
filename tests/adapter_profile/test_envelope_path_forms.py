@@ -1,8 +1,8 @@
 import pytest
 from rdflib import Literal
 
+import _path_forms as path_forms
 import declared_terms
-import path_forms
 from _terms import BRIDGE
 from adapter_profile_world import envelope_named, shape_file_messages
 
@@ -26,7 +26,7 @@ def declared_wrapped(crate):
 
 
 class TestWhereAnEnvelopesContentStandsInAPath:
-    """Where an envelope's content stands in a path · adapter/profile/must/envelope.ttl, scripts/path_forms.py
+    """Where an envelope's content stands in a path · adapter/profile/must/envelope.ttl, adapter/profile/_path_forms.py
 
     A format can write one place in a record that is its content, in a record that wraps it, and in each of those inside
     a record it contains. An envelope says where the content stands in its records, where the content of records nested

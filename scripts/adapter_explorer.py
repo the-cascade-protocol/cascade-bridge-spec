@@ -26,19 +26,17 @@ from urllib.parse import urlparse
 from urllib.request import url2pathname
 from xml.parsers import expat
 
-from rdflib import RDF, RDFS, SKOS, Graph, Literal, Namespace, URIRef, Variable
+from rdflib import RDF, RDFS, SKOS, Graph, Literal, URIRef, Variable
 from rdflib.plugins.sparql.algebra import translateQuery
 from rdflib.plugins.sparql.parser import parseQuery
 from rdflib.plugins.sparql.parserutils import CompValue
 from rdflib.util import guess_format
 
-import path_forms
-
-BRIDGE = Namespace(path_forms.BRIDGE)
-SCHEMA = Namespace("http://schema.org/")
-MF = Namespace("http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#")
-OA = Namespace("http://www.w3.org/ns/oa#")
 SPEC = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(SPEC / "adapter" / "profile"))
+
+import _path_forms as path_forms
+from _terms import BRIDGE, MF, OA, SCHEMA
 
 VERDICTS = ("carried", "carriedInPart", "redundantWith", "consumed", "noHome", "ignored")
 NOT_CARRIED = ("carriedInPart", "noHome", "ignored")
