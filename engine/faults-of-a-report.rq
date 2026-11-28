@@ -6,6 +6,15 @@ PREFIX bridge: <https://ns.cascadeprotocol.org/bridge/v1-draft#>
 SELECT ?entry ?fault ?reportedTest ?listedEntry
 WHERE {
   {
+    FILTER EXISTS { ?firstManifest mf:entries ?firstEntries . ?secondManifest mf:entries ?secondEntries
+      FILTER (?firstManifest != ?secondManifest) }
+    BIND ("more than one node holds mf:entries, so the graph holds more than one test manifest: a report is judged against one"
+      AS ?fault)
+  }
+  UNION
+  {
+    FILTER NOT EXISTS { ?firstManifest mf:entries ?firstEntries . ?secondManifest mf:entries ?secondEntries
+      FILTER (?firstManifest != ?secondManifest) }
     FILTER NOT EXISTS { ?anyResult earl:outcome ?anyOutcome }
     BIND ("its report records no outcome" AS ?fault)
   }
@@ -128,6 +137,8 @@ WHERE {
     {
       FILTER EXISTS { ?anyResult earl:outcome ?anyOutcome }
     }
+    FILTER NOT EXISTS { ?firstManifest mf:entries ?firstEntries . ?secondManifest mf:entries ?secondEntries
+      FILTER (?firstManifest != ?secondManifest) }
   }
 }
 ORDER BY ?entry ?fault
