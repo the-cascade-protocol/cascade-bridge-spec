@@ -111,7 +111,9 @@ Any other IRI, a code, a class or another record, is a value by its name, whatev
 reported `earl:failed` with that check as the `bridge:failedCheck` of its result;
 [`faults-of-a-report.rq`](faults-of-a-report.rq) finds each fault of a report, of these entries and every other. A
 report has one base, the one under which the most of its tests are entries at the same path, and a test is the entry
-at the same path under that base and no other; where no base makes any test an entry, every entry has no outcome.
+at the same path under that base and no other; where no base makes any test an entry, every entry has no outcome. A
+graph in which more than one node holds `mf:entries` holds more than one manifest, and the query returns one fault that
+says so and no other.
 With `?everyOutcome` bound it also returns each result it finds no fault in, its fault empty, which is how the
 compatibility tool's case report learns which entry each test is. A
 Bridge is held to
