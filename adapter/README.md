@@ -105,6 +105,8 @@ the case in the manifest with `bridge:testsUnaccountedSourcePath`, written as th
     <#a-record-holding-a-path-nothing-names> a bridge:IsomorphicConversionTest ;
       bridge:testsUnaccountedSourcePath "/ExampleRecord/Novelty" ;
 
+An engine's `survey` ([`../engine/command.md`](../engine/command.md#survey)) lists such paths over a folder of real documents.
+
 Any other such path wants an entry that stands for it, so that it is accounted for: one whose `bridge:sourcePath` is that path as
 the record writes it; or, for a path in a contained form under a content prefix, the same place in the contained form of no
 content prefix (`/contained/novelty` for `/resource/contained/novelty`); or its place, where the adapter declares the form it is

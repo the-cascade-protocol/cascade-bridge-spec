@@ -1,6 +1,6 @@
 # The commands an engine offers
 
-All three, not some. `test` and `convert` are callers of the library, and
+All three of `test`, `convert` and `library`, not some. `test` and `convert` are callers of the library, and
 [`library.md`](library.md) says what each does. Each names the adapter and the
 vocabulary by their directories' `file:` IRIs, and the document and its facts
 by their own, and reads a directory's files into that directory's map.
@@ -142,3 +142,73 @@ into `<results directory>/<case name>/`:
 
 **The exit code means nothing to the tooling; the results do.** A call with no
 result does not hold.
+
+## `survey`
+
+```
+survey <adapter directory> <folder> [--envelope <iri>] [--tsv <file>] [--kind <kind>] [--under <path>]
+```
+
+An engine may offer `survey`; the tooling never calls it, as it never passes
+`--owed`. It is for an adapter's author, to read which fields of a folder of real
+documents the adapter's accounting has never decided about, which wait on a term
+the vocabulary lacks, and which it leaves out on purpose, most common first.
+
+It converts nothing: it lifts each file directly in `<folder>`, a subfolder being
+skipped, and reads each path of each record against the adapter's source
+accounting. It runs no mapping, query, schema or shapes and needs no vocabulary,
+so a document that breaks the source schema is read like any other.
+`--envelope` is resolved as `convert`'s is and applies to every file. A file it
+cannot read is listed with its reason and the run goes on: it is empty, it does
+not parse in the adapter's syntax, no envelope accepts it, it holds no record
+(with `--envelope`, the envelope finds none), or it is a symbolic link.
+
+It prints these lists, each by record kind, each row ranked by `documents`, then
+`occurrences`, then place. `documents` counts the files that hold the place, once
+each; `occurrences` counts the times it stands in all of them; a `Counts` line
+under the header says so.
+
+- **Never decided**: the paths no entry stands for, which are exactly the paths
+  that would draw `cascade:SourcePathNotAccounted` on converting the same
+  documents.
+- **No term yet**: the paths whose entry is `bridge:noHome`, or
+  `bridge:carriedInPart` naming a gap, with that gap; the second is marked as
+  carried in part.
+- **Left out on purpose**: the paths whose entry is `bridge:ignored`, with its
+  `bridge:because`.
+
+The verdicts are those of `bridge:verdicts` in [`../vocab/bridge.ttl`](../vocab/bridge.ttl).
+A row is a place within a record kind, as the adapter's envelopes say what a
+place is ([`../adapter/README.md`](../adapter/README.md#saying-where-a-place-stands-in-each-form-of-a-path)),
+not a path: its counts are summed over the forms it was written in, and it names
+them where there is more than one or one that is not the bare form; forms of one
+place whose entries differ stand as separate rows. A record kind is read at the
+envelope's `bridge:pathOfRecordKindBelowContent`; a contained resource has its own
+where it names one and its container's where it does not. Kinds are read for JSON
+envelopes only: an adapter whose envelopes declare none, or an XML one that
+declares one (which gets a note saying so), is one group, and a record whose kind
+cannot be read is `(no kind)`.
+
+`--kind` keeps one record kind, and `--under` a place and the places below it,
+step by step. `--tsv` writes every place seen, whatever its verdict, narrowed as
+the lists are, to `<file>`: one line each, in the same order, tab separated after
+a header line. A control character inside a cell is written as a space, as in the
+readable output. Its words are for a person; its columns are what a script may
+read:
+
+| Column | Holds |
+| --- | --- |
+| `kind` | the record kind; empty where there is none |
+| `path` | the place |
+| `verdict` | the local name of the entry's `bridge:verdict`, or `neverDecided` |
+| `gap` | the entry's `bridge:namesGap` as a full IRI; empty where it names none |
+| `reason` | the entry's `bridge:because` |
+| `documents`, `occurrences` | integers |
+| `forms` | the forms written in, comma separated, `bare` for the bare one; empty where only the bare form was |
+
+**The exit code is 0 once the adapter was read, whatever was found**, a folder
+with no document included, and 2, never 1, where the adapter cannot be read, it
+names no `bridge:sourceAccounting`, or `--envelope` names an envelope it does not
+declare, each refused before any document is read, so an empty folder is refused
+too; and where the folder cannot be read, `--tsv` cannot be written or the
+arguments are wrong. Standard output carries nothing then.
