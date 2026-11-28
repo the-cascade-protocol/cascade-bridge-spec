@@ -711,6 +711,7 @@ class TestAnAdaptersExplorer:
             (code,) = explorer.node("/category/coding/code")["mappings"]
             assert sorted(form["path"] for form in code["forms"]) == [
                 "/category/coding/code",
+                "/contained/category/coding/code",
                 "/item/category/coding/code",
             ]
 
@@ -823,13 +824,17 @@ class TestAnAdaptersExplorer:
             nodes = list(explorer.nodes(explorer.data["tree"]))
             entries = [form for node in nodes for m in node["mappings"] for form in m["forms"]]
             counts = (len(entries), len(nodes), len(INPUTS))
-            assert counts[0] == 12 and counts[2] == 4
+            assert counts[0] == 30 and counts[2] == 4
             figures = explorer.page.split("It accounts for ")[1].split("</p>")[0]
             assert figures.startswith(
                 f"{adapter_explorer.rough(counts[0])} source paths, at {adapter_explorer.rough(counts[1])} places, "
                 f"and {adapter_explorer.rough(counts[2])}\ntest cases"
             ), figures
-            assert not [count for count in counts if re.search(rf"\b{count}\b", figures)], figures
+            assert not [
+                count
+                for count in counts
+                if re.search(rf"\b{count}\b", figures.replace(adapter_explorer.rough(count), ""))
+            ], figures
             by_verdict = {
                 item["verdict"]: len(
                     [
@@ -842,7 +847,7 @@ class TestAnAdaptersExplorer:
                 )
                 for item in explorer.data["verdicts"]
             }
-            assert by_verdict["carried"] == 6 and by_verdict["consumed"] == 3 and by_verdict["carriedInPart"] == 0
+            assert by_verdict["carried"] == 12 and by_verdict["consumed"] == 9 and by_verdict["carriedInPart"] == 0
             overview = explorer.by_id("overview")
             shown = {
                 row[0]: row[-1]
@@ -853,7 +858,11 @@ class TestAnAdaptersExplorer:
                 item["words"]: adapter_explorer.rough(by_verdict[item["verdict"]]) for item in explorer.data["verdicts"]
             }
             exact = {count for count in (*counts, *by_verdict.values()) if count > 1}
-            assert not [count for count in exact if re.search(rf"\b{count}\b", overview.text())], overview.text()
+            assert not [
+                count
+                for count in exact
+                if re.search(rf"\b{count}\b", overview.text().replace(adapter_explorer.rough(count), ""))
+            ], overview.text()
             assert f'href="{REPORT}"' in explorer.page
             assert f'href="{REPOSITORY}/blob/{explorer.commit}/vocab/accounting.ttl"' in explorer.page
 
@@ -1169,7 +1178,11 @@ class TestAnAdaptersExplorer:
         def test_lists_the_plain_form_of_a_place_before_its_contained_form(self, explorer):
             """lists the plain form of a place before its contained form"""
             subject = explorer.mapping("/subject/reference")
-            assert [form["path"] for form in subject["forms"]] == ["/subject/reference", "/contained/subject/reference"]
+            assert [form["path"] for form in subject["forms"]] == [
+                "/item/subject/reference",
+                "/subject/reference",
+                "/contained/subject/reference",
+            ]
 
         def test_names_the_plain_form_in_the_same_fact_as(self, explorer):
             """names the plain form in "The same fact as"

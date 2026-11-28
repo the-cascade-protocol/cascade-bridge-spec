@@ -212,15 +212,15 @@ For each source record of a document, in document order, a Bridge:
    `oa:refinedBy`.
 7. adds, where the caller asks for the census and the adapter names a
    `bridge:sourceAccounting`, one finding for each distinct path of the record
-   that no `bridge:PathEntry` of that file carries as its `bridge:sourcePath`:
+   that no `bridge:PathEntry` of that file accounts for ([the forms](../adapter/README.md#saying-where-a-place-stands-in-each-form-of-a-path)):
    the census;
 8. adds, where the caller asks for the findings and the adapter names a
    `bridge:sourceAccounting`, one finding for
-   each distinct path of the record whose `bridge:PathEntry` carries a verdict a
+   each distinct path of the record whose entry (the `bridge:PathEntry` that accounts for it) carries a verdict a
    Bridge reports from and names a gap of a kind that reports;
 9. adds, where the caller asks for the findings, for each `bridge:PathEntry`
    declaring a `bridge:lookupIn`, one finding
-   for each distinct value the record holds at that entry's path whose key no
+   for each distinct value the record holds at a path that entry accounts for whose key no
    concept of that file's scheme carries as its `skos:notation`.
 
 A record's findings are the union of what its queries construct and what its
@@ -277,8 +277,8 @@ written `@name`, no step carrying a position. A step names a node in no
 namespace by that name, and one in a namespace by `*[local-name()='…' and
 namespace-uri()='…']`, an attribute's after its `@`. The record element itself
 is no path. A path is as the record writes it, the form of the envelope it was read in; which paths are one place an adapter
-says in [its envelopes](../adapter/README.md#saying-where-a-place-stands-in-each-form-of-a-path), and a census path is never
-rewritten to one.
+says in [its envelopes](../adapter/README.md#saying-where-a-place-stands-in-each-form-of-a-path), which also says which
+entry accounts for a path, and a finding's path is never rewritten to its place.
 
 In a JSON record, a path is the names of the members from the record down to the
 node, each written as a JSON Pointer reference token after a `/`, `~` as `~0`

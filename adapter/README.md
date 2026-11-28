@@ -76,6 +76,26 @@ adapter with no form reads each path as its own place. No two envelopes of an ad
 must not equal a real member name of the source in another form: a `resource` member of a record read in the resource
 envelope would make `/resource/code` read as the Bundle form.
 
+A form is a content prefix, empty or not, and the contained prefix after it or not. An entry accounts for the path it names
+and for the same place in other forms; the entry that stands for a path is the nearest of three, and the farther two have no
+part in it:
+
+1. the entry at the path itself;
+2. for a path in a contained form under a content prefix, the entry at the same place in the contained form of no content
+   prefix, such as `/contained/id` for `/resource/contained/id`;
+3. the entry for the place, one whose `bridge:sourcePath` begins with no form's prefix and a `/`.
+
+So an entry for a place stands in every form that has a prefix, an entry in the contained form of no content prefix stands
+in that contained form under each content prefix, and an entry written with a content prefix stands for its own path alone.
+What stands for a path stands whole: its verdict, `bridge:namesGap`, `bridge:adapterReportsGap`, `bridge:lookupIn` and
+`bridge:lookupNamesGap`, `bridge:carriedAs`, `bridge:because`, `bridge:concern` and `bridge:sameFactAs`, as written.
+A form is reached only where the path it would be written at reads as that form: with the forms `/resource` and
+`/resource/contained` and none at `/contained`, an entry for `/contained/id` is a place, and accounts for
+`/resource/contained/contained/id` and not for `/resource/contained/id`, which is the place `/id` of the form
+`/resource/contained`. An accounting that writes an entry for every form of every place says what it said. A finding names a path
+as the document writes it, never as its place. A `bridge:sameFactAs` names a place, read in the form of its entry's path;
+one naming the path of an entry as written is read as written.
+
 ## Testing a path the accounting names nowhere
 
 A test case expects `cascade:SourcePathNotAccounted` only where it tests that finding, and then names each such path on
@@ -84,8 +104,9 @@ the case in the manifest with `bridge:testsUnaccountedSourcePath`, written as th
     <#a-record-holding-a-path-nothing-names> a bridge:IsomorphicConversionTest ;
       bridge:testsUnaccountedSourcePath "/ExampleRecord/Novelty" ;
 
-Any other such path wants an entry in the accounting whose `bridge:sourcePath` is that path as the record writes it, in its
-own form; an entry on a path above it, or on the same place in another form, does not account for it
+Any other such path wants an entry that accounts for it: one whose `bridge:sourcePath` is that path as the record writes it,
+or is its place where the adapter declares the form it is written in
+([above](#saying-where-a-place-stands-in-each-form-of-a-path)). An entry on a path above it does not account for it
 ([`profile/must/unaccounted_paths.py`](profile/must/unaccounted_paths.py)).
 
 ## When a test entry fails by the accounting

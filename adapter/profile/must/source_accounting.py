@@ -10,9 +10,11 @@ from rdflib.namespace import RDF, SKOS
 from rocrate_validator.models import ValidationContext
 from rocrate_validator.requirements.python import PyFunctionCheck, check, requirement
 
+from _accounting import paths_accounted
 from _codes import scheme_named_by
 from _findings import SHAPES, report_findings, shapes_of, unmet
 from _json_source import A_PATH, named_in_the_lift, syntax_of
+from _path_forms import place_of, read
 from _terms import BRIDGE, shortened
 
 THE_KINDS_A_VERDICT_MAY_NAME = {
@@ -113,6 +115,12 @@ def entries_of(accounting):
             yield entry, str(path), verdict
 
 
+def readings_of(forms, source_path, instead):
+    """The paths a bridge:sameFactAs may name: as written, or as the place it names in the form of its entry's path."""
+    form, _ = place_of(forms, source_path)
+    return {instead, ("" if form is None else form.prefix) + instead}
+
+
 def repeated(accounted):
     seen, twice = set(), set()
     for path in accounted:
@@ -148,9 +156,11 @@ def faulty(crate):
         yield f"{path.name}: {message}"
 
     entries = sorted(entries_of(accounting), key=lambda entry: entry[1])
-    accounted = [source_path for _, source_path, _ in entries]
-    for shared in sorted(repeated(accounted)):
+    written = [source_path for _, source_path, _ in entries]
+    for shared in sorted(repeated(written)):
         yield f"{shared} is the bridge:sourcePath of more than one entry, where a path is accounted for once"
+    accounted = paths_accounted(crate, accounting)
+    forms = read(crate.graph, crate.root)
 
     scheme = scheme_named_by(crate)
     gaps = set(scheme.subjects(RDF.type, SKOS.Concept))
@@ -172,10 +182,10 @@ def faulty(crate):
                     f"{source_path} names its own bridge:sourcePath as its bridge:sameFactAs, "
                     "where the fact is carried by another path"
                 )
-            elif str(instead) not in accounted:
+            elif not readings_of(forms, source_path, str(instead)) & accounted:
                 yield (
                     f"{source_path} names {instead} as its bridge:sameFactAs, "
-                    f"which is the bridge:sourcePath of no entry of {path.name}"
+                    f"which no entry of {path.name} accounts for, as written or as a place in the form of {source_path}"
                 )
         for gap in sorted(accounting.objects(entry, BRIDGE.namesGap)):
             if gap not in gaps:
