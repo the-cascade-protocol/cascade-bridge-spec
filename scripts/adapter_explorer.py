@@ -26,19 +26,17 @@ from urllib.parse import urlparse
 from urllib.request import url2pathname
 from xml.parsers import expat
 
-from rdflib import RDF, RDFS, SKOS, Graph, Literal, Namespace, URIRef, Variable
+from rdflib import RDF, RDFS, SKOS, Graph, Literal, URIRef, Variable
 from rdflib.plugins.sparql.algebra import translateQuery
 from rdflib.plugins.sparql.parser import parseQuery
 from rdflib.plugins.sparql.parserutils import CompValue
 from rdflib.util import guess_format
 
-import path_forms
-
-BRIDGE = Namespace(path_forms.BRIDGE)
-SCHEMA = Namespace("http://schema.org/")
-MF = Namespace("http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#")
-OA = Namespace("http://www.w3.org/ns/oa#")
 SPEC = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(SPEC / "adapter" / "profile"))
+
+import _path_forms as path_forms
+from _terms import BRIDGE, MF, OA, SCHEMA
 
 VERDICTS = ("carried", "carriedInPart", "redundantWith", "consumed", "noHome", "ignored")
 NOT_CARRIED = ("carriedInPart", "noHome", "ignored")
@@ -635,6 +633,19 @@ def read_entries(adapter, forms):
                 "carried": tuple(carried),
             }
         )
+    for copy, path in path_forms.copies(forms, {entry["path"] for entry in entries}):
+        form, place = path_forms.place_of(forms, copy)
+        entries += [
+            {
+                **entry,
+                "path": copy,
+                "form": form_label(adapter, form),
+                "contained": form.contained,
+                "steps": steps_of(place),
+            }
+            for entry in entries
+            if entry["path"] == path
+        ]
     unknown = {entry["verdict"] for entry in entries} - set(VERDICTS)
     if unknown:
         raise ValueError(f"the accounting names verdicts this explorer does not know: {sorted(unknown)}")
@@ -785,7 +796,12 @@ def build(folder, vocabulary, repository, report):
         """The path a fact is read at where it is not contained, when the accounting names its contained form."""
         place = path_forms.place_of(forms, path)[1]
         same_place = [entry for entry in entries if path_forms.place_of(forms, entry["path"])[1] == place]
-        return min(((entry["contained"], entry["path"]) for entry in same_place), default=(False, path))[1]
+
+        def nearness(entry):
+            form = path_forms.place_of(forms, entry["path"])[0]
+            return entry["contained"], bool(form and form.prefix), entry["path"]
+
+        return min(map(nearness, same_place), default=(False, False, path))[2]
 
     def mappings_of(node):
         grouped = {}

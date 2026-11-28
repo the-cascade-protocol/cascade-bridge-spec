@@ -4,11 +4,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from rdflib import Graph
-from rdflib.namespace import RDF, SH
+from rdflib.namespace import SH
 from rocrate_validator.models import ValidationContext
 from rocrate_validator.requirements.python import PyFunctionCheck, check, requirement
 
-from _accounting import accounting_of
+from _accounting import accounting_of, paths_accounted
 from _crate import file_name_of
 from _findings import report_findings
 from _terms import BRIDGE, CASCADE, MF, OA
@@ -29,12 +29,7 @@ def census_paths_in(path, findings):
 
 
 def faulty(crate):
-    accounting = accounting_of(crate)
-    accounted = {
-        str(path)
-        for entry in accounting.subjects(RDF.type, BRIDGE.PathEntry)
-        for path in accounting.objects(entry, BRIDGE.sourcePath)
-    }
+    accounted = paths_accounted(crate, accounting_of(crate))
     named = crate.graph.value(crate.root, BRIDGE.sourceAccounting)
     accounting_file = "the adapter's bridge:sourceAccounting" if named is None else file_name_of(named)
     for test in crate.entries:
@@ -49,7 +44,7 @@ def faulty(crate):
         for source_path in sorted(expected - accounted - tested):
             yield (
                 f"{name}: {path.name}: expects cascade:SourcePathNotAccounted at {source_path}, where a path a "
-                f"test's input holds is the bridge:sourcePath of an entry of {accounting_file}, or one its test case "
+                f"test's input holds is accounted for by an entry of {accounting_file}, or one its test case "
                 "names by bridge:testsUnaccountedSourcePath"
             )
         where = (

@@ -887,7 +887,7 @@
     sh:path bridge:sameFactAs ;
     sh:minCount 1 ;
     sh:maxCount 1 ;
-    sh:message "An entry whose verdict is bridge:redundantWith names exactly one bridge:sameFactAs, the bridge:sourcePath that carries the fact instead."
+    sh:message "An entry whose verdict is bridge:redundantWith names exactly one bridge:sameFactAs, the place that carries the fact instead."
   ] ;
   sh:property [
     sh:path bridge:namesGap ;

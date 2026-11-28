@@ -53,3 +53,38 @@
   bridge:verdict bridge:carriedInPart ;
   bridge:namesGap ex:a-last-update-with-no-time-zone ;
   bridge:carriedAs [ bridge:asProperty pav:lastUpdateOn ; bridge:inRecordClass ex:Record ] .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/source" ;
+  bridge:verdict bridge:ignored ;
+  bridge:because "A source names the registry a record was taken from, not what the record says." .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/fullUrl" ;
+  bridge:verdict bridge:ignored ;
+  bridge:because "A bundle entry's address says where the entry is, not what its record says." .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/resource" ;
+  bridge:verdict bridge:consumed .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/resource/note" ;
+  bridge:verdict bridge:ignored ;
+  bridge:because "A note a bundle makes on its resource is the bundle's, not the record's." .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/contained/note" ;
+  bridge:verdict bridge:noHome ;
+  bridge:namesGap ex:no-term-for-a-note-on-a-held-record .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/contained/status" ;
+  bridge:verdict bridge:consumed ;
+  bridge:lookupIn <example-statuses.ttl> ;
+  bridge:lookupNamesGap ex:a-status-outside-the-set-the-vocabulary-fixes .
+
+[] a bridge:PathEntry ;
+  bridge:sourcePath "/resource/contained/status" ;
+  bridge:verdict bridge:ignored ;
+  bridge:because "A status on a record a bundle's resource holds is not looked up." .

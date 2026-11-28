@@ -1,0 +1,17 @@
+{
+  "kind": "bundle",
+  "entries": [
+    {
+      "fullUrl": "urn:example:entry-1",
+      "resource": {
+        "note": "a note the bundle drops, which its entry for this form says",
+        "source": "a registry",
+        "status": ["current", "Retired"],
+        "novelty": "a member the accounting names nowhere",
+        "contained": [
+          {"note": "a note on a record held inside the entry's resource", "source": "a held registry", "status": ["Retired"], "novelty": "a member the accounting names nowhere"}
+        ]
+      }
+    }
+  ]
+}

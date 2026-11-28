@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "required": ["kind", "entries"],
+  "properties": {
+    "kind": {"const": "bundle"},
+    "entries": {"type": "array", "items": {"$ref": "#/definitions/entry"}}
+  },
+  "definitions": {
+    "entry": {
+      "type": "object",
+      "required": ["resource"],
+      "properties": {
+        "fullUrl": {"type": "string"},
+        "resource": {"type": "object"}
+      }
+    }
+  }
+}

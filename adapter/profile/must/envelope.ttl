@@ -114,14 +114,30 @@
     """
   ] ;
   sh:sparql [
-    sh:message "No two envelopes of an adapter declare the same bridge:pathOfContentInRecord: {?value} is declared twice." ;
+    sh:message "No two envelopes of an adapter write a form at one path, a content prefix or a content prefix followed by the contained prefix: the envelopes {?name} and {?otherName} both write {?value}." ;
     sh:select """
-      SELECT $this ?value WHERE {
+      SELECT $this ?name ?otherName ?value WHERE {
         ?adapter <https://ns.cascadeprotocol.org/bridge/v1-draft#envelope> $this, ?other .
-        FILTER ($this != ?other)
-        $this <https://ns.cascadeprotocol.org/bridge/v1-draft#pathOfContentInRecord> ?value .
-        ?other <https://ns.cascadeprotocol.org/bridge/v1-draft#pathOfContentInRecord> ?otherValue .
-        FILTER (STR(?value) = STR(?otherValue))
+        FILTER (STR($this) < STR(?other))
+        $this <http://schema.org/name> ?name .
+        ?other <http://schema.org/name> ?otherName .
+        {
+          $this <https://ns.cascadeprotocol.org/bridge/v1-draft#pathOfContentInRecord> ?content .
+          BIND (STR(?content) AS ?value)
+        } UNION {
+          $this <https://ns.cascadeprotocol.org/bridge/v1-draft#pathOfContainedContentBelowContent> ?contained .
+          OPTIONAL { $this <https://ns.cascadeprotocol.org/bridge/v1-draft#pathOfContentInRecord> ?content }
+          BIND (CONCAT(STR(COALESCE(?content, "")), STR(?contained)) AS ?value)
+        }
+        {
+          ?other <https://ns.cascadeprotocol.org/bridge/v1-draft#pathOfContentInRecord> ?otherContent .
+          BIND (STR(?otherContent) AS ?otherValue)
+        } UNION {
+          ?other <https://ns.cascadeprotocol.org/bridge/v1-draft#pathOfContainedContentBelowContent> ?otherContained .
+          OPTIONAL { ?other <https://ns.cascadeprotocol.org/bridge/v1-draft#pathOfContentInRecord> ?otherContent }
+          BIND (CONCAT(STR(COALESCE(?otherContent, "")), STR(?otherContained)) AS ?otherValue)
+        }
+        FILTER (?value = ?otherValue)
       }
     """
   ] ;

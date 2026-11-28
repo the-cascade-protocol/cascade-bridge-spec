@@ -236,7 +236,7 @@ bridge:adapterReportsGap a owl:ObjectProperty ;
 
 bridge:sameFactAs a owl:DatatypeProperty ;
   rdfs:label "same fact as"@en ;
-  rdfs:comment "The bridge:sourcePath that carries the fact instead."@en ;
+  rdfs:comment "The place that carries the fact instead, read in the form of the entry's path."@en ;
   rdfs:domain bridge:PathEntry ;
   rdfs:range xsd:string ;
   rdfs:isDefinedBy <https://ns.cascadeprotocol.org/bridge/v1-draft#> .

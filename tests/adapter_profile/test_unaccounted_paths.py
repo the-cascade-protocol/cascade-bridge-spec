@@ -1,7 +1,9 @@
 from rdflib import Literal
 
 import unaccounted_paths
+from _accounting import paths_accounted
 from _terms import BRIDGE, MF
+from adapter_profile_world import accounting_of
 
 ACCOUNTING = "vocab/example-accounting.ttl"
 
@@ -28,7 +30,7 @@ def said_about(crate):
 def unaccounted(case, findings, path):
     return (
         f"{case}: {findings}: expects cascade:SourcePathNotAccounted at {path}, where a path a test's input holds is "
-        "the bridge:sourcePath of an entry of example-accounting.ttl, or one its test case names by "
+        "accounted for by an entry of example-accounting.ttl, or one its test case names by "
         "bridge:testsUnaccountedSourcePath"
     )
 
@@ -38,7 +40,8 @@ class TestAnUnaccountedPathATestCaseExpects:
 
     A census finding, `cascade:SourcePathNotAccounted`, says a record holds a path the adapter's accounting names
     nowhere. A test case expects one only where it tests that finding, and names the path it tests; any other is a path
-    the accounting is missing. Only an entry naming the path as the record writes it accounts for it.
+    the accounting is missing. An entry accounts for the path it names and, where it names a place, for that place in
+    each form the adapter's envelopes declare.
     """
 
     class TestGivenTheSyntheticAdapters:
@@ -47,6 +50,26 @@ class TestAnUnaccountedPathATestCaseExpects:
 
         def test_reports_nothing_for_the_json_adapter_whose_census_cases_name_the_paths_they_test(self, json_crate):
             assert not said_about(json_crate)
+
+    class TestGivenAnAdapterWhoseEnvelopesDeclareFourForms:
+        def test_accounts_for_a_place_in_each_form_by_the_one_entry_written_for_it(self, json_crate):
+            accounted = paths_accounted(json_crate, accounting_of(json_crate))
+            assert {"/source", "/contained/source", "/resource/source", "/resource/contained/source"} <= accounted
+
+        def test_accounts_for_the_contained_form_under_a_content_prefix_by_the_entry_written_for_it_with_none(
+            self, json_crate
+        ):
+            accounted = paths_accounted(json_crate, accounting_of(json_crate))
+            assert {"/contained/id", "/resource/contained/id"} <= accounted
+
+        def test_accounts_for_no_path_of_a_member_no_entry_names_in_any_form(self, json_crate):
+            accounted = paths_accounted(json_crate, accounting_of(json_crate))
+            assert not accounted & {
+                "/novelty",
+                "/contained/novelty",
+                "/resource/novelty",
+                "/resource/contained/novelty",
+            }
 
     class TestGivenACaseExpectingAPathItDoesNotName:
         def test_reports_the_path_and_the_case_that_holds_it(self, crate):
@@ -67,12 +90,17 @@ class TestAnUnaccountedPathATestCaseExpects:
             said = said_about(unmarked(crate, "example-0004", THE_LANGUAGE_OF_A_LABEL))
             assert unaccounted("example-0004", "example-0004.ttl", THE_LANGUAGE_OF_A_LABEL) in said
 
-        def test_reports_a_path_whose_place_an_entry_names_in_another_form_of_the_path(self, json_package):
+        def test_reports_nothing_for_a_path_whose_place_an_entry_names_in_a_form_the_adapter_declares(
+            self, json_package
+        ):
             json_package.edit(
                 "ro-crate-metadata.json",
                 '"bridge:pathOfContentInRecord": ""',
                 '"bridge:pathOfContentInRecord": "/records"',
             )
+            assert not said_about(unmarked(json_package.crate, "json-0005", AN_ACCESSION_BELOW_RECORDS))
+
+        def test_reports_a_path_whose_place_an_entry_names_in_a_form_no_envelope_declares(self, json_package):
             said = said_about(unmarked(json_package.crate, "json-0005", AN_ACCESSION_BELOW_RECORDS))
             assert unaccounted("json-0005", "json-0005.ttl", AN_ACCESSION_BELOW_RECORDS) in said
 
@@ -82,7 +110,7 @@ class TestAnUnaccountedPathATestCaseExpects:
             said = said_about(unmarked(crate, "example-0004", NOVELTY))
             assert (
                 f"example-0004: example-0004.ttl: expects cascade:SourcePathNotAccounted at {NOVELTY}, where a path a "
-                "test's input holds is the bridge:sourcePath of an entry of the adapter's bridge:sourceAccounting, or "
+                "test's input holds is accounted for by an entry of the adapter's bridge:sourceAccounting, or "
                 "one its test case names by bridge:testsUnaccountedSourcePath"
             ) in said
 

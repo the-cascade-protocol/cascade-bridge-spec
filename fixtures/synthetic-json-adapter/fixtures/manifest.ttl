@@ -15,6 +15,8 @@
     <#json-0007>
     <#json-0008>
     <#json-0009>
+    <#json-0010>
+    <#json-0011>
     <#json-0002-and-json-0006-name-one-record>
     <#json-0006-holds-two-records>
     <#json-0007-names-two-records>
@@ -137,6 +139,34 @@
   mf:result [
     bridge:expectedGraph <expected/json-0009.ttl> ;
     bridge:expectedFindings <findings/json-0009.ttl>
+  ] .
+
+<#json-0010> a bridge:IsomorphicConversionTest ;
+  mf:name "json-0010" ;
+  rdfs:comment "A bundle's entries each hold a record in their resource member, the bundle envelope's content, and a record held inside it. The nearest entry stands for a path. The entry for the place stands under /resource and /resource/contained: a source is accounted and a status the concept map lacks is found at /resource/status. The entry for the contained form of no content prefix, /contained/note, stands for /resource/contained/note over the entry for the place, so that note is reported with the gap of the held record's. An entry written at a path stands over both: /resource/note and /resource/contained/status are not reported and not looked up. A member no entry names is a census finding at each." ;
+  bridge:testsUnaccountedSourcePath "/resource/novelty" , "/resource/contained/novelty" ;
+  mf:action [
+    bridge:input <in/json-0010.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-bundle> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/json-0010.ttl> ;
+    bridge:expectedFindings <findings/json-0010.ttl>
+  ] .
+
+<#json-0011> a bridge:IsomorphicConversionTest ;
+  mf:name "json-0011" ;
+  rdfs:comment "The record envelope's two forms, read as json-0010 reads the bundle's: the entry for a place stands at /, the entries written at /contained/note and /contained/status stand at /contained over it, a note is reported with the held record's gap and a status looked up there, and a member no entry names is a census finding in both." ;
+  bridge:testsUnaccountedSourcePath "/novelty" , "/contained/novelty" ;
+  mf:action [
+    bridge:input <in/json-0011.json> ;
+    bridge:envelope <../ro-crate-metadata.json#envelope-record> ;
+    bridge:facts <facts/example-registry.ttl>
+  ] ;
+  mf:result [
+    bridge:expectedGraph <expected/json-0011.ttl> ;
+    bridge:expectedFindings <findings/json-0011.ttl>
   ] .
 
 <#json-0002-and-json-0006-name-one-record> a bridge:IdentityRelationTest ;

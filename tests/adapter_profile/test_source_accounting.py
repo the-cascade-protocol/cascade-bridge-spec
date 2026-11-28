@@ -187,6 +187,32 @@ class TestAccountingForEveryPathOfASource:
             assert "bridge:sameFactAs" in said
             assert THE_ACCESSION in said
 
+    class TestGivenABridgeSameFactAsInAFormOfAPlace:
+        TITLE_IN_A_CONTAINED_RECORD = entry("/contained/title", verdict=IGNORED, because='"A title is not data."')
+
+        def named_by(self, json_package, same_fact_as, path="/contained/name"):
+            return accounted(
+                json_package,
+                self.TITLE_IN_A_CONTAINED_RECORD,
+                entry(path, verdict=REDUNDANT_WITH, same_fact_as=same_fact_as),
+            )
+
+        def test_reads_the_place_it_names_in_the_form_of_its_entrys_path(self, json_package):
+            self.named_by(json_package, "/title")
+            assert not said_about(json_package)
+
+        def test_reads_a_path_written_in_the_form_of_its_entrys_path_as_it_always_did(self, json_package):
+            self.named_by(json_package, "/contained/title")
+            assert not said_about(json_package)
+
+        def test_reports_a_place_no_entry_of_the_form_of_its_entrys_path_accounts_for(self, json_package):
+            self.named_by(json_package, "/subtitle")
+            assert "/subtitle" in said_about(json_package)
+
+        def test_reports_a_place_only_another_form_of_it_is_written_for(self, json_package):
+            self.named_by(json_package, "/title", path="/name")
+            assert "/title" in said_about(json_package)
+
     class TestGivenTheGapAnEntryNames:
         def test_reports_a_bridge_namesgap_that_is_no_gap_of_the_adapters_own_gap_scheme(self, package):
             """reports a `bridge:namesGap` that is no gap of the adapter's own gap scheme"""
