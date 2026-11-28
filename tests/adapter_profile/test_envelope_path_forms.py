@@ -81,6 +81,20 @@ class TestWhereAnEnvelopesContentStandsInAPath:
             declare(json_crate, "set", content="/entry")
             assert "No two envelopes" in shape_file_messages(json_crate, "envelope.ttl")
 
+        def test_reports_two_envelopes_whose_content_and_contained_prefixes_are_one_path(self, json_crate):
+            declare(json_crate, "record", content="", contained="/contained")
+            declare(json_crate, "set", content="/r/contained")
+            declare(json_crate, "listing", content="/r", contained="/contained")
+            said = shape_file_messages(json_crate, "envelope.ttl")
+            assert "No two envelopes" in said
+            assert all(word in said for word in ("/r/contained", "set", "listing"))
+
+        def test_reports_nothing_for_envelopes_whose_prefixes_differ_though_one_lies_inside_another(self, json_crate):
+            declare(json_crate, "record", content="", contained="/contained")
+            declare(json_crate, "set", content="/r", contained="/contained")
+            declare(json_crate, "listing", content="/r/contained/x")
+            assert not shape_file_messages(json_crate, "envelope.ttl")
+
         def test_names_the_empty_reference_token_in_what_it_reports_of_a_path(self, json_crate):
             declare(json_crate, "set", contained="/a//b")
             assert "no empty reference token" in shape_file_messages(json_crate, "envelope.ttl")
@@ -152,6 +166,21 @@ class TestWhereAnEnvelopesContentStandsInAPath:
             forms = path_forms.read(json_crate.graph, json_crate.root)
             form, place = path_forms.place_of(forms, "/entry/contained/id")
             assert (form.prefix, place) == ("/entry/contained", "/id")
+
+    class TestGivenAPrefixThatLiesInsideAnotherForm:
+        FORMS = [
+            path_forms.Form(None, prefix, contained, None, content)
+            for prefix, contained, content in (
+                ("/r/contained/x", False, "/r/contained/x"),
+                ("/r/contained", True, "/r"),
+                ("/r", False, "/r"),
+                ("/contained", True, ""),
+                ("", False, ""),
+            )
+        ]
+
+        def test_copies_a_path_of_the_contained_form_only_where_the_copy_reads_as_the_form_it_is_copied_to(self):
+            assert not list(path_forms.copies(self.FORMS, {"/contained/x/y"}))
 
     class TestGivenAnAdapterThatDeclaresNothing:
         def test_reads_no_form_and_each_path_as_its_own_place(self, crate):
